@@ -1,0 +1,6 @@
+directed graph of statements
+can drag statement( block)s around
+can (dis)connect statements
+can drop statements into statement blocks
+statement block enlarges to accept statement
+statement block line is emphasised when statement is held over it

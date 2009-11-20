@@ -1,0 +1,3 @@
+Visual code generation for the LAG Web Adaptation Language (Cristea, A.I., Verschoor, M.: The LAG Grammar for Authoring the Adaptive Web. In: ITCC 2004, Las Vegas, US. IEEE, Los Alamitos (2004))
+
+The aim of this project is to produce an easy-to-use environment for producing LAG code compatible with the AHA! 3  adaptation system using visual elements and the PEAL LAG editor (2009, “LAG 2.0: Refining a reusable Adaptation Language and Improving on its Authoring”, 4th European Conference on Technology Enhanced Learning (ECTEL'09), Springer LNCS, Subseries: Programming and Software Engineering, Vol. 5794, ISBN: 978-3-642-04635-3, Nice, France, September 14, 2009 (due). Authors: A. I. Cristea, D. Smits, J. Bevan, M. Hendrix)
