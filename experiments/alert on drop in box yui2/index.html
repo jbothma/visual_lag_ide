@@ -1,0 +1,71 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+        <title>alert on drop yui2</title>
+<!--
+		<script type="text/javascript" src="lib/yui/yahoo/yahoo-min.js"></script> 
+		<script type="text/javascript" src="lib/yui/event/event-min.js"></script> 
+		<script type="text/javascript" src="lib/yui/dom/dom-min.js"></script> 
+		<script type="text/javascript" src="lib/yui/dragdrop/dragdrop-min.js"></script> 
+		<script type="text/javascript" src="lib/yui/element/element-min.js"></script> 
+-->
+		<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/yahoo-dom-event/yahoo-dom-event.js"></script> 
+		<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/dragdrop/dragdrop-min.js"></script> 
+		<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/element/element-min.js"></script> 		
+		
+		<script type="text/javascript">
+			var dropee, dropTarget;
+	        dropee		= new YAHOO.util.DD("dd_box_drop"); 
+			dropTarget	= new YAHOO.util.DDTarget("dd_box_catch");
+			canvas		= new YAHOO.util.DDTarget("canvas_box");
+			
+			// if an element is dropped on a DDTarget,
+			// make the element a child of that target
+			var dropAction = function(e, id) {
+				alert("yay! " + id);
+
+				elDropee 	 = YAHOO.util.Event.getTarget(e);
+				elDropTarget = new YAHOO.util.Element(id);
+				elDropTarget.appendChild(elDropee);
+				
+			};
+			
+			// Replace my dropable div's onDragDrop event 
+			// with my own function
+			dropee.onDragDrop = dropAction;
+			
+		</script>
+		
+		<style type="text/css">
+			.basic_box { 
+				border:	4px solid #666;
+			} 
+			
+			.container_box {
+				width: 	400px;
+				height: 240px;
+			}
+			
+			.small_box {
+				width: 	80px;
+				height: 48px;
+			}
+			
+			#dd_box_catch {
+				width: 	100px;
+				height: 100px;
+				background-color:	#EEE;
+			}
+		</style>
+    </head>
+    <body>
+        <h1>bob</h1>
+		
+		<div id="canvas_box" class="container_box basic_box">
+			<div id="dd_box_drop" class="small_box basic_box"></div>
+			<div id="dd_box_catch" class="small_box basic_box"></div>
+		</div>
+    </body>
+</html>
