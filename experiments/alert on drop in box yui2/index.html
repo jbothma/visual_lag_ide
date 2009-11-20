@@ -16,25 +16,46 @@
 		<script type="text/javascript" src="http://yui.yahooapis.com/2.8.0r4/build/element/element-min.js"></script> 		
 		
 		<script type="text/javascript">
-			var dropee, dropTarget;
+			DDM = YAHOO.util.DragDropMgr;
+			DDM.stopPropagation = true;
+			
 	        dropee		= new YAHOO.util.DD("dd_box_drop"); 
 			dropTarget	= new YAHOO.util.DDTarget("dd_box_catch");
 			canvas		= new YAHOO.util.DDTarget("canvas_box");
 			
+			dropEl		= new YAHOO.util.Element('dd_box_drop');
+			catchEl		= new YAHOO.util.Element('dd_box_catch');
+			canvasEl	= new YAHOO.util.Element('canvas_box');
+			
+			function ev2el(e) {
+				DOMEl = YAHOO.util.Event.getTarget(e);
+				YUIEl = new YAHOO.util.Element(DOMEl);
+				return YUIEl;
+			}
+			
 			// if an element is dropped on a DDTarget,
 			// make the element a child of that target
-			var dropAction = function(e, id) {
-				alert("yay! " + id);
-
-				elDropee 	 = YAHOO.util.Event.getTarget(e);
-				elDropTarget = new YAHOO.util.Element(id);
-				elDropTarget.appendChild(elDropee);
+			dropAction = function(e, id){
+				if (e.messedWith) {
+					return null;
+				}
 				
+				something = this;
+				dropeeEl 	 = ev2el(e);
+				dropTargetEl = new YAHOO.util.Element(id);
+				dropTargetEl.appendChild(dropeeEl);
+				alert(dropeeEl.get('id') + ' dropped on target ' + dropTargetEl.get('id'));
+				
+				// hack event and check whether it's hacked to stop propagation in YUI2
+				//  by jdb woo!
+				e.messedWith=true;
 			};
 			
 			// Replace my dropable div's onDragDrop event 
 			// with my own function
 			dropee.onDragDrop = dropAction;
+			//dropEl.on("onDragDrop", dropAction);
+			
 			
 		</script>
 		
