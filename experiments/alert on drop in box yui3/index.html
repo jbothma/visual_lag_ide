@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Untitled Document</title>
+		
+		<style type="text/css">
+			.statement {
+				border: 1px solid black;
+				padding: 10px;
+				height: 50px;
+				width: 200px;
+			}
+			.dragOver {
+				border: 3px solid black;
+			}
+			#workspace {
+				width: 60%;
+				height: 400px;
+			}
+			
+		</style>
+		<script type="text/javascript" src="lib/yui/yui/yui.js"></script> 
+		<script type="text/javascript">
+		
+		YUI({
+			filter:'raw'
+		}).use('console','dd-drop','dd-drag','node','event', function (Y) { 			
+			/**
+			 * @class Statement
+			 * @constructor
+			 * @param parent the Node to which this node will be appended
+			 */
+		 	var Statement = function(parent) {
+				// Base div for a Statement production
+				this.node = Y.Node.create('<div class="statement"></div>');
+				this.node.jdParent = this;
+				
+				// Create Unordered List to hold statements
+				//this._ul = Y.Node.create('<ul class="statementList"></ul>');
+				//this.node.appendChild(this._ul);
+				
+				// Add node to given parent
+				parent.appendChild(this.node);
+				
+				this.dd	= new Y.DD.Drag({node: this.node});
+				this.dd.jdOwner = this;
+				this.dt	= new Y.DD.Drop({node: this.node});
+				this.dt.jdOwner = this;
+				
+				this.dd.on('drag:over', 	overAction);
+				this.dd.on('drag:exit', 	exitAction);
+				this.dd.on('drag:drophit',	dropAction);
+				
+				return true;
+			}
+			
+			// refactor into Statement class methinks
+			overAction = function(e) {
+				e.drop.jdOwner.node.addClass('dragOver');
+			};
+			// refactor into Statement class methinks
+			exitAction = function(e) {
+				e.drop.jdOwner.node.removeClass('dragOver');
+			};
+			// refactor into Statement class methinks
+			dropAction = function(e) {				
+				dragNode = e.drag.jdOwner.node;
+				dropNode = e.drop.jdOwner.node;
+				dropNode.appendChild(dragNode);
+				dragNode.setStyle('left','0px');
+				dragNode.setStyle('top','0px');
+				dropNode.removeClass('dragOver');
+				//dropNode.fixSize();
+			}
+			//add a statement production to the workspace
+			newStatement = function(e) {
+				new Statement(workspace);
+			}
+			
+			var workspace;
+			
+			function init(){
+				//yconsole.render();
+				
+				workspace = Y.one('#workspace');
+				
+				// Click button to add a statement production to the workspace
+				Y.one('button#newStatement').on('click',newStatement);
+				
+			}
+			Y.on("domready", init);
+
+	 	});
+		</script>
+		
+	</head>
+	<body class="yui-skin-sam">
+		<button id="newStatement">New Statement</button>
+		<div id="workspace" class="statement">
+			
+		</div>
+	</body>
+</html>
