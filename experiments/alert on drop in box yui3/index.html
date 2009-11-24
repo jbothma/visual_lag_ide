@@ -7,94 +7,10 @@
 		<link type="text/css" rel="stylesheet" href="style.css" />
 		
 		<script type="text/javascript" src="lib/yui/yui/yui.js"></script> 
-		<script type="text/javascript">
-		
-		YUI({
-			filter:'raw'
-		}).use('console','dd-drop','dd-drag','node','event', function (Y) { 			
-			/**
-			 * @class Statement
-			 * @constructor
-			 * @param parent the Node to which this node will be appended
-			 */
-		 	var Statement = function(parent) {
-				// Base div for a Statement production
-				this.node = Y.Node.create('<div class="statement"></div>');
-				// Get this container object from its node
-				this.node.owner = this;
-				
-				// Create Unordered List to hold statements
-				//this._ul = Y.Node.create('<ul class="statementList"></ul>');
-				//this.node.appendChild(this._ul);
-				
-				// Add node to given parent
-				parent.appendChild(this.node);
-				
-				// Givs this a DD to make it dragable
-				this.dd	= new Y.DD.Drag({node: this.node});
-				// Givs this a DT to let it catch drops
-				this.dt	= new Y.DD.Drop({node: this.node});
-				// Get this container object from its dd and dt
-				// This is useful to get back to this when 
-				// a DragDrop event gives the DragDrop and DropTarget.
-				this.dd.owner = this;
-				this.dt.owner = this;
-								
-				overAction = function(e) {
-					this.owner.node.addClass('dragOver');
-				};
-				exitAction = function(e) {
-					this.owner.node.removeClass('dragOver');
-				};
-				dropAction = function(e) {				
-					dragNode = e.drag.owner.node;
-					dropNode = this.owner.node;
-					dropNode.appendChild(dragNode);
-					dragNode.setStyle('left','0px');
-					dragNode.setStyle('top','0px');
-					dropNode.removeClass('dragOver');
-					//dropNode.fixSize();
-				};
-
-				this.dt.on('drop:over', overAction);
-				this.dt.on('drop:exit', exitAction);
-				this.dt.on('drop:hit',	dropAction);			
-
-				return true;
-			}
-			
-
-			//add a statement production to the workspace
-			var newStatement = function() {
-				new Statement(workspace);
-			}
-			
-			var workspace;
-			// A box where things can be dropped 
-			// to get out of the way temporarily
-			var holdBox;
-			
-			function init(){				
-				workspace 		= Y.one('#workspace');
-				workspace.dt	= new Y.DD.Drop({node: workspace});
-				
-				holdBox			= Y.one('#holdBox');
-				holdBox.dt		= new Y.DD.Drop({node: holdBox});
-
-				// Click button to add a statement production to the workspace
-				Y.one('button#newStatement').on('click',newStatement);
-				
-			}
-			Y.on("domready", init);
-
-	 	});
-		</script>
+		<script type="text/javascript" src="vislag.js"></script>
 		
 	</head>
 	<body class="yui-skin-sam">
 		<button id="newStatement">New Statement</button>
-		<div id="workspace" class="statement">
-		<div id="holdBox"></div>
-		</div>
 	</body>
 </html>
