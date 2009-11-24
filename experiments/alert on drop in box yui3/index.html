@@ -4,22 +4,8 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>Untitled Document</title>
 		
-		<style type="text/css">
-			.statement {
-				border: 1px solid black;
-				padding: 10px;
-				height: 50px;
-				width: 200px;
-			}
-			.dragOver {
-				border: 3px solid black;
-			}
-			#workspace {
-				width: 60%;
-				height: 400px;
-			}
-			
-		</style>
+		<link type="text/css" rel="stylesheet" href="style.css" />
+		
 		<script type="text/javascript" src="lib/yui/yui/yui.js"></script> 
 		<script type="text/javascript">
 		
@@ -34,7 +20,8 @@
 		 	var Statement = function(parent) {
 				// Base div for a Statement production
 				this.node = Y.Node.create('<div class="statement"></div>');
-				this.node.jdParent = this;
+				// Get this container object from its node
+				this.node.owner = this;
 				
 				// Create Unordered List to hold statements
 				//this._ul = Y.Node.create('<ul class="statementList"></ul>');
@@ -43,48 +30,57 @@
 				// Add node to given parent
 				parent.appendChild(this.node);
 				
+				// Givs this a DD to make it dragable
 				this.dd	= new Y.DD.Drag({node: this.node});
-				this.dd.jdOwner = this;
+				// Givs this a DT to let it catch drops
 				this.dt	= new Y.DD.Drop({node: this.node});
-				this.dt.jdOwner = this;
-				
-				this.dd.on('drag:over', 	overAction);
-				this.dd.on('drag:exit', 	exitAction);
-				this.dd.on('drag:drophit',	dropAction);
-				
+				// Get this container object from its dd and dt
+				// This is useful to get back to this when 
+				// a DragDrop event gives the DragDrop and DropTarget.
+				this.dd.owner = this;
+				this.dt.owner = this;
+								
+				overAction = function(e) {
+					this.owner.node.addClass('dragOver');
+				};
+				exitAction = function(e) {
+					this.owner.node.removeClass('dragOver');
+				};
+				dropAction = function(e) {				
+					dragNode = e.drag.owner.node;
+					dropNode = this.owner.node;
+					dropNode.appendChild(dragNode);
+					dragNode.setStyle('left','0px');
+					dragNode.setStyle('top','0px');
+					dropNode.removeClass('dragOver');
+					//dropNode.fixSize();
+				};
+
+				this.dt.on('drop:over', overAction);
+				this.dt.on('drop:exit', exitAction);
+				this.dt.on('drop:hit',	dropAction);			
+
 				return true;
 			}
 			
-			// refactor into Statement class methinks
-			overAction = function(e) {
-				e.drop.jdOwner.node.addClass('dragOver');
-			};
-			// refactor into Statement class methinks
-			exitAction = function(e) {
-				e.drop.jdOwner.node.removeClass('dragOver');
-			};
-			// refactor into Statement class methinks
-			dropAction = function(e) {				
-				dragNode = e.drag.jdOwner.node;
-				dropNode = e.drop.jdOwner.node;
-				dropNode.appendChild(dragNode);
-				dragNode.setStyle('left','0px');
-				dragNode.setStyle('top','0px');
-				dropNode.removeClass('dragOver');
-				//dropNode.fixSize();
-			}
+
 			//add a statement production to the workspace
-			newStatement = function(e) {
+			var newStatement = function() {
 				new Statement(workspace);
 			}
 			
 			var workspace;
+			// A box where things can be dropped 
+			// to get out of the way temporarily
+			var holdBox;
 			
-			function init(){
-				//yconsole.render();
+			function init(){				
+				workspace 		= Y.one('#workspace');
+				workspace.dt	= new Y.DD.Drop({node: workspace});
 				
-				workspace = Y.one('#workspace');
-				
+				holdBox			= Y.one('#holdBox');
+				holdBox.dt		= new Y.DD.Drop({node: holdBox});
+
 				// Click button to add a statement production to the workspace
 				Y.one('button#newStatement').on('click',newStatement);
 				
@@ -98,7 +94,7 @@
 	<body class="yui-skin-sam">
 		<button id="newStatement">New Statement</button>
 		<div id="workspace" class="statement">
-			
+		<div id="holdBox"></div>
 		</div>
 	</body>
 </html>
