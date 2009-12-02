@@ -1,0 +1,61 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Untitled Document</title>
+		<style type="text/css">
+			.connectorHandle{
+				border:		1px solid black;
+				width: 		5px;
+				height:		5px;
+				position:	fixed;
+				top:		30px;
+				left:		30px;
+			}
+			.connectorHoriz {
+				background:	#ff0000;
+				width:		30px;
+				height:		3px;
+				position:	fixed;
+			}
+			.connectorVert{
+				background:	#ff0000;
+				width:		3px;
+				height:		30px;
+				position:	fixed;
+			}
+			#connector1topHandle {
+				top:		30px;
+				left:		30px;
+			}
+			#connector1topHoriz {
+				top:		32px;	/*	topHandle_top + 2		*/
+				left:		32px;	/*	topHandle_left + 2		*/
+			}
+			#connector1vert {
+				top:		32px; 	/*	topHoriz_top						*/
+				left:		59px;	/*	topHoriz_left + topHoriz_width - 3	*/
+			}
+			#connector1bottomHoriz {
+				top:		59px;	/*	vert_top + vert_height - 3			*/
+				left:		59px;	/*	vert_left							*/
+			}
+			#connector1bottomHandle {
+				top:		57px;	/*	bottomHoriz_top - 2					*/
+				left:		85px;	/*	bottomHoriz_left + bottomHoriz_width - 4	*/
+			}
+		</style>
+		<script type="text/javascript" src="lib/yui/yui/yui.js">
+		<script type="text/javascript">
+			
+		</script>
+	</head>
+	<body>
+		<div id="connector1topHandle" 	class="connectorHandle"></div>
+		<div id="connector1topHoriz" 	class="connectorHoriz"></div>
+		<div id="connector1vert" 		class="connectorVert"></div>
+		<div id="connector1bottomHoriz" class="connectorHoriz"></div>
+		<div id="connector1bottomHandle" class="connectorHandle"></div>
+
+	</body>
+</html>
