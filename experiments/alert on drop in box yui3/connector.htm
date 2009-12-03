@@ -35,7 +35,7 @@
 				filter:'min'
 			}).use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
 				function handleMoved(handle) {
-					
+					// look up connector nodes
 					var topHoriz 		= handle.connectorNodes['topHoriz'];
 					var vert 			= handle.connectorNodes['vert'];
 					var bottomHoriz 	= handle.connectorNodes['bottomHoriz'];
@@ -56,15 +56,15 @@
 					/* TODO: this can prob be simplified with something like handleDelta */
 					var topHoriz_width		= Math.abs(Math.floor((topHandle_left - bottomHandle_left)/2))+3;
 					var topHoriz_top		= topHandle_top + 2;
-					var topHoriz_left		= topHandle_left + 2 + (leftOffset * topHoriz_width);
+					var topHoriz_left		= topHandle_left + 2 + (leftOffset * (topHoriz_width-3));
 
 					var vert_height			= Math.abs(Math.floor(topHandle_top - bottomHandle_top))+3;
-					var vert_top			= topHoriz_top + (topOffset * vert_height);
-					var vert_left			= topHoriz_left - 3 + topHoriz_width + (leftOffset * topHoriz_width);
+					var vert_top			= topHoriz_top + (topOffset * (vert_height-3));
+					var vert_left			= topHoriz_left - 3 + topHoriz_width + (leftOffset * (topHoriz_width-3));
 
 					var bottomHoriz_width	= Math.abs(Math.floor((topHandle_left - bottomHandle_left)/2))+3;
-					var bottomHoriz_left	= vert_left + (leftOffset * bottomHoriz_width);
-					var bottomHoriz_top		= vert_top - 3 + vert_height + (topOffset * vert_height);
+					var bottomHoriz_left	= vert_left + (leftOffset * (bottomHoriz_width-3));
+					var bottomHoriz_top		= vert_top - 3 + vert_height + (topOffset * (vert_height-3));
 
 					/* set */
 					topHoriz.setY(topHoriz_top);
@@ -80,15 +80,29 @@
 					bottomHoriz.setStyle('width',bottomHoriz_width + 'px');
 				}
 				
+				/**
+				 * 
+				 * @param {int} thl left offset px of top handle
+				 * @param {int} tht	top offset px of top handle
+				 * @param {int} bhl left offset px of bottom handle
+				 * @param {int} bht top offset px of bottom handle
+				 */
 				function newConnector(thl,tht,bhl,bht) {
 					/* TODONE:giving nodes references to other parts of the connector would
 					 * remove the need to look them up using classes for EACH MOVE
-					 * TODO: check if all this class rubbish is then still needed or if
+					 * TODONE: check if all this class rubbish is then still needed or if
 					 * the node hash table can be always be used.
+					 * 
+					 * Not really needed but useful for knowing which connector parts belong to which
+					 * so i'll keep it around for the moment.
+					 * without being read they don't add huge overhead.
 					 */ 
 					var topHandleId 	= Y.guid('topHandle_');
 					var bottomHandleId 	= Y.guid('bottomHandle_');
-					
+					/*
+					 * Each section of a connector has the id of the handles as a class
+					 * so all the parts can be related to their handles and thus to each other
+					 */
 					var topHandle 	= Y.Node.create('<div id="' 
 													+ topHandleId
 													+ '" class="'
@@ -111,6 +125,9 @@
 													
 					var body = Y.one('body');
 					
+					/*
+					 * hash of all the nodes making up this connector
+					 */
 					connectorNodes = {
 						'topHandle':	topHandle,
 						'topHoriz':		topHoriz,
@@ -118,9 +135,11 @@
 						'bottomHoriz':	bottomHoriz,
 						'bottomHandle':	bottomHandle
 					}
-					/*[topHandle,topHoriz,vert,bottomHoriz,bottomHandle]*/
+
 					for (var i in connectorNodes) {
+						// add reference to hash of node references to each node for this connector
 						connectorNodes[i].connectorNodes = connectorNodes;
+						// add each node to the body
 						body.appendChild(connectorNodes[i]);
 					}
 					
@@ -129,12 +148,14 @@
 					bottomHandle.setX(bhl);
 					bottomHandle.setY(bht);
 					
-
+					// make handles dragable
 					var ddTop 		= new Y.DD.Drag({node:topHandle});
+					// make handle node accessible from the handle's DD
 					ddTop.jd_node 	= topHandle;
 					var ddBottom 	= new Y.DD.Drag({node:bottomHandle});
 					ddBottom.jd_node = bottomHandle;
 					
+					// inserting counts as 'move' to get the lines into position
 					handleMoved(topHandle);
 				}
 				
