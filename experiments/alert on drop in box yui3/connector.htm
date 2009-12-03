@@ -1,61 +1,138 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
 	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Untitled Document</title>
 		<style type="text/css">
-			.connectorHandle{
+			.topHandle,.bottomHandle{
 				border:		1px solid black;
 				width: 		5px;
 				height:		5px;
 				position:	fixed;
-				top:		30px;
-				left:		30px;
 			}
-			.connectorHoriz {
+			.topHoriz,.bottomHoriz {
 				background:	#ff0000;
 				width:		30px;
 				height:		3px;
 				position:	fixed;
 			}
-			.connectorVert{
+			.vert{
 				background:	#ff0000;
 				width:		3px;
 				height:		30px;
 				position:	fixed;
 			}
-			#connector1topHandle {
-				top:		30px;
-				left:		30px;
-			}
-			#connector1topHoriz {
-				top:		32px;	/*	topHandle_top + 2		*/
-				left:		32px;	/*	topHandle_left + 2		*/
-			}
-			#connector1vert {
-				top:		32px; 	/*	topHoriz_top						*/
-				left:		59px;	/*	topHoriz_left + topHoriz_width - 3	*/
-			}
-			#connector1bottomHoriz {
-				top:		59px;	/*	vert_top + vert_height - 3			*/
-				left:		59px;	/*	vert_left							*/
-			}
-			#connector1bottomHandle {
-				top:		57px;	/*	bottomHoriz_top - 2					*/
-				left:		85px;	/*	bottomHoriz_left + bottomHoriz_width - 4	*/
-			}
-		</style>
-		<script type="text/javascript" src="lib/yui/yui/yui.js">
-		<script type="text/javascript">
+
 			
+		</style>
+		<script type="text/javascript" src="lib/yui/yui/yui.js"></script>
+		<script type="text/javascript">
+		function init() {
+			YUI({
+				filter:'raw'
+			}).use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
+				function topMoved(topHandle) {
+					var topHandleId = topHandle.getAttribute('id');
+					var topHoriz	= Y.all('.' + topHandleId).filter('.topHoriz').item(0);
+					var vert		= Y.all('.' + topHandleId).filter('.vert').item(0);
+					var bottomHoriz	= Y.all('.' + topHandleId).filter('.bottomHoriz').item(0);
+					
+					var topHandle_top	= topHandle.getY();
+					var topHandle_left	= topHandle.getX();
+					
+					topHoriz.setStyle('top',topHandle_top + 2 + 'px');
+					topHoriz.setStyle('left',topHandle_left + 2 + 'px');
+					
+					var topHoriz_top	= topHoriz.getY();
+					var topHoriz_left	= topHoriz.getX();
+					var topHoriz_width	= topHoriz.getStyle('width');
+					/* the following line is yucky. I know. */
+					topHoriz_width		= parseInt(topHoriz_width.substring(0,topHoriz_width.length-2));
+					
+					vert.setY(topHoriz_top);
+					vert.setX(topHoriz_left - 3 + topHoriz_width);
+
+					var vert_top		= vert.getY();
+					var vert_height		= vert.getStyle('height');
+					vert_height			= parseInt(vert_height.substring(0,vert_height.length-2));
+					var vert_left		= vert.getX();
+
+					bottomHoriz.setY(vert_top - 3 + vert_height);
+					bottomHoriz.setX(vert_left);
+				}
+				
+				function newConnector(thl,tht,bhl,bht) {
+					var topHandleId 	= Y.guid('topHandle_');
+					var bottomHandleId 	= Y.guid('bottomHandle_');
+					
+					var topHandle 	= Y.Node.create('<div id="' 
+													+ topHandleId
+													+ '" class="topHandle"></div>');
+					var bottomHandle = Y.Node.create('<div id="' 
+													 + bottomHandleId
+													 + '" class="bottomHandle"></div>');
+					var topHoriz 	= Y.Node.create('<div id="" class="'
+													+ topHandleId + ' ' + bottomHandleId
+													+ ' topHoriz"></div>');
+					var vert 		= Y.Node.create('<div id="" class="'
+													+ topHandleId + ' ' + bottomHandleId
+													+ ' vert"></div>');
+					var bottomHoriz = Y.Node.create('<div id="" class="'
+													+ topHandleId + ' ' + bottomHandleId
+													+ ' bottomHoriz"></div>');
+													
+					var body = Y.one('body');
+					body.appendChild(topHandle);
+					topHandle.setX(thl);
+					topHandle.setY(tht);
+					body.appendChild(topHoriz);
+					body.appendChild(vert);
+					body.appendChild(bottomHoriz);
+					body.appendChild(bottomHandle);
+					bottomHandle.setX(bhl);
+					bottomHandle.setY(bht);
+					var ddTop 		= new Y.DD.Drag({node:topHandle});
+					ddTop.jd_node = topHandle;
+					var ddBottom 	= new Y.DD.Drag({node:bottomHandle});
+					ddBottom.jdNode = bottomHandle;
+					
+					topMoved(topHandle);
+				}
+				
+				
+				newConnector(30,30,90,60);
+
+
+				
+
+
+					
+/*
+			        
+var topHandle_top	=
+var topHandle_left	=
+var topHoriz_top	=
+var topHoriz_left	=
+var topHoriz_width	=
+var vert_top		=
+var vert_height		=
+var vert_left		=
+
+var bottomHoriz_top
+var bottomHoriz_left
+var bottomHoriz_width
+			    });*/
+			});
+		}
+
 		</script>
 	</head>
-	<body>
-		<div id="connector1topHandle" 	class="connectorHandle"></div>
-		<div id="connector1topHoriz" 	class="connectorHoriz"></div>
-		<div id="connector1vert" 		class="connectorVert"></div>
-		<div id="connector1bottomHoriz" class="connectorHoriz"></div>
-		<div id="connector1bottomHandle" class="connectorHandle"></div>
+	<body onload="init()">
+		<!--<div id="connector1topHandle" 		class="connector1 topHandle"></div>
+		<div id="connector1topHoriz" 		class="connector1 topHoriz"></div>
+		<div id="connector1vert" 			class="connector1 vert"></div>
+		<div id="connector1bottomHoriz" 	class="connector1 bottomHoriz"></div>
+		<div id="connector1bottomHandle" 	class="connector1 bottomHandle"></div>-->
 
 	</body>
 </html>
