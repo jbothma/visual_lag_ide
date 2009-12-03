@@ -35,21 +35,12 @@
 				filter:'min'
 			}).use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
 				function handleMoved(handle) {
-					var handleId = handle.getAttribute('id');
-					var topHandle;
-					var bottomHandle;
-					 
-					if (handle.hasClass('topHandle')) {
-						topHandle 		= handle;
-						bottomHandle 	= Y.all('.' + handleId).filter('.bottomHandle').item(0);
-					} else {
-						bottomHandle	= handle;
-						topHandle 		= Y.all('.' + handleId).filter('.topHandle').item(0);
-					}
 					
-					var topHoriz	= Y.all('.' + handleId).filter('.topHoriz').item(0);
-					var vert		= Y.all('.' + handleId).filter('.vert').item(0);
-					var bottomHoriz	= Y.all('.' + handleId).filter('.bottomHoriz').item(0);
+					var topHoriz 		= handle.connectorNodes['topHoriz'];
+					var vert 			= handle.connectorNodes['vert'];
+					var bottomHoriz 	= handle.connectorNodes['bottomHoriz'];
+					var topHandle 		= handle.connectorNodes['topHandle'];
+					var bottomHandle	= handle.connectorNodes['bottomHandle'];
 					
 					/* get and calculate */
 					var topHandle_top		= topHandle.getY();
@@ -90,8 +81,10 @@
 				}
 				
 				function newConnector(thl,tht,bhl,bht) {
-					/* TODO:giving nodes references to other parts of the connector would
+					/* TODONE:giving nodes references to other parts of the connector would
 					 * remove the need to look them up using classes for EACH MOVE
+					 * TODO: check if all this class rubbish is then still needed or if
+					 * the node hash table can be always be used.
 					 */ 
 					var topHandleId 	= Y.guid('topHandle_');
 					var bottomHandleId 	= Y.guid('bottomHandle_');
@@ -117,16 +110,26 @@
 													+ ' bottomHoriz"></div>');
 													
 					var body = Y.one('body');
-					body.appendChild(topHandle);
+					
+					connectorNodes = {
+						'topHandle':	topHandle,
+						'topHoriz':		topHoriz,
+						'vert':			vert,
+						'bottomHoriz':	bottomHoriz,
+						'bottomHandle':	bottomHandle
+					}
+					/*[topHandle,topHoriz,vert,bottomHoriz,bottomHandle]*/
+					for (var i in connectorNodes) {
+						connectorNodes[i].connectorNodes = connectorNodes;
+						body.appendChild(connectorNodes[i]);
+					}
+					
 					topHandle.setX(thl);
 					topHandle.setY(tht);
-					body.appendChild(topHoriz);
-					body.appendChild(vert);
-					body.appendChild(bottomHoriz);
-					body.appendChild(bottomHandle);
 					bottomHandle.setX(bhl);
 					bottomHandle.setY(bht);
 					
+
 					var ddTop 		= new Y.DD.Drag({node:topHandle});
 					ddTop.jd_node 	= topHandle;
 					var ddBottom 	= new Y.DD.Drag({node:bottomHandle});
