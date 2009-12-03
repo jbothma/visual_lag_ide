@@ -4,20 +4,20 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Untitled Document</title>
 		<style type="text/css">
-			.topHandle,.bottomHandle{
+			.topHandle,.botHandle{
 				border:		1px solid black;
 				width: 		5px;
 				height:		5px;
 				position:	fixed;
 				z-index:	100;
 			}
-			.topHoriz,.bottomHoriz {
+			.horiz {
 				background:	#ff0000;
 				height:		3px;
 				position:	fixed;
 				z-index:	-1;
 			}
-			.vert{
+			.topVert,.botVert{
 				background:	#ff0000;
 				width:		3px;
 				position:	fixed;
@@ -36,56 +36,62 @@
 			}).use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
 				function handleMoved(handle) {
 					// look up connector nodes
-					var topHoriz 		= handle.connectorNodes['topHoriz'];
-					var vert 			= handle.connectorNodes['vert'];
-					var bottomHoriz 	= handle.connectorNodes['bottomHoriz'];
-					var topHandle 		= handle.connectorNodes['topHandle'];
-					var bottomHandle	= handle.connectorNodes['bottomHandle'];
+					var horiz 		= handle.connectorNodes['horiz'];
+					var topVert 	= handle.connectorNodes['topVert'];
+					var botVert 	= handle.connectorNodes['botVert'];
+					var topHandle 	= handle.connectorNodes['topHandle'];
+					var botHandle	= handle.connectorNodes['botHandle'];
 					
 					/* get and calculate */
-					var topHandle_top		= topHandle.getY();
-					var topHandle_left		= topHandle.getX();
-					var bottomHandle_top	= bottomHandle.getY();
-					var bottomHandle_left	= bottomHandle.getX();
+					var topHandle_top	= topHandle.getY();
+					var topHandle_left	= topHandle.getX();
+					var botHandle_top	= botHandle.getY();
+					var botHandle_left	= botHandle.getX();
 					
-					var topOffset = 0;
-					var leftOffset = 0;
-					if (topHandle_top > bottomHandle_top) 	{ topOffset = -1 }
-					if (topHandle_left > bottomHandle_left) { leftOffset = -1 }
+					/* yes this is badly named. 
+					 * basically, top handle is seen as above, left of bottom handle
+					 * and positions need to be reversed if above assumptio is violated
+					 */
+					var topOffset 	= 0;
+					var leftOffset 	= 0;
+					if (topHandle_top > botHandle_top) 	{ topOffset = -1 }
+					if (topHandle_left > botHandle_left) { leftOffset = -1 }
 
-					/* TODO: this can prob be simplified with something like handleDelta */
-					var topHoriz_width		= Math.abs(Math.floor((topHandle_left - bottomHandle_left)/2))+3;
-					var topHoriz_top		= topHandle_top + 2;
-					var topHoriz_left		= topHandle_left + 2 + (leftOffset * (topHoriz_width-3));
+					/* TODO: this can prob be simplified with something like handleDelta 
+					 * and only really need to calculate vert height once
+					 */
+					var topVert_height	= Math.abs(Math.floor((topHandle_top - botHandle_top)/2))+3;
+					var topVert_top		= topHandle_top + 2 + (topOffset * (topVert_height - 3));
+					var topVert_left	= topHandle_left + 2;
 
-					var vert_height			= Math.abs(Math.floor(topHandle_top - bottomHandle_top))+3;
-					var vert_top			= topHoriz_top + (topOffset * (vert_height-3));
-					var vert_left			= topHoriz_left - 3 + topHoriz_width + (leftOffset * (topHoriz_width-3));
+					var horiz_width		= Math.abs(Math.floor(topHandle_left - botHandle_left))+3;
+					var horiz_top		= topVert_top -3 + topVert_height + (topOffset * (topVert_height-3));
+					var horiz_left		= topVert_left + (leftOffset * (horiz_width-3));
 
-					var bottomHoriz_width	= Math.abs(Math.floor((topHandle_left - bottomHandle_left)/2))+3;
-					var bottomHoriz_left	= vert_left + (leftOffset * (bottomHoriz_width-3));
-					var bottomHoriz_top		= vert_top - 3 + vert_height + (topOffset * (vert_height-3));
+					var botVert_height	= Math.abs(Math.floor((topHandle_top - botHandle_top)/2))+3;
+					var botVert_top		= horiz_top + (topOffset * (botVert_height - 3));
+					var botVert_left	= horiz_left -3 + horiz_width + (leftOffset * (horiz_width-3));
 
 					/* set */
-					topHoriz.setY(topHoriz_top);
-					topHoriz.setX(topHoriz_left);
-					topHoriz.setStyle('width',topHoriz_width + 'px');
+					topVert.setY(topVert_top);
+					topVert.setX(topVert_left);
+					topVert.setStyle('height',topVert_height + 'px');
 
-					vert.setY(vert_top);
-					vert.setX(vert_left);
-					vert.setStyle('height',vert_height + 'px');
+					horiz.setY(horiz_top);
+					horiz.setX(horiz_left);
+					horiz.setStyle('width',horiz_width + 'px');
 					
-					bottomHoriz.setY(bottomHoriz_top);
-					bottomHoriz.setX(bottomHoriz_left);
-					bottomHoriz.setStyle('width',bottomHoriz_width + 'px');
+					botVert.setY(botVert_top);
+					botVert.setX(botVert_left);
+					botVert.setStyle('height',botVert_height + 'px');
 				}
 				
 				/**
 				 * 
 				 * @param {int} thl left offset px of top handle
 				 * @param {int} tht	top offset px of top handle
-				 * @param {int} bhl left offset px of bottom handle
-				 * @param {int} bht top offset px of bottom handle
+				 * @param {int} bhl left offset px of bot handle
+				 * @param {int} bht top offset px of bot handle
 				 */
 				function newConnector(thl,tht,bhl,bht) {
 					/* TODONE:giving nodes references to other parts of the connector would
@@ -98,7 +104,7 @@
 					 * without being read they don't add huge overhead.
 					 */ 
 					var topHandleId 	= Y.guid('topHandle_');
-					var bottomHandleId 	= Y.guid('bottomHandle_');
+					var botHandleId 	= Y.guid('botHandle_');
 					/*
 					 * Each section of a connector has the id of the handles as a class
 					 * so all the parts can be related to their handles and thus to each other
@@ -106,22 +112,22 @@
 					var topHandle 	= Y.Node.create('<div id="' 
 													+ topHandleId
 													+ '" class="'
-													+ bottomHandleId
+													+ botHandleId
 													+ ' topHandle"></div>');
-					var bottomHandle = Y.Node.create('<div id="' 
-													 + bottomHandleId
+					var botHandle = Y.Node.create('<div id="' 
+													 + botHandleId
 													 + '" class="'
 													+ topHandleId
-													+ ' bottomHandle"></div>');
-					var topHoriz 	= Y.Node.create('<div id="" class="'
-													+ topHandleId + ' ' + bottomHandleId
-													+ ' topHoriz"></div>');
-					var vert 		= Y.Node.create('<div id="" class="'
-													+ topHandleId + ' ' + bottomHandleId
-													+ ' vert"></div>');
-					var bottomHoriz = Y.Node.create('<div id="" class="'
-													+ topHandleId + ' ' + bottomHandleId
-													+ ' bottomHoriz"></div>');
+													+ ' botHandle"></div>');
+					var topVert	 	= Y.Node.create('<div id="" class="'
+													+ topHandleId + ' ' + botHandleId
+													+ ' topVert"></div>');
+					var botVert 		= Y.Node.create('<div id="" class="'
+													+ topHandleId + ' ' + botHandleId
+													+ ' botVert"></div>');
+					var horiz 		= Y.Node.create('<div id="" class="'
+													+ topHandleId + ' ' + botHandleId
+													+ ' horiz"></div>');
 													
 					var body = Y.one('body');
 					
@@ -130,10 +136,10 @@
 					 */
 					connectorNodes = {
 						'topHandle':	topHandle,
-						'topHoriz':		topHoriz,
-						'vert':			vert,
-						'bottomHoriz':	bottomHoriz,
-						'bottomHandle':	bottomHandle
+						'horiz':		horiz,
+						'topVert':		topVert,
+						'botVert':		botVert,
+						'botHandle':	botHandle
 					}
 
 					for (var i in connectorNodes) {
@@ -145,15 +151,15 @@
 					
 					topHandle.setX(thl);
 					topHandle.setY(tht);
-					bottomHandle.setX(bhl);
-					bottomHandle.setY(bht);
+					botHandle.setX(bhl);
+					botHandle.setY(bht);
 					
 					// make handles dragable
 					var ddTop 		= new Y.DD.Drag({node:topHandle});
 					// make handle node accessible from the handle's DD
 					ddTop.jd_node 	= topHandle;
-					var ddBottom 	= new Y.DD.Drag({node:bottomHandle});
-					ddBottom.jd_node = bottomHandle;
+					var ddbot 	= new Y.DD.Drag({node:botHandle});
+					ddbot.jd_node = botHandle;
 					
 					// inserting counts as 'move' to get the lines into position
 					handleMoved(topHandle);
