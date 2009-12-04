@@ -9,21 +9,39 @@
 				width: 		5px;
 				height:		5px;
 				position:	fixed;
-				z-index:	100;
+				z-index:	200;
 			}
 			.horiz {
 				background:	#ff0000;
 				height:		3px;
 				position:	fixed;
-				z-index:	-1;
+				z-index:	100;
 			}
 			.topVert,.botVert{
 				background:	#ff0000;
 				width:		3px;
 				position:	fixed;
-				z-index:	-1;
+				z-index:	100;
 			}
-
+			.connectable {
+				border:		2px solid #2222FF;
+				background-color:	#CCCCFF;
+				width: 		300px;
+				height: 	200px;
+				position: 	absolute;
+				top:		50px;
+				left:		50px;
+				z-index:	50;
+			}
+			.connPoint {
+				border:		2px solid #22AA22;
+				position: 	absolute;
+				bottom:		-12px;
+				left:		50%;
+				width:		9px;
+				height:		9px;
+				/*z-index:	60;*/
+			}
 			
 		</style>
 		
@@ -134,7 +152,7 @@
 					/*
 					 * hash of all the nodes making up this connector
 					 */
-					connectorNodes = {
+					var connectorNodes = {
 						'topHandle':	topHandle,
 						'horiz':		horiz,
 						'topVert':		topVert,
@@ -166,20 +184,68 @@
 				}
 				
 				//Listen for all drag:drag events
-			    Y.DD.DDM.on('drag:drag', function(e) {
-			        var handle = e.target.jd_node;
-					handleMoved(handle);
-			    });
+				Y.DD.DDM.on('drag:drag', function(e) {
+					var node = e.target.jd_node;
+					handleMoved(node);
+				});
 				
 				newConnector(30,30,90,60);
 				newConnector(300,300,390,360);
+				
+				// make connection point a drop target
+				var connPoint = Y.one('#connPoint1');
+				var dt = new Y.DD.Drop({
+					node: connPoint
+				});
+				
+				//Listen for all drag:drophit events
+				Y.DD.DDM.on('drag:drophit', function(e) {
+			 		var connPoint		= e.drop.get('node'),
+						handle			= e.drag.get('node');
+						
+					/*
+					 * If a topHandle has been dropped
+					 * on a connPoint
+					 */
+					if (handle.hasClass('topHandle')) {
+						connPoint.handle 	= handle;
+						handle.connPoint 	= connPoint;
+						alert('connected');
+					}
+			    });
+				
+				//Listen for all drag:dropmiss events
+				Y.DD.DDM.on('drag:dropmiss', function(e) {
+			 		var handle = e.target.jd_node;
+					
+					/*
+					 * If a topHandle has been dropped 
+					 * outside a connPoint
+					 */
+					if (handle.hasClass('topHandle')) {
+						if (typeof(handle.connPoint) !== 'undefined') {
+							var connPoint = handle.connPoint;
+							if (typeof(connPoint.handle) !== 'undefined') {
+								connPoint.handle = null;
+							}
+						}
+						if (typeof(handle.connPoint) !== 'undefined') {
+							handle.connPoint = null
+						}
+						alert('DISconnected');
+					}
+					
+			    });
 			});
 		}
 
 		</script>
 	</head>
 	<body onload="init()">
-		<p id="svndata">$HeadURL$ $Id$</p>
-
+		<p>$HeadURL$</p>
+		<p>$Id$</p>
+		<div id="connectable" class="connectable">
+			<div class="connPoint" id="connPoint1"></div>
+		</div>
 	</body>
 </html>
