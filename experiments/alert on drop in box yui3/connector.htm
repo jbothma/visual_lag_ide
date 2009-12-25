@@ -26,8 +26,8 @@
 			.connectable {
 				border:		2px solid #2222FF;
 				background-color:	#CCCCFF;
-				width: 		300px;
-				height: 	200px;
+				width: 		60px;
+				height: 	40px;
 				position: 	absolute;
 				top:		50px;
 				left:		50px;
@@ -36,11 +36,17 @@
 			.connPoint {
 				border:		2px solid #22AA22;
 				position: 	absolute;
-				bottom:		-12px;
-				left:		50%;
 				width:		9px;
 				height:		9px;
 				/*z-index:	60;*/
+			}
+			.topConnPoint {
+				top:		-12px;
+				left:		50%;
+			}
+			.botConnPoint {
+				bottom:		-12px;
+				left:		50%;
 			}
 			
 		</style>
@@ -52,6 +58,16 @@
 			YUI({
 				filter:'min'
 			}).use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
+				
+				/*
+				 * functions that should be librarized soon
+				 */
+				
+				function isset(variable)
+				{
+				    return ( typeof(variable) == "undefined" || variable == null )?  false: true;
+				}
+
 				function handleMoved(handle) {
 					// look up connector nodes
 					var horiz 		= handle.connectorNodes['horiz'];
@@ -107,7 +123,7 @@
 				/**
 				 * 
 				 * @param {int} thl left offset px of top handle
-				 * @param {int} tht	top offset px of top handle
+				 * @param {int} tht	top off	set px of top handle
 				 * @param {int} bhl left offset px of bot handle
 				 * @param {int} bht top offset px of bot handle
 				 */
@@ -131,12 +147,12 @@
 													+ topHandleId
 													+ '" class="'
 													+ botHandleId
-													+ ' topHandle"></div>');
+													+ ' topHandle handle"></div>');
 					var botHandle = Y.Node.create('<div id="' 
 													 + botHandleId
 													 + '" class="'
 													+ topHandleId
-													+ ' botHandle"></div>');
+													+ ' botHandle handle"></div>');
 					var topVert	 	= Y.Node.create('<div id="" class="'
 													+ topHandleId + ' ' + botHandleId
 													+ ' topVert"></div>');
@@ -175,67 +191,135 @@
 					// make handles dragable
 					var ddTop 		= new Y.DD.Drag({node:topHandle});
 					// make handle node accessible from the handle's DD
-					ddTop.jd_node 	= topHandle;
-					var ddbot 	= new Y.DD.Drag({node:botHandle});
-					ddbot.jd_node = botHandle;
+					ddTop.handle 	= topHandle;
+					var ddbot 		= new Y.DD.Drag({node:botHandle});
+					ddbot.handle 	= botHandle;
 					
 					// inserting counts as 'move' to get the lines into position
 					handleMoved(topHandle);
+				} // END newConnector()
+				
+				function newConnectable() {
+					var connectableId =	Y.guid('connectable_');
+					var connectable =	Y.Node.create('<div id="' 
+											+ connectableId
+											+ '" class="connectable"></div>');
+					var topConnPoint = Y.Node.create('<div class="topConnPoint connPoint"></div>');
+					var botConnPoint = Y.Node.create('<div class="botConnPoint connPoint"></div>');
+
+					// make connection point a drop target
+					var tcpdt = new Y.DD.Drop({	node: topConnPoint });
+					tcpdt.connPoint = topConnPoint;
+					
+					bcpdt = new Y.DD.Drop({	node: botConnPoint });
+					bcpdt.connPoint = botConnPoint;
+					
+					// make connectable div dragable
+					cdd = new Y.DD.Drag({ node: connectable })
+					cdd.connectable = connectable;
+					
+					connectable.appendChild(topConnPoint);
+					connectable.appendChild(botConnPoint);
+					
+					var nodes = {
+						'connectable':	connectable,
+						'topConnPoint':	topConnPoint,
+						'botConnPoint':	botConnPoint
+					}
+
+					for (var i in nodes) {
+						// add reference to hash of node references to each node for this connector
+						nodes[i].nodes = nodes;
+					}
+					
+					
+					
+					Y.one('body').appendChild(connectable);
+				} // END newConnectable
+				
+				function connectableMoved(connectable) {
+					var topConnPoint = connectable.nodes['topConnPoint'];
+					var botConnPoint = connectable.nodes['botConnPoint'];
+					
+					if (isset(topConnPoint.handle)) {
+						topConnPoint.handle.setX(topConnPoint.getX() + 2);
+						topConnPoint.handle.setY(topConnPoint.getY() + 2);
+						
+						handleMoved(topConnPoint.handle);
+					}
+
+					if (isset(botConnPoint.handle)) {
+						botConnPoint.handle.setX(botConnPoint.getX() + 2);
+						botConnPoint.handle.setX(botConnPoint.getX() + 2);
+						
+						handleMoved(botConnPoint.handle);
+					}
 				}
+				
+			    function connectHandle(handle, connPoint) {
+						connPoint.handle = handle;
+						handle.connPoint = connPoint;
+						alert('connected');
+				}
+				
+				
+			    function disconnectHandle(handle) {
+					if (isset(handle.connPoint)) {
+						var connPoint = handle.connPoint;
+						if (isset(connPoint.handle)) {
+							connPoint.handle = null;
+						}
+						handle.connPoint = null
+					}
+					alert('DISconnected');
+				}
+				
+				/*
+				 * Add listeners
+				 */
 				
 				//Listen for all drag:drag events
 				Y.DD.DDM.on('drag:drag', function(e) {
-					var node = e.target.jd_node;
-					handleMoved(node);
-				});
-				
-				newConnector(30,30,90,60);
-				newConnector(300,300,390,360);
-				
-				// make connection point a drop target
-				var connPoint = Y.one('#connPoint1');
-				var dt = new Y.DD.Drop({
-					node: connPoint
+					var target = e.target;
+					
+					if (isset(target.handle)) {
+						var node = target.handle;
+						if (node.hasClass('handle')) {
+							handleMoved(node);
+						}
+						//TODO: break out here to skip
+						// checking for other sorts of dragables
+					}
+					
+					if (isset(target.connectable)) {
+						connectableMoved(target.connectable);
+					}
 				});
 				
 				//Listen for all drag:drophit events
 				Y.DD.DDM.on('drag:drophit', function(e) {
-			 		var connPoint		= e.drop.get('node'),
-						handle			= e.drag.get('node');
-						
-					/*
-					 * If a topHandle has been dropped
-					 * on a connPoint
-					 */
-					if (handle.hasClass('topHandle')) {
-						connPoint.handle 	= handle;
-						handle.connPoint 	= connPoint;
-						alert('connected');
+			 		var drop = e.drop.get('node'),
+						drag = e.drag.get('node');
+
+					if (drop.hasClass('connPoint') && drag.hasClass('handle')) {
+						connectHandle(drop,drag);
 					}
 			    });
 				
 				//Listen for all drag:dropmiss events
 				Y.DD.DDM.on('drag:dropmiss', function(e) {
-			 		var handle = e.target.jd_node;
-					
-					/*
-					 * If a topHandle has been dropped 
-					 * outside a connPoint
-					 */
-					if (handle.hasClass('topHandle')) {
-						if (typeof(handle.connPoint) !== 'undefined') {
-							var connPoint = handle.connPoint;
-							if (typeof(connPoint.handle) !== 'undefined') {
-								connPoint.handle = null;
-							}
-						}
-						if (typeof(handle.connPoint) !== 'undefined') {
-							handle.connPoint = null
-						}
-						alert('DISconnected');
+						//&& isset(e.target.handle)
+					if (isset(e.target.handle)) {
+						disconnectHandle(e.target.handle);
 					}
-					
 			    });
+				
+				/*
+				 * Build the page
+				 */
+				newConnector(30,30,90,60);
+				newConnector(40,50,100,80);
+				newConnectable();
 			});
 		}
 
@@ -244,8 +328,6 @@
 	<body onload="init()">
 		<p>$HeadURL$</p>
 		<p>$Id$</p>
-		<div id="connectable" class="connectable">
-			<div class="connPoint" id="connPoint1"></div>
-		</div>
+		
 	</body>
 </html>
