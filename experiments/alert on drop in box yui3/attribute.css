@@ -1,55 +1,24 @@
-.corner {
-	width:		14px;
-	height:		14px;
-}
-
-.corner_top_left {
-	background:	url(../images/curve_tl_corner_14.gif) no-repeat top left;
-	position:	absolute;
-	top:		-1px;
-	left:		-1px;
-}
-
-.corner_top_right {
-	background:	url(../images/curve_tr_corner_14.gif) no-repeat top right;
-	position:	absolute;
-	top:		-1px; 
-	right:		-1px;
-}
-
-.corner_bot_left {
-	background:	url(../images/curve_bl_corner_14.gif) no-repeat bottom left;
-	position:	absolute; 
-	bottom:		-1px; 
-	left:		-1px;
-}
-
-.corner_bot_right {
-	background:	url(../images/curve_br_corner_14.gif) no-repeat bottom right;
-	position:	absolute;
-	bottom:		-1px;
-	right:		-1px;
-}
 
 .attr_box {
 	position:	absolute;
-	left:		60px;
-	top:		60px;
 	border:		1px solid black;
-}
-
-.attr_sub_level {
-	position:	relative;
-	top:		0px;
-	left:		0px;
+	-moz-border-radius: 14px;
+	height:		57px;
 }
 
 .sub_level_container {
-	float:		right;
+	float: right;
 }
 
 .attr_box_value {
 	font-size:	1.5em;
 	margin:		14px;
-	float:		left;
+	float: left;
 }
+
+.sub_level {
+	position:	relative;
+	top:		-1px;
+	right:		-1px;
+}
+
