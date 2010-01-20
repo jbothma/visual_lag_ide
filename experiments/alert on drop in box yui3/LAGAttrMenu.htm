@@ -1,0 +1,86 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>LAGAttrMenu</title>
+		
+		<!--<link rel=StyleSheet href="attribute.css" type="text/css">-->
+		<!--<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.0.0/build/yui/yui.js"></script>-->
+		<script type="text/javascript" src="lib/yui/yui/yui-min.js"></script>
+		<!--<script type="text/javascript" src="attribute.js"></script>-->
+		<script type="text/javascript">
+
+			//	Call the "use" method, passing in "node-menunav".  This will load the 
+			//	script and CSS for the MenuNav Node Plugin and all of the required 
+			//	dependencies.
+
+			YUI().use("node-menunav", function(Y) {
+
+				//	Use the "contentready" event to initialize the menu when the subtree of 
+				//	element representing the root menu (<div id="menu-1">) is ready to 
+				//	be scripted.
+
+						Y.on("contentready", function () {
+
+					//	The scope of the callback will be a Node instance representing 
+					//	the root menu (<div id="menu-1">).  Therefore, since "this"
+					//	represents a Node instance, it is possible to just call "this.plug"
+					//	passing in a reference to the MenuNav Node Plugin.
+
+							//this.plug(Y.Plugin.NodeMenuNav);
+							this.plug(Y.Plugin.NodeMenuNav, {	autoSubmenuDisplay: false,
+																mouseOutHideDelay:	0 }); 
+
+						}, "#menu-1");
+			
+			});
+			
+			
+		</script>
+	</head>
+	<body onload="" class="yui-skin-sam">
+		<p>$HeadURL: $</p>
+		<p>$Id: $</p>
+		
+		<div id="menu-1" class="yui-menu" style="width:180px"><!-- Bounding box --> 
+			<div class="yui-menu-content"><!-- Content box --> 
+				<ul> 
+					<!-- Menu items -->
+					<li class="yui-menuitem"><!-- Bounding box -->
+						<a class="yui-menu-label" href="#GM">GM</a>
+						<div id="GM" class="yui-menu">
+							<div class="yui-menu-content"><!-- Content box --> 
+								<ul> 
+									<li class="yui-menuitem"><!-- Bounding box -->
+										<a class="yui-menu-label" href="#GM-Concept">Concept</a>
+										<div id="GM-Concept" class="yui-menu">
+											<div class="yui-menu-content"><!-- Content box --> 
+												<ul> 
+													<li class="yui-menuitem"><!-- Bounding box -->
+														<a class="yui-menuitem-content" href="javascript:alert('Create GM.Concept.label')">label</a>
+													</li>
+													<li class="yui-menuitem"><!-- Bounding box -->
+														<a class="yui-menuitem-content" href="javascript:alert('Create GM.Concept.weight')">weight</a>
+													</li>
+												</ul>
+											</div>
+										</div>
+									</li>
+								
+								</ul>
+							</div>
+						</div>
+					</li>
+
+					<li class="yui-menuitem"><!-- Bounding box -->
+						<a class="yui-menuitem-content" href="">PM</a>
+					</li>
+
+					<li class="yui-menuitem"><!-- Bounding box -->
+						<a class="yui-menuitem-content" href="">UM</a>
+					</li>
+				</ul> 
+			</div> 
+		</div> 
+	</body>
+</html>

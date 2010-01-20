@@ -1,3 +1,7 @@
+/**
+ * Library for the LAG Attribute visual item
+ */ 
+
 function init() {
 	YUI({
 		filter:'min'
