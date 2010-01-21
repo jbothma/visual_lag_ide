@@ -10,28 +10,19 @@
 		<!--<script type="text/javascript" src="attribute.js"></script>-->
 		<script type="text/javascript">
 
-			//	Call the "use" method, passing in "node-menunav".  This will load the 
-			//	script and CSS for the MenuNav Node Plugin and all of the required 
-			//	dependencies.
-
 			YUI().use("node-menunav", function(Y) {
-
-				//	Use the "contentready" event to initialize the menu when the subtree of 
-				//	element representing the root menu (<div id="menu-1">) is ready to 
-				//	be scripted.
-
-						Y.on("contentready", function () {
-
-					//	The scope of the callback will be a Node instance representing 
-					//	the root menu (<div id="menu-1">).  Therefore, since "this"
-					//	represents a Node instance, it is possible to just call "this.plug"
-					//	passing in a reference to the MenuNav Node Plugin.
-
-							//this.plug(Y.Plugin.NodeMenuNav);
-							this.plug(Y.Plugin.NodeMenuNav); 
-
-						}, "#menu-1");
-			
+				Y.on("contentready", 
+					function () {
+						this.plug(	Y.Plugin.NodeMenuNav, 
+									{	autoSubmenuDisplay:	false, 
+										mouseOutHideDelay:	0,
+										submenuHideDelay:	1000,
+										submenuShowDelay:	0,
+									}
+								); 
+					}, 
+					"#LAGAttrMenu"
+				);
 			});
 			
 			
@@ -41,21 +32,20 @@
 		<p>$HeadURL: $</p>
 		<p>$Id: $</p>
 		
-		<div id="menu-1" class="yui-menu" style="width:180px"><!-- Bounding box --> 
-			<div class="yui-menu-content"><!-- Content box --> 
+		<div id="LAGAttrMenu" class="yui-menu" style="width:180px">
+			<div class="yui-menu-content">
 				<ul> 
-					<!-- Menu items -->
-					<li class="yui-menuitem"><!-- Bounding box -->
+					<li class="yui-menuitem">
 						<a class="yui-menu-label" href="#GM">GM</a>
 						<div id="GM" class="yui-menu">
-							<div class="yui-menu-content"><!-- Content box --> 
+							<div class="yui-menu-content">
 								<ul> 
-									<li class="yui-menuitem"><!-- Bounding box -->
+									<li class="yui-menuitem">
 										<a class="yui-menu-label" href="#GM-Concept">Concept</a>
 										<div id="GM-Concept" class="yui-menu">
-											<div class="yui-menu-content"><!-- Content box --> 
+											<div class="yui-menu-content">
 												<ul> 
-													<li class="yui-menuitem"><!-- Bounding box -->
+													<li class="yui-menuitem">
 														<a class="yui-menuitem-content" href="javascript:alert('Create GM.Concept.label')">label</a>
 													</li>
 													<li class="yui-menuitem"><!-- Bounding box -->
@@ -70,31 +60,31 @@
 						</div> <!-- end GM -->
 					</li>
 
-					<li class="yui-menuitem"><!-- Bounding box -->
+					<li class="yui-menuitem">
 						<a class="yui-menu-label" href="#PM">PM</a>
 						<div id="PM" class="yui-menu">
-							<div class="yui-menu-content"><!-- Content box --> 
+							<div class="yui-menu-content">
 								<ul> 
-									<li class="yui-menuitem"><!-- Bounding box -->
+									<li class="yui-menuitem">
 										<a class="yui-menu-label" href="#PM-GM">GM</a>
 										<div id="PM-GM" class="yui-menu">
-											<div class="yui-menu-content"><!-- Content box --> 
+											<div class="yui-menu-content">
 												<ul> 
-													<li class="yui-menuitem"><!-- Bounding box -->
+													<li class="yui-menuitem">
 														<a class="yui-menu-label" href="#PM-GM-Concept">Concept</a>
 														<div id="PM-GM-Concept" class="yui-menu">
-															<div class="yui-menu-content"><!-- Content box --> 
+															<div class="yui-menu-content">
 																<ul>
-																	<li class="yui-menuitem"><!-- Bounding box -->
+																	<li class="yui-menuitem">
 																		<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">access</a>
 																	</li>
-																	<li class="yui-menuitem"><!-- Bounding box -->
+																	<li class="yui-menuitem">
 																		<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">show</a>
 																	</li>
-																	<li class="yui-menuitem"><!-- Bounding box -->
+																	<li class="yui-menuitem">
 																		<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">type</a>
 																	</li>
-																	<li class="yui-menuitem"><!-- Bounding box -->
+																	<li class="yui-menuitem">
 																		<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">visible</a>
 																	</li>
 																</ul>
@@ -119,17 +109,17 @@
 						</div> <!-- end PM -->
 					</li>
 
-					<li class="yui-menuitem"><!-- Bounding box -->
+					<li class="yui-menuitem">
 						<a class="yui-menu-label" href="#UM">UM</a>
 						<div id="UM" class="yui-menu">
-							<div class="yui-menu-content"><!-- Content box --> 
+							<div class="yui-menu-content">
 								<ul> 
-									<li class="yui-menuitem"><!-- Bounding box -->
+									<li class="yui-menuitem">
 										<a class="yui-menu-label" href="#UM-Concept">Concept</a>
 										<div id="UM-Concept" class="yui-menu">
-											<div class="yui-menu-content"><!-- Content box --> 
+											<div class="yui-menu-content">
 												<ul> 
-													<li class="yui-menuitem"><!-- Bounding box -->
+													<li class="yui-menuitem">
 														<form class="yui-menuitem-content" onsubmit="alert('user-entered-text');return false">
 															<input value="custom" type="text" style="border:1px solid black"/>
 														</form>
@@ -138,7 +128,7 @@
 											</div>
 										</div> <!-- end UM.Concept -->
 									</li>
-									<li class="yui-menuitem"><!-- Bounding box -->
+									<li class="yui-menuitem">
 										<form class="yui-menuitem-content" onsubmit="alert('user-entered-text');return false">
 											<input value="custom" type="text" style="border:1px solid black"/>
 										</form>
