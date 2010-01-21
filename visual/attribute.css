@@ -1,0 +1,24 @@
+/** CSS for attribute.htm **/
+.attr_box {
+	position:	absolute;
+	border:		1px solid black;
+	-moz-border-radius: 14px;
+	height:		57px;
+}
+
+.sub_level_container {
+	float: right;
+}
+
+.attr_box_value {
+	font-size:	1.5em;
+	margin:		14px;
+	float: left;
+}
+
+.sub_level {
+	position:	relative;
+	top:		-1px;
+	right:		-1px;
+}
+

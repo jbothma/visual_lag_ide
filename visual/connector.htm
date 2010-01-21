@@ -1,0 +1,76 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>Untitled Document</title>
+		<style type="text/css">
+			.topHandle,.botHandle{
+				border:		1px solid black;
+				width: 		5px;
+				height:		5px;
+				position:	fixed;
+				z-index:	200;
+			}
+			.horiz {
+				background:	#ff0000;
+				height:		3px;
+				position:	fixed;
+				z-index:	100;
+			}
+			.topVert,.botVert{
+				background:	#ff0000;
+				width:		3px;
+				position:	fixed;
+				z-index:	100;
+			}
+			.connectable {
+				border:		2px solid #2222FF;
+				background-color:	#CCCCFF;
+				width: 		60px;
+				height: 	40px;
+				position: 	absolute;
+				top:		50px;
+				left:		50px;
+				z-index:	50;
+			}
+			.connPoint {
+				border:		2px solid #22AA22;
+				position: 	absolute;
+				width:		9px;
+				height:		9px;
+				/*z-index:	60;*/
+			}
+			.topConnPoint {
+				top:		-12px;
+				left:		50%;
+			}
+			.botConnPoint {
+				bottom:		-12px;
+				left:		50%;
+			}
+			
+		</style>
+		
+		<!--<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.0.0/build/yui/yui.js"></script>-->
+		<script type="text/javascript" src="lib/yui/yui/yui-min.js"></script>
+		<script type="text/javascript" src="connector.js"></script>
+		<script type="text/javascript">
+
+		</script>
+	</head>
+	<body onload="init()">
+		<p>$HeadURL$</p>
+		<p>$Id$</p>
+		
+		<p>
+			In this version you can:
+			<ul>
+				<li>move boxes by clicking and dragging</li>
+				<li>connect connectors by dropping the handles (box ends of the lines) on the connection boxes of the bigger boxes</li>
+				<li>connected connector lines follow when boxes are dragged around</li>
+				<li>disconnect connectors by dropping them in open space</li>
+			</ul>
+			Redrawing the lines while moving takes a bit of CPU power but have a look at the difference in speed between the Chrome browser and Firefox or, for a laugh, Internet Explorer of any version.
+		</p>
+	</body>
+</html>

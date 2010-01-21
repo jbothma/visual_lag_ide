@@ -1,0 +1,155 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+		<title>Visual LAG Editor</title>
+		
+		
+		
+	</head>
+	<body onload="" class="yui-skin-sam">
+		<p>$HeadURL: $</p>
+		<p>$Id: $</p>
+		<div id="VE-window" style="min-height:400px;width:90%;border:1px solid black;margin:1px">
+			<div id="VE-menu-container">
+				<div id="VE-menu" class="yui-menu yui-menu-horizontal">
+					<div class="yui-menu-content">
+						<ul class="first-of-type"> 
+							<!-- Menu items -->
+							<li class="yui-menuitem">
+								<a class="yui-menuitem-content" href="javascript:alert('delete tool not implemented yet!')">delete tool</a>
+							</li>
+							<li class="yui-menuitem">
+								<a class="yui-menu-label" href="#LAG-Attr-Menu">
+									<img src="images/LAGAttrIcon.gif" alt="LAG Attribute" style="vertical-align:middle";border-width:0px;>
+								</a>
+								<div id="LAG-Attr-Menu" class="yui-menu">
+									<div class="yui-menu-content">
+										<ul> 
+											<li>
+												<a class="yui-menu-label" href="#GM">GM</a>
+												<div id="GM" class="yui-menu">
+													<div class="yui-menu-content">
+														<ul> 
+															<li>
+																<a class="yui-menu-label" href="#GM-Concept">Concept</a>
+																<div id="GM-Concept" class="yui-menu">
+																	<div class="yui-menu-content">
+																		<ul> 
+																			<li class="yui-menuitem">
+																				<a class="yui-menuitem-content" href="javascript:alert('Create GM.Concept.label')">label</a>
+																			</li>
+																			<li class="yui-menuitem"><!-- Bounding box -->
+																				<a class="yui-menuitem-content" href="javascript:alert('Create GM.Concept.weight')">weight</a>
+																			</li>
+																		</ul>
+																	</div>
+																</div> <!-- end GM.Concept -->
+															</li>
+														</ul>
+													</div>
+												</div> <!-- end GM -->
+											</li>
+
+											<li>
+												<a class="yui-menu-label" href="#PM">PM</a>
+												<div id="PM" class="yui-menu">
+													<div class="yui-menu-content">
+														<ul> 
+															<li>
+																<a class="yui-menu-label" href="#PM-GM">GM</a>
+																<div id="PM-GM" class="yui-menu">
+																	<div class="yui-menu-content">
+																		<ul> 
+																			<li>
+																				<a class="yui-menu-label" href="#PM-GM-Concept">Concept</a>
+																				<div id="PM-GM-Concept" class="yui-menu">
+																					<div class="yui-menu-content">
+																						<ul>
+																							<li class="yui-menuitem">
+																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">access</a>
+																							</li>
+																							<li class="yui-menuitem">
+																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">show</a>
+																							</li>
+																							<li class="yui-menuitem">
+																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">type</a>
+																							</li>
+																							<li class="yui-menuitem">
+																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">visible</a>
+																							</li>
+																						</ul>
+																					</div>
+																				</div> <!-- end PM.GM.Concept -->
+																			</li>
+																		</ul>
+																	</div>
+																</div> <!-- end PM.GM -->
+															</li>
+															<li>
+																<a class="yui-menuitem-content" href="javascript:alert('Create PM.menu')">menu</a>
+															</li>
+															<li>
+																<a class="yui-menuitem-content" href="javascript:alert('Create PM.next')">next</a>
+															</li>
+															<li>
+																<a class="yui-menuitem-content" href="javascript:alert('Create PM.ToDo')">ToDo</a>
+															</li>
+														</ul>
+													</div>
+												</div> <!-- end PM -->
+											</li>
+
+											<li>
+												<a class="yui-menu-label" href="#UM">UM</a>
+												<div id="UM" class="yui-menu">
+													<div class="yui-menu-content">
+														<ul> 
+															<li>
+																<a class="yui-menu-label" href="#UM-Concept">Concept</a>
+																<div id="UM-Concept" class="yui-menu">
+																	<div class="yui-menu-content">
+																		<ul> 
+																			<li class="yui-menuitem">
+																				<form action="#" class="yui-menuitem-content" onsubmit="alert('Create '+document.getElementById('UM-custom').value);return false">
+																					<div><input value="custom" type="text" style="border:1px solid black" ></div>
+																				</form>
+																			</li>
+																		</ul>
+																	</div>
+																</div> <!-- end UM.Concept -->
+															</li>
+															<li class="yui-menuitem">
+																<form action="#" class="yui-menuitem-content" onsubmit="alert('Create '+document.getElementById('UM-custom').value);return false">
+																	<div><input id="UM-custom" value="custom" type="text" style="border:1px solid black" ></div>
+																</form>
+															</li>
+														</ul>
+													</div>
+												</div> <!-- end UM -->
+											</li>
+										</ul> 
+									</div> 
+								</div> <!-- end LAG-attr-menu -->
+							</li>
+							<li class="yui-menuitem">
+								<a class="yui-menuitem-content" href="javascript:insertConnector()">insert connector</a>
+							</li>
+						</ul>
+					</div>
+				</div> <!-- end VE-menu -->
+			</div> <!-- end VE-menu-container -->
+			
+		</div> <!-- end VE-window -->
+		
+		<script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui.js"></script>
+		<script type="text/javascript">
+
+			YUI({combine: true, timeout: 10000}).use("node-menunav", function(Y) {
+				var menu = Y.one("#VE-menu");
+				menu.plug(Y.Plugin.NodeMenuNav, {autoSubmenuDisplay:false});
+			});
+			
+		</script>
+	</body>
+</html>
