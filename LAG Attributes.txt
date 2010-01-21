@@ -1,17 +1,31 @@
 
 GM.Concept.label
+
 GM.Concept.weight
+
+
 
 PM.DM.Concept.Relatedness.Concept.show
 
+
 PM.GM.Concept.type
+
 PM.GM.Concept.show
+
 PM.GM.Concept.access
+
 PM.GM.Concept.visited
 
+
+
 PM.menu
+
 PM.next
+
 PM.ToDo
 
+
+
 UM.GM.Concept."text"
+
 UM.GM."text"
