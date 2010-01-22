@@ -7,11 +7,6 @@ function init() {
 		 * functions that should be librarized soon
 		 */
 		
-		function isset(variable)
-		{
-		    return ( typeof(variable) == "undefined" || variable == null )?  false: true;
-		}
-		
 		function handleMoved(handle) {
 			// look up connector nodes
 			var horiz 		= handle.connectorNodes['horiz'];

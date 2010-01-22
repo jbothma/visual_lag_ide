@@ -1,16 +1,20 @@
 /**
-* Library for the LAG Attribute visual item
-*/ 
+ *	LAGVEAttr
+ *
+ *	Library for the LAG Visual Editor Attribute item
+ */ 
 
+var LAGVEAttr = new Object();
+LAGVEAttr.scriptName = 'attribute.js';
 
 YUI({
 	filter:'min'
-}).use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
+}).use('dd-drag','node','event', function (Y) {
 
 	/**
 	 *
 	 */
-	function newAttrLevel(levelValue, isRoot, sublevel) {
+	LAGVEAttr.newAttrLevel = function(levelValue, isRoot, sublevel) {
 		var attrBox = Y.Node.create('<div class="attr_box"></div>');
 		var attrBoxValue = Y.Node.create('<div class="attr_box_value">' + levelValue + '</div>');
 		var subLevelContainer = Y.Node.create('<div class="sub_level_container"></div>');
@@ -30,24 +34,30 @@ YUI({
 			attrBox.addSubLevel(sublevel);
 		}
 		
-		if (isset(isRoot) && isRoot) {
-			new Y.DD.Drag({node: attrBox});
-		}
-		
 		return attrBox;
 	}
 	
-	Y.one('body').append(newAttrLevel('PM',true,newAttrLevel('Concept',false,newAttrLevel('visible'))));
 
-	function newLAGAttr(levels) {
-		rootAttrLevel = newAttrLevel(levels[0],true);
+	/**
+	 *	insertNewAttr(['PM','GM','accessed'],'visual-editing-workspace')
+	 *  would append PM.GM.accessed to the element 
+	 *	with id visual-editing-workspace
+	 */
+	LAGVEAttr.insertNewAttr = function(levels,targetId) {
+		var lowestAttrLevel;
 		
-		for (var i = 1; i < levels.length; i++) {
-			
-			
-			newAttrLevel(levels[i]);
+		/*	create attribute levels in reverse
+		 *	e.g. for PM.GM.visible
+		 *	make visible, then make GM and insert visible to it, 
+		 *	then make PM and insert GM.visible into it. */
+		for (var i = levels.length-1; i >= 0; i--) {
+			lowestAttrLevel = LAGVEAttr.newAttrLevel(levels[i],false,lowestAttrLevel);
 		}
-	}
 		
+		// make the root attribute level box dragable
+		new Y.DD.Drag({node: lowestAttrLevel});
+		
+		// append to the node found by CSS id #targetId
+		Y.one('#' + targetId).append(lowestAttrLevel);
+	}
 });
-
