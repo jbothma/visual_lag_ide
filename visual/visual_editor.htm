@@ -3,7 +3,11 @@
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>Visual LAG Editor</title>
-		
+
+		<link rel=StyleSheet href="attribute.css" type="text/css">
+
+		<script type="text/javascript" src="utility.js"></script>
+		<script type="text/javascript" src="attribute.js"></script>		
 		
 		
 	</head>
@@ -37,10 +41,10 @@
 																	<div class="yui-menu-content">
 																		<ul> 
 																			<li class="yui-menuitem">
-																				<a class="yui-menuitem-content" href="javascript:alert('Create GM.Concept.label')">label</a>
+																				<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['GM','Concept','label'],'VE-workspace')">label</a>
 																			</li>
 																			<li class="yui-menuitem"><!-- Bounding box -->
-																				<a class="yui-menuitem-content" href="javascript:alert('Create GM.Concept.weight')">weight</a>
+																				<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['GM','Concept','weight'],'VE-workspace')">weight</a>
 																			</li>
 																		</ul>
 																	</div>
@@ -67,16 +71,16 @@
 																					<div class="yui-menu-content">
 																						<ul>
 																							<li class="yui-menuitem">
-																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">access</a>
+																								<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['PM','GM','Concept','access'],'VE-workspace')">access</a>
 																							</li>
 																							<li class="yui-menuitem">
-																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">show</a>
+																								<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['PM','GM','Concept','show'],'VE-workspace')">show</a>
 																							</li>
 																							<li class="yui-menuitem">
-																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">type</a>
+																								<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['PM','GM','Concept','type'],'VE-workspace')">type</a>
 																							</li>
 																							<li class="yui-menuitem">
-																								<a class="yui-menuitem-content" href="javascript:alert('Create PM.GM.Concept.show')">visible</a>
+																								<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['PM','GM','Concept','visible'],'VE-workspace')">visible</a>
 																							</li>
 																						</ul>
 																					</div>
@@ -87,13 +91,13 @@
 																</div> <!-- end PM.GM -->
 															</li>
 															<li>
-																<a class="yui-menuitem-content" href="javascript:alert('Create PM.menu')">menu</a>
+																<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['PM','menu'],'VE-workspace')">menu</a>
 															</li>
 															<li>
-																<a class="yui-menuitem-content" href="javascript:alert('Create PM.next')">next</a>
+																<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['PM','next'],'VE-workspace')">next</a>
 															</li>
 															<li>
-																<a class="yui-menuitem-content" href="javascript:alert('Create PM.ToDo')">ToDo</a>
+																<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['PM','ToDo'],'VE-workspace')">ToDo</a>
 															</li>
 														</ul>
 													</div>
@@ -111,8 +115,12 @@
 																	<div class="yui-menu-content">
 																		<ul> 
 																			<li class="yui-menuitem">
-																				<form action="#" class="yui-menuitem-content" onsubmit="alert('Create '+document.getElementById('UM-custom').value);return false">
-																					<div><input value="custom" type="text" style="border:1px solid black" ></div>
+																				<form 
+																					action="#" 
+																					class="yui-menuitem-content" 
+																					onsubmit="LAGVEAttr.insertNewAttr(['UM','Concept',document.getElementById('UM-Concept-custom').value],'VE-workspace');return false"
+																				>
+																					<div><input id="UM-Concept-custom" value="custom" type="text" style="border:1px solid black" ></div>
 																				</form>
 																			</li>
 																		</ul>
@@ -120,7 +128,11 @@
 																</div> <!-- end UM.Concept -->
 															</li>
 															<li class="yui-menuitem">
-																<form action="#" class="yui-menuitem-content" onsubmit="alert('Create '+document.getElementById('UM-custom').value);return false">
+																<form
+																	action="#" 
+																	class="yui-menuitem-content" 
+																	onsubmit="LAGVEAttr.insertNewAttr(['UM',document.getElementById('UM-custom').value],'VE-workspace');return false"
+																>
 																	<div><input id="UM-custom" value="custom" type="text" style="border:1px solid black" ></div>
 																</form>
 															</li>
@@ -139,7 +151,8 @@
 					</div>
 				</div> <!-- end VE-menu -->
 			</div> <!-- end VE-menu-container -->
-			
+			<div id="VE-workspace" style="min-height:368px;border:1px solid black">
+			</div>
 		</div> <!-- end VE-window -->
 		
 		<!--<script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui.js"></script>-->
