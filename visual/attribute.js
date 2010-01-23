@@ -9,7 +9,7 @@ LAGVEAttr.scriptName = 'attribute.js';
 
 YUI({
 	filter:'min'
-}).use('dd-drag','node','event', function (Y) {
+}).use('dd-constrain','node','event', function (Y) {
 
 	/**
 	 *
@@ -55,7 +55,8 @@ YUI({
 		}
 		
 		// make the root attribute level box dragable
-		new Y.DD.Drag({node: lowestAttrLevel});
+		new Y.DD.Drag({node: lowestAttrLevel}).plug(	Y.Plugin.DDConstrained, 
+														{ constrain2node: '#' + targetId});
 		
 		// append to the node found by CSS id #targetId
 		Y.one('#' + targetId).append(lowestAttrLevel);
