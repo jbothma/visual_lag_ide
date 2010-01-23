@@ -6,6 +6,7 @@
 
 		<link rel=StyleSheet href="attribute.css" type="text/css">
 		<link rel=StyleSheet href="connector.css" type="text/css">
+		<link rel=StyleSheet href="visual_editor.css" type="text/css">
 
 		<script type="text/javascript" src="lib/yui/yui/yui-min.js"></script>
 
@@ -13,12 +14,11 @@
 		<script type="text/javascript" src="attribute.js"></script>		
 		<script type="text/javascript" src="connector.js"></script>	
 		
-		
 	</head>
 	<body onload="" class="yui-skin-sam">
 		<p>$HeadURL: $</p>
 		<p>$Id: $</p>
-		<div id="VE-window" style="min-height:400px;width:90%;border:1px solid black;margin:1px">
+		<div id="VE-window">
 			<div id="VE-menu-container">
 				<div id="VE-menu" class="yui-menu yui-menu-horizontal">
 					<div class="yui-menu-content">
@@ -29,7 +29,7 @@
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menu-label" href="#LAG-Attr-Menu">
-									<img src="images/LAGAttrIcon.gif" alt="LAG Attribute" style="vertical-align:middle;border-width:0px;">
+									<img class="menu-button-img" src="images/LAGAttrIcon.gif" alt="LAG Attribute">
 								</a>
 								<div id="LAG-Attr-Menu" class="yui-menu">
 									<div class="yui-menu-content">
@@ -124,7 +124,7 @@
 																					class="yui-menuitem-content" 
 																					onsubmit="LAGVEAttr.insertNewAttr(['UM','Concept',document.getElementById('UM-Concept-custom').value],'VE-workspace');return false"
 																				>
-																					<div><input id="UM-Concept-custom" value="custom" type="text" style="border:1px solid black" ></div>
+																					<div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text"></div>
 																				</form>
 																			</li>
 																		</ul>
@@ -137,7 +137,7 @@
 																	class="yui-menuitem-content" 
 																	onsubmit="LAGVEAttr.insertNewAttr(['UM',document.getElementById('UM-custom').value],'VE-workspace');return false"
 																>
-																	<div><input id="UM-custom" value="custom" type="text" style="border:1px solid black" ></div>
+																	<div><input id="UM-custom" class="menu-form-input" value="custom" type="text"></div>
 																</form>
 															</li>
 														</ul>
@@ -161,7 +161,7 @@
 					</div>
 				</div> <!-- end VE-menu -->
 			</div> <!-- end VE-menu-container -->
-			<div id="VE-workspace" style="position:relative;min-height:368px;border:1px solid black">
+			<div id="VE-workspace">
 			</div>
 		</div> <!-- end VE-window -->
 		
@@ -180,14 +180,12 @@
 			
 		</script>
 		
-		<div id="VE-help" style="position:fixed;top:20px;left:20px;width:70%;height:400px;border:1px solid black;background-color:white;visibility:hidden">
-			<div id="VE-help-titlebar" style="height:21px;border:1px solid black;background-color:#AAA;float:left">
+		<div id="VE-help">
+			<div id="VE-help-titlebar">
 				Visual LAG Editor Help (<a href="help.htm" target="_blank" onclick="hideHelp()">new window</a>)
 			</div>
-			<div	id="VE-help-closeBtn" 
-					onclick="hideHelp()" 
-					style="width:21px;height:21px;position:absolute;top:0px;right:0px;border:1px solid black;text-align:center">X</div>
-			<iframe src="help.htm" style="position:absolute;top:23px;width:100%;height:377px;border-width:0px;clear:both;left:0px;">
+			<div id="VE-help-closeBtn" onclick="hideHelp()">X</div>
+			<iframe id="VE-help-iframe" src="help.htm">
 		</div>
 	</body>
 </html>

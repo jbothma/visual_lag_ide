@@ -198,6 +198,8 @@ YUI({
 		
 		
 		targetNode.appendChild(connectable);
+		
+		return connectable;
 	} // END newConnectable
 	
 	function connectableMoved(connectable) {
