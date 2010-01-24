@@ -6,10 +6,7 @@
 LAGVECon = new Object();
 LAGVECon.scriptName = 'connector.js';
 
-
-YUI({
-	filter:'min'
-}).use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
+getMyY().use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
 	
 	/*
 	 * functions that should be librarized soon
@@ -276,7 +273,6 @@ YUI({
 	
 	//Listen for all drag:dropmiss events
 	Y.DD.DDM.on('drag:dropmiss', function(e) {
-			//&& isset(e.target.handle)
 		if (isset(e.target.handle)) {
 			disconnectHandle(e.target.handle);
 		}

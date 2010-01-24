@@ -7,9 +7,7 @@
 var LAGVEAttr = new Object();
 LAGVEAttr.scriptName = 'attribute.js';
 
-YUI({
-	filter:'min'
-}).use('dd-constrain','node','event', function (Y) {
+getMyY().use('dd-constrain','node','event', function (Y) {
 
 	/**
 	 *

@@ -9,7 +9,7 @@
 				top:		0px;
 				left:		0px;
 				width:		500px;
-				height:		500px;
+				height:		200px;
 				border:		1px solid black;
 			}
 			.action-container {
@@ -21,6 +21,8 @@
 				float:		left;
 			}
 			.action-attribute-container {
+				width:300px;
+				height:80px;
 			}
 			.action-operator-container {
 			}
@@ -31,20 +33,27 @@
 			}
 		</style>
 		<link href="connector.css" rel="stylesheet" type="text/css">
+		<link href="attribute.css" rel="stylesheet" type="text/css">
 
 		<script type="text/javascript" src="lib/yui/yui/yui-min.js"></script>
 
 		<script type="text/javascript" src="utility.js"></script>
 		<script type="text/javascript" src="connector.js"></script>
+		<script type="text/javascript" src="attribute.js"></script>
 		
 		<script type="text/javascript">
 			LAGVEActn = new Object();
 			LAGVEActn.scriptName = 'action.html';
 			
-			YUI({
-				filter:'min'
-			}).use('node','event', function (Y) {
-	
+			getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
+				
+
+				//Listen for all drag:drophit events
+				Y.DD.DDM.on('drag:drophit', function(e) {
+					alert('I\'m hit!');
+				});
+				
+				
 				LAGVEActn.newAction = function(targetId) {
 					var action = LAGVECon.newConnectable('workspace');
 					
@@ -52,19 +61,25 @@
 					var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-container"></div>' );
 					var valueContainer 		= Y.Node.create( '<div class="action-value-container action-container">v</div>' );
 					
+					var attributeContainerDT = new Y.DD.Drop({ node: attributeContainer });
+					
+					
+			
 					/**
 					 * Given a Node, attributeContainer will receive it as a child
 					 */
-					attributeContainer.catchAttribute = function(attribute) {
-						this.append(attribute);
+					attributeContainer.catch = function(e) {
+						
+						var x = 1;
+						//this.append(attribute);
 					}
 					
-					var operatorSelect =  Y.Node.create('<select class="operator-select">' +
-														'<option value="=">=</option>' +
-														'<option value="+=">+=</option>' +
-														'<option value="-=">-=</option>' +
-														'<option value=".=">.=</option>' +
-														'</select>');
+					var operatorSelect =  Y.Node.create( '<select class="operator-select">' +
+														 '<option value="=">=</option>' +
+														 '<option value="+=">+=</option>' +
+														 '<option value="-=">-=</option>' +
+														 '<option value=".=">.=</option>' +
+														 '</select>');
 					operatorContainer.append(operatorSelect);
 					
 					action.append(attributeContainer);
@@ -78,6 +93,8 @@
 		<p>$HeadURL: https://visuallagide.svn.sourceforge.net/svnroot/visuallagide/visual/connector.htm $</p>
 		<p>$Id: connector.htm 43 2010-01-22 19:16:48Z jbothma $</p>
 		<p><a href="#" onclick="LAGVEActn.newAction('worspace')">New ACTION</a></p>
+		<p><a href="#" onclick="LAGVEAttr.insertNewAttr(['PM','GM','accessed'],'workspace')">PM.GM.accessed</a></p>
+
 		<div id="workspace"></div>
 		
 	</body>
