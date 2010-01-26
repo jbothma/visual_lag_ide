@@ -1,5 +1,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
 <html>
+	<!--
+		$HeadURL: $
+		$Id: $
+	-->
 	<head>
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>Visual LAG Editor</title>
@@ -15,17 +19,9 @@
 		<script type="text/javascript" src="attribute.js"></script>		
 		<script type="text/javascript" src="connector.js"></script>
 		<script type="text/javascript" src="action.js"></script>
-	
-		<style type="text/css">
-			.yui-menu-label {
-				z-index:	500;
-			}
-		</style>
-		
+
 	</head>
 	<body onload="" class="yui-skin-sam">
-		<p>$HeadURL: $</p>
-		<p>$Id: $</p>
 		<div id="VE-window">
 			<div id="VE-menu-container">
 				<div id="VE-menu" class="yui-menu yui-menu-horizontal">
@@ -33,7 +29,7 @@
 						<ul class="first-of-type"> 
 							<!-- Menu items -->
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="javascript:alert('delete tool not implemented yet!')">delete tool</a>
+								<a class="yui-menuitem-content" href="javascript:alert('Delete not yet implemented.\nPlease refresh page to clear contents.')">delete tool</a>
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menu-label" href="#LAG-Attr-Menu">
@@ -43,12 +39,12 @@
 									<div class="yui-menu-content">
 										<ul> 
 											<li>
-												<a class="yui-menu-label" href="#GM">GM</a>
+												<a class="yui-menu-label" href="#GM"><em>GM</em></a>
 												<div id="GM" class="yui-menu">
 													<div class="yui-menu-content">
 														<ul> 
 															<li>
-																<a class="yui-menu-label" href="#GM-Concept">Concept</a>
+																<a class="yui-menu-label" href="#GM-Concept"><em>Concept</em></a>
 																<div id="GM-Concept" class="yui-menu">
 																	<div class="yui-menu-content">
 																		<ul> 
@@ -68,17 +64,17 @@
 											</li>
 
 											<li>
-												<a class="yui-menu-label" href="#PM">PM</a>
+												<a class="yui-menu-label" href="#PM"><em>PM</em></a>
 												<div id="PM" class="yui-menu">
 													<div class="yui-menu-content">
 														<ul> 
 															<li>
-																<a class="yui-menu-label" href="#PM-GM">GM</a>
+																<a class="yui-menu-label" href="#PM-GM"><em>GM</em></a>
 																<div id="PM-GM" class="yui-menu">
 																	<div class="yui-menu-content">
 																		<ul> 
 																			<li>
-																				<a class="yui-menu-label" href="#PM-GM-Concept">Concept</a>
+																				<a class="yui-menu-label" href="#PM-GM-Concept"><em>Concept</em></a>
 																				<div id="PM-GM-Concept" class="yui-menu">
 																					<div class="yui-menu-content">
 																						<ul>
@@ -117,12 +113,12 @@
 											</li>
 
 											<li>
-												<a class="yui-menu-label" href="#UM">UM</a>
+												<a class="yui-menu-label" href="#UM"><em>UM</em></a>
 												<div id="UM" class="yui-menu">
 													<div class="yui-menu-content">
 														<ul> 
 															<li>
-																<a class="yui-menu-label" href="#UM-Concept">Concept</a>
+																<a class="yui-menu-label" href="#UM-Concept"><em>Concept</em></a>
 																<div id="UM-Concept" class="yui-menu">
 																	<div class="yui-menu-content">
 																		<ul> 
@@ -152,6 +148,12 @@
 													</div>
 												</div> <!-- end UM -->
 											</li>
+											<li>
+												<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['true'],'VE-workspace')">true</a>
+											</li>
+											<li>
+												<a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.insertNewAttr(['false'],'VE-workspace')">false</a>
+											</li>
 											<li class="yui-menuitem">
 												<form
 													action="#" 
@@ -175,7 +177,7 @@
 								<a class="yui-menuitem-content" href="#" onclick="LAGVEActn.newAction('VE-workspace')">Action</a>
 							</li>
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="showHelp()"><em>Help</em></a>
+								<a class="yui-menuitem-content" href="#" onclick="showHelp()">Help</a>
 							</li>
 						</ul>
 					</div>

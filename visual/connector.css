@@ -3,19 +3,19 @@
 	width: 		5px;
 	height:		5px;
 	position:	absolute;
-	z-index:	200;
+	z-index:	1;
 }
 .horiz {
 	background:	#ff0000;
 	height:		3px;
 	position:	absolute;
-	z-index:	100;
+	/*z-index:	100;*/
 }
 .topVert,.botVert{
 	background:	#ff0000;
 	width:		3px;
 	position:	absolute;
-	z-index:	100;
+	/*z-index:	100;*/
 }
 .connectable {
 	border:		2px solid #2222FF;
@@ -25,7 +25,7 @@
 	position: 	absolute;
 	top:		50px;
 	left:		50px;
-	z-index:	50;
+	/*z-index:	50;*/
 }
 .connPoint {
 	border:		2px solid #22AA22;

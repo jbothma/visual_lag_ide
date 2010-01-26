@@ -15,6 +15,8 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 	LAGVEActn.newAction = function(targetId) {
 		var action = LAGVECon.newConnectable(targetId);
 		
+		action.addClass('action');
+		
 		var attributeContainer	= Y.Node.create( '<div class="action-attribute-container action-child-container"></div>' );
 		var valueContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container"></div>' );
 		var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-child-container"></div>' );
