@@ -13,27 +13,27 @@ YUI({
 	 * dropAction implementation left to subclass implementation
 	 */
 	var DropReceiver = function() {
-// container DIV for whatever this is goin to represent
-this.node = Y.Node.create('<div class="dropReceiver"></div>');
-// Get this container object from its node
-this.node.owner = this;
-		
-		
-		
-// Givs this a DT to let it catch drops
-this.dt	= new Y.DD.Drop({node: this.node});
-// Get this container object from its dt
-this.dt.owner = this;
-						
-overAction = function(e) {
-	this.owner.node.addClass('dragOver');
-};
-exitAction = function(e) {
-	this.owner.node.removeClass('dragOver');
-};
+		// container DIV for whatever this is goin to represent
+		this.node = Y.Node.create('<div class="dropReceiver"></div>');
+		// Get this container object from its node
+		this.node.owner = this;
+				
+				
+				
+		// Givs this a DT to let it catch drops
+		this.dt	= new Y.DD.Drop({node: this.node});
+		// Get this container object from its dt
+		this.dt.owner = this;
+								
+		overAction = function(e) {
+			this.owner.node.addClass('dragOver');
+		};
+		exitAction = function(e) {
+			this.owner.node.removeClass('dragOver');
+		};
 
-this.dt.on('drop:over', overAction);
-this.dt.on('drop:exit', exitAction);
+		this.dt.on('drop:over', overAction);
+		this.dt.on('drop:exit', exitAction);
 
 		/**
 		 * Put the node in the given parent
