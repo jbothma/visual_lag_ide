@@ -224,6 +224,7 @@ getMyY().use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
 	function connectHandle(handle, connPoint) {
 			connPoint.handle = handle;
 			handle.connPoint = connPoint;
+			connPoint.removeClass('can-connect');
 			//alert('connected');
 	}
 	
@@ -275,6 +276,18 @@ getMyY().use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
 	Y.DD.DDM.on('drag:dropmiss', function(e) {
 		if (isset(e.target.handle)) {
 			disconnectHandle(e.target.handle);
+		}
+	});
+	
+	Y.DD.DDM.on('drag:over', function(e) {
+		if (isset(e.drag.handle) && isset(e.drop.connPoint)) {
+			e.drop.connPoint.addClass('can-connect');
+		}
+	});
+	
+	Y.DD.DDM.on('drag:exit', function(e) {
+		if (isset(e.target.handle) && isset(e.drop.connPoint)) {
+			e.drop.connPoint.removeClass('can-connect');
 		}
 	});
 });
