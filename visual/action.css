@@ -1,4 +1,4 @@
-.child-of-action {
+.action-child {
 	position:	relative;
 	top:		0px;
 	left:		0px;
@@ -7,11 +7,11 @@
 	position:	relative;
 	top:		0px;
 	left:		0px;
-	width:		500px;
+	width:		700px;
 	height:		200px;
 	border:		1px solid black;
 }
-.action-container {
+.action-child-container {
 	min-width:	20px;
 	min-height:	20px;
 	border:		1px solid black;
@@ -24,6 +24,8 @@
 	min-height:		50px;
 }
 .action-operator-container {
+	position:	relative;
+	top:		16px;	// we know the height of of attributes so we know what height to expect an action block to be.
 }
 .action-value-container {
 }

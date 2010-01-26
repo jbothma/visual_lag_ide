@@ -7,12 +7,20 @@
 		<link rel=StyleSheet href="attribute.css" type="text/css">
 		<link rel=StyleSheet href="connector.css" type="text/css">
 		<link rel=StyleSheet href="visual_editor.css" type="text/css">
+		<link rel=StyleSheet href="action.css" type="text/css">
 
 		<script type="text/javascript" src="lib/yui/yui/yui-min.js"></script>
 
 		<script type="text/javascript" src="utility.js"></script>
 		<script type="text/javascript" src="attribute.js"></script>		
-		<script type="text/javascript" src="connector.js"></script>	
+		<script type="text/javascript" src="connector.js"></script>
+		<script type="text/javascript" src="action.js"></script>
+	
+		<style type="text/css">
+			.yui-menu-label {
+				z-index:	500;
+			}
+		</style>
 		
 	</head>
 	<body onload="" class="yui-skin-sam">
@@ -144,6 +152,15 @@
 													</div>
 												</div> <!-- end UM -->
 											</li>
+											<li class="yui-menuitem">
+												<form
+													action="#" 
+													class="yui-menuitem-content" 
+													onsubmit="LAGVEAttr.insertNewAttr([document.getElementById('custom').value],'VE-workspace');return false"
+												>
+													<div><input id="custom" class="menu-form-input" value="value" type="text"></div>
+												</form>
+											</li>
 										</ul> 
 									</div> 
 								</div> <!-- end LAG-attr-menu -->
@@ -153,6 +170,9 @@
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="LAGVECon.newConnectable('VE-workspace')">Connectable</a>
+							</li>
+							<li class="yui-menuitem">
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEActn.newAction('VE-workspace')">Action</a>
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="showHelp()"><em>Help</em></a>

@@ -1,5 +1,6 @@
 /** CSS for attribute.htm **/
 .attr_box {
+	background-color:	white;
 	position:	absolute;
 	border:		1px solid black;
 	-moz-border-radius: 14px;
