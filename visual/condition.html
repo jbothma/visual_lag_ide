@@ -7,24 +7,29 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" ></meta>
 		<title>Untitled Document</title>
 		<style type="text/css">
-			#internal-paragraph {
-				position: relative;
-			}
-			#container-div {
-				border: 	1px black;
-				min-width: 	200px;
-				height: 	60px;
-				position: 	absolute;
-				text-align:	center;
-				vertical-align:	center;
+			.condition {
+				min-width: 		200px;
+				height: 		90px;
+				position: 		absolute;
 				padding-left:	20px;
 				padding-right:	20px;
+				text-align:		center;
 			}
-			#diamond-image {
+			.condition-content {
+				position: 	relative;
+				top:		11px;	
+				height:		59px;
+				border:		1px dashed #AAA;
+				text-size:	1.5em
+			}
+			.condition-diamond-image {
 				position:	absolute;
 				left:		0px;
 				width:		100%;
 				height:		100%;
+			}
+			.condition-AND {
+				line-height:	57px;
 			}
 		</style>
 		<script type="text/javascript">
@@ -40,11 +45,11 @@
 			
 			<button onclick="updateText()">blah</button>
 		</p>
-		<div id="container-div">
-			<img alt="id-diamond" id="diamond-image" src="if-diamond.PNG" ></img>
-			<p id="internal-paragraph">
-				hello world
-			</p>
+		<div class="condition">
+			<img alt="condition-diamond" class="condition-diamond-image" src="if-diamond.PNG" ></img>
+			<div class="condition-content">
+				<div class="condition-AND" style="text-">AND</div>
+			</div>
 		</div>
 	</body>
 </html>
