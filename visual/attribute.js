@@ -53,10 +53,16 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 		}
 		
 		// make the root attribute level box dragable
-		var attributeDD = new Y.DD.Drag({node: lowestAttrLevel}).plug(	Y.Plugin.DDConstrained, 
-																		{ constrain2node: '#' + targetId});
+		var attributeDD = new Y.DD.Drag({	node:	lowestAttrLevel,
+											groups:	['attribute'] });
+		
+		//constrain attributes to their initial target for now.
+		//TODO: should prob be a sparate parameter once attributes 
+		//can be inserted in context.
+		attributeDD.plug(	Y.Plugin.DDConstrained,
+							{ constrain2node: '#' + targetId } );
 																		
-		attributeDD.attribute = lowestAttrLevel;
+		attributeDD.node = lowestAttrLevel;
 		
 		// append to the node found by CSS id #targetId
 		Y.one('#' + targetId).append(lowestAttrLevel);

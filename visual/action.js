@@ -13,19 +13,20 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 	
 	
 	LAGVEActn.newAction = function(targetId) {
-		var action = LAGVECon.newConnectable(targetId);
+		var action 				= Y.Node.create( '<div class="action"></div>' );
 		
-		action.addClass('action');
+		var attributeContainer	= Y.Node.create( '<div class="action-attribute-container action-child-container" title="Drop an attribute here."></div>' );
+		var valueContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container" title="Drop an attribute or value here."></div>' );
+		var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-child-container" title="Select an operator from the list."></div>' );
 		
-		var attributeContainer	= Y.Node.create( '<div class="action-attribute-container action-child-container"></div>' );
-		var valueContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container"></div>' );
-		var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-child-container"></div>' );
+		var attributeContainerDT	= new Y.DD.Drop({	node:	attributeContainer,
+														groups:	['attribute'] });
 		
-		var attributeContainerDT	= new Y.DD.Drop({ node: attributeContainer });
-		var valueContainerDT 		= new Y.DD.Drop({ node: valueContainer });
+		var valueContainerDT 		= new Y.DD.Drop({	node:	valueContainer,
+														groups:	['attribute']  });
 		
-		attributeContainerDT.attributeContainer	= attributeContainer;
-		valueContainerDT.attributeContainer		= valueContainer;
+		attributeContainerDT.node	= attributeContainer;
+		valueContainerDT.node		= valueContainer;
 
 		/**
 		 * Given a Node, attributeContainer will receive it as a child
@@ -50,5 +51,15 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		action.append(attributeContainer);
 		action.append(operatorContainer);
 		action.append(valueContainer);
+		
+		var actionDD =	new Y.DD.Drag({node:action}).plug(	Y.Plugin.DDConstrained,
+															{ constrain2node: '#' + targetId});
+		actionDD.node = action;
+		
+		Y.one('#' + targetId).append(action);
+		
+		return action;
 	}
+	
+	
 });

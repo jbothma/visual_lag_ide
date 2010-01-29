@@ -1,6 +1,9 @@
 .action {
 	height:		65px;
 	background-color:	white;
+	border:		1px solid black;
+	position:	absolute;
+	min-width:	100px;
 }
 .action-child {
 	position:	relative;
@@ -16,6 +19,7 @@
 	border:		1px solid black;
 }
 .action-child-container {
+	position:	relative;
 	min-width:	20px;
 	border:		1px solid black;
 	padding:	1px;
