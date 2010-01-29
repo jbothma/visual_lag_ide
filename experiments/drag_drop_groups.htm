@@ -1,0 +1,88 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>YUI 3 Drag Drop Groups Experiment</title>
+		
+
+		<script type="text/javascript" src="../visual/lib/yui/yui/yui-min.js"></script>
+
+		<style type="text/css">
+			div {
+				border:				1px solid black;
+				background-color:	white;
+				width:				40px;
+				height:				40px;
+			}
+			.dark {
+				background-color:	#666666;
+			}
+			#dd-one {
+				position:			absolute;
+				top:				40px;
+				left:				40px;
+			}
+			#dd-two {
+				position:			absolute;
+				top:				100px;
+				left:				40px;
+			}
+			#dt-one {
+				position:			absolute;
+				top:				40px;
+				left:				100px;
+			}
+			#dt-two {
+				position:			absolute;
+				top:				40px;
+				left:				160px;
+			}
+		</style>
+		
+		
+		
+	</head>
+	<body>
+		<div id="dd-one">dd-one</div>
+		<div id="dd-two">dd-two</div>
+		<div id="dt-one">dt-one</div>
+		<div id="dt-two">dt-two</div>
+		<script type="text/javascript">
+			YUI().use('dd','dd-drop','node','event', function (Y) {
+				//var init = function(){
+					alert('bob');
+				
+					var ddOne = Y.one('#dd-one');
+					ddOneDrag =	new Y.DD.Drag({ node:	ddOne,
+												groups:	['one'] });
+					
+					var ddTwo = Y.one('#dd-two');
+					ddTwoDrag =	new Y.DD.Drag({ node:	ddTwo,
+												groups:	['two'] });
+					
+					var dtOne = Y.one('#dt-one');
+					dtOneDrop =	new Y.DD.Drop({ node:	dtOne,
+												groups:	['one']  });
+					dtOneDrop.node = dtOne;
+					
+					var dtTwo = Y.one('#dt-two');
+					dtTwoDrop =	new Y.DD.Drop({ node:	dtTwo,
+												groups:	['two']  });
+					dtTwoDrop.node = dtTwo;
+
+					
+					Y.DD.DDM.on('drop:enter',function(e) {
+						e.drop.node.addClass('dark');
+					});
+					
+					Y.DD.DDM.on('drop:exit',function(e) {
+						e.target.node.removeClass('dark');
+
+					});
+				//}
+				
+				//Y.on('contentready',init);
+			});
+		</script>
+	</body>
+</html>
