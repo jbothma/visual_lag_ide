@@ -1,0 +1,54 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+	<head>
+		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+		<title>LAG ACTION</title>
+		<style type="text/css">
+			#drag {
+				border:	1px solid black;
+				width:20px;
+				height:30px;
+			}
+			#drop {
+				border: 1px solid black;
+				width:200px;
+				height:150px;
+			}
+		</style>
+
+		<script type="text/javascript" src="lib/yui/yui/yui-min.js"></script>
+		<script type="text/javascript" src="utility.js"></script>
+
+
+		
+		<script type="text/javascript">
+			getMyY().use('dd-drag','dd-drop','node','event', function (Y) {
+				var drag = Y.one('#drag');
+				var dragDD = new Y.DD.Drag({ node: drag });
+				
+				
+			});
+				
+			getMyY().use('dd-drag','dd-drop','node','event', function (Y) {
+				
+				var drop = Y.one('#drop');
+				var dropDD = new Y.DD.Drop({ node: drop });
+				
+				//Listen for all drag:drophit events
+				dropDD.on('drop:hit', function(e) {
+					alert('I\'m hit!');
+				});
+			});
+		</script>
+	</head>
+	<body>
+		<p><a href="#" onclick="LAGVEActn.newAction('worspace')">New ACTION</a></p>
+		<p><a href="#" onclick="LAGVEAttr.insertNewAttr(['PM','GM','accessed'],'workspace')">PM.GM.accessed</a></p>
+
+		<div id="workspace">
+			<div id="drag"></div>
+			<div id="drop"></div>
+		</div>
+		
+	</body>
+</html>
