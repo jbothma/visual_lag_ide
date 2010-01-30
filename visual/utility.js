@@ -13,7 +13,7 @@ function getMyY() {
 	} else {
 		//alert('no myY, creating and returning.');
 		// Create global YUI3 instance
-		myY = YUI({ filter:'min' });
+		myY = YUI({ filter:'raw' });
 		return myY;
 	}
 }
