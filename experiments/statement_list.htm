@@ -10,25 +10,46 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 		<title>Statement list development</title>
 				
+		<link rel=StyleSheet href="../visual/action.css" type="text/css">
+
 		<!--<script type="text/javascript" src="http://yui.yahooapis.com/combo?3.0.0/build/yui/yui.js"></script>-->
 		
 		<script type="text/javascript" src="../visual/lib/yui/yui/yui-min.js"></script>
-		
-		<script type="text/javascript">
-		
-		</script>
+
+		<script type="text/javascript" src="../visual/utility.js"></script>
+		<script type="text/javascript" src="../visual/action.js"></script>
+		<script type="text/javascript" src="statement.js"></script>
 		
 		<style type="text/css">
-		
+			.statement {
+				min-width:	200px;
+				min-height:	30px;
+				border:		1px solid black;
+				position:	relative;
+				float:left;
+				background-color:	white;
+			}
+			.statement-placeholder {
+				border:		1px solid #AAA;
+				height:		20px;
+				
+			}
+			.statement-child-container {
+				border:		1px dashed #AAA;
+				min-height:	20px;
+				position:	relative
+				background-color:	white;
+			}
 		</style>
 		
 	</head>
 	<body>
 
 		
-		<!--<p><a href="#" onclick="LAGVEAttr.insertNewAttr(['PM','GM','accessed'],'visual-editing-workspace')">PM.GM.accessed</a></p>
-		<div id="visual-editing-workspace" style="width:400px;height:400px;border:1px solid black;">text inside visual-editing-workspace</div>-->
-		
-		
+		<p><a href="#" onclick="LAGVEStmt.newStatement()">Insert Statement</a></p>
+		<div id="workspace" style="width:80%;height:400px;border:1px solid black;">
+			<div style="position:absolute;color:#AAA">text inside visual-editing-workspace</div>
+		</div>
+
 	</body>
 </html>
