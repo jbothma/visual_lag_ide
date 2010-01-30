@@ -22,10 +22,7 @@
 			var LIs = Y.Node.all('li.dragable');
 			LIs.each(function(v, k) {
 				var dd = new Y.DD.Drag({
-					node: v,
-		            target: {
-		                padding: '20 0 0 20'
-		            }
+					node: v
 				}).plug(Y.Plugin.DDProxy, {
 					moveOnEnd: false
 				});
