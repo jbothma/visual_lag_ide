@@ -19,6 +19,18 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	LAGVEStmt.goingUp	= false;
 	LAGVEStmt.lastY		= 0;
 	
+	/**
+	 *	LAGVEStmt.newStatement
+	 *
+	 *	Creates a new LAG STATEMENT block.
+	 *  Returns the statement.
+	 *
+	 *	Configurable by:
+	 *	{
+	 *		targetId		Id of node to which new statement must be appended, if set.
+	 *		initialChild	A node that would be appended to the new statement, if set.
+	 *	}
+	 */
 	LAGVEStmt.newStatement = function(config) {
 		var statement		= Y.Node.create( '<div class="statement"></div>' );		
 		var statementUL		= Y.Node.create( '<ul class="statement-list"></ul>' );
