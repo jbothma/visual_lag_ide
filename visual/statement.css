@@ -1,0 +1,25 @@
+.statement {
+	min-width:	200px;
+	min-height:	30px;
+	border:		1px solid black;
+	position:	relative;
+	margin:		5px;
+	padding:	5px;
+	background-color:	white;
+	float:left;
+	clear:both;
+}
+.statement-child-container {
+	border:		1px dashed #AAA;
+	min-height:	20px;
+	position:	relative
+	background-color:	white;
+	float:left;
+	clear:both;
+}
+.statement-list {
+	min-height:			30px;
+	list-style-type:	none;
+	margin:				0px;
+	padding:			0px;
+}

@@ -105,13 +105,15 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		//Get our drag object
 		var drag = e.target;
 		
+		drag.get('node').setStyles({
+			opacity:	'.25'
+		});
+		
 		drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
 		
 		// make dragNode's style match node but at 50% opacity
 		drag.get('dragNode').setStyles({
-			opacity: '.5',
-			filter: 'alpha(opacity = 50)',
-			zoom: '1',
+			opacity: 	'.5'
 			borderColor: 		drag.get('node').getStyle('borderColor'),
 			backgroundColor: 	drag.get('node').getStyle('backgroundColor')
 		});
