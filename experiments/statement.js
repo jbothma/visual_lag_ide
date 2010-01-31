@@ -2,7 +2,7 @@ LAGVEStmt = new Object();
 LAGVEStmt.scriptName = 'statement.js';
 
 getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (Y) {
-	new Y.Console().render();
+	//new Y.Console().render();
 	
 	/**
 	 * 
@@ -103,47 +103,35 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 
 	Y.DD.DDM.on('drag:start', function(e) {
 		//Get our drag object
-		var dragNode = e.target.get('node');
-		//Set some styles here
-		dragNode.setStyle('opacity', '.25');
-		// copy the node's contents into dragNode
-		//dragNode.set('innerHTML', dragNode.get('innerHTML'));
+		var drag = e.target;
+		
+		drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
+		
 		// make dragNode's style match node but at 50% opacity
-		dragNode.setStyles({
+		drag.get('dragNode').setStyles({
 			opacity: '.5',
-			borderColor: 		dragNode.getStyle('borderColor'),
-			backgroundColor: 	dragNode.getStyle('backgroundColor')
+			filter: 'alpha(opacity = 50)',
+			zoom: '1',
+			borderColor: 		drag.get('node').getStyle('borderColor'),
+			backgroundColor: 	drag.get('node').getStyle('backgroundColor')
 		});
 	});
 
 	Y.DD.DDM.on('drag:end', function(e) {
-		Y.log('drag:end');
+		//Y.log('drag:end');
 		
 		var dragNode = e.target.get('node');
 
 		dragNode.setStyles({
 			visibility: '',
-			opacity: '1'
+			opacity: '1',
+			filter: 'alpha(opacity = 100)'
 		});
 		
 		// don't automatically remove for the moment,
 		// let user delete manually
 		//removeEmptyStatement(dragNode)
 	});
-
-	//Y.DD.DDM.on('drag:drophit', function(e) {
-		/*Y.log('drag:drophit');
-		
-		var dropNode = e.drop.get('node'),
-			dragNode = e.drag.get('node');
-
-		//if we are not on an li, we must have been dropped on a ul
-		if (dropNode.hasClass('statement-list')) {
-			if (!dropNode.contains(dragNode)) {
-				dropNode.append(dragNode);
-			}
-		}		*/
-	//});
 	
 	function removeEmptyStatement(dragNode){
 		//if (isset(dragNode.oldList)) {

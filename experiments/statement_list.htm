@@ -26,19 +26,19 @@
 				min-height:	30px;
 				border:		1px solid black;
 				position:	relative;
-				float:left;
+				margin:		5px;
+				padding:	5px;
 				background-color:	white;
-			}
-			.statement-placeholder {
-				border:		1px solid #AAA;
-				height:		20px;
-				
+				float:left;
+				clear:both;
 			}
 			.statement-child-container {
 				border:		1px dashed #AAA;
 				min-height:	20px;
 				position:	relative
 				background-color:	white;
+				float:left;
+				clear:both;
 			}
 			.statement-list {
 				min-height:			30px;
@@ -53,7 +53,7 @@
 
 		
 		<p><a href="#" onclick="LAGVEStmt.newStatement()">Insert Statement</a></p>
-		<div id="workspace" style="width:80%;height:400px;border:1px solid black;">
+		<div id="workspace" style="position:relative;width:80%;height:400px;border:1px solid black;">
 			<div style="position:absolute;color:#AAA">text inside visual-editing-workspace</div>
 		</div>
 

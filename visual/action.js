@@ -21,7 +21,7 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		var operatorSelect =  Y.Node.create( '<select class="operator-select">' +
 											 '<option value="=">=</option>' +
-											 '<option value="+=">+=</option>' +
+											 '<option value="+=" title="Add to the current value">+=</option>' +
 											 '<option value="-=">-=</option>' +
 											 '<option value=".=">.=</option>' +
 											 '</select>');
