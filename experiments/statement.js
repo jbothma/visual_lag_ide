@@ -22,15 +22,14 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	LAGVEStmt.newStatement = function() {
 		var statement		= Y.Node.create( '<div class="statement"></div>' );		
 		var statementUL		= Y.Node.create( '<ul class="statement-list"></ul>' );
-		
-		//var placeholderLI	= Y.Node.create( '<li class="statement-placeholder">placeholder</li>' );
-		//var placeholderLIDrop = new Y.DD.Drop({node: placeholderLI });
-		var statementULDrop = new Y.DD.Drop({node: statementUL });
+
+		var statementULDrop = new Y.DD.Drop({	node:	statementUL,
+												groups:	['statement-list']  });
 		
 		/////// START TESTING NONSENSE ///////////
 		statementChildContainer = LAGVEStmt.newStatementChildContainer()
 		var testAction = LAGVEActn.newAction();
-		testAction.setStyle('position','relative');
+		//testAction.setStyle('position','relative');
 		statementChildContainer.oldList = statementUL;
 		statementChildContainer.append( testAction );
 		statementUL.append(statementChildContainer);		
@@ -47,10 +46,13 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	LAGVEStmt.newStatementChildContainer = function() {
 		var statementChildContainer	= Y.Node.create( '<li class="statement-child-container"></li>' );
 	
-		var actionContainerDrag = new Y.DD.Drag({ node: statementChildContainer });
+		var actionContainerDrag = new Y.DD.Drag({	node:	statementChildContainer,
+													groups:	['statement-list'] });
+													
 		actionContainerDrag.plug(Y.Plugin.DDProxy, { moveOnEnd: false });
 		
-		var actionContainerDrop = new Y.DD.Drop({node: statementChildContainer });
+		var actionContainerDrop = new Y.DD.Drop({	node:	statementChildContainer,
+													groups:	['statement-list']  });
 
 		return statementChildContainer;
 	};
@@ -61,15 +63,24 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 			dropNode = e.drop.get('node');
 		
 		//Are we dropping on a li node?
-		if (dropNode.get('tagName').toLowerCase() === 'li') {
+		if (dropNode.hasClass('statement-child-container')) {
 			//Are we going down? (not going up)
 			// then we want to insert below, but not below a placeholder
 			if (!LAGVEStmt.goingUp) {
 				var nextSibling = dropNode.get('nextSibling');
-				if (isset(nextSibling)) {dropNode = nextSibling}				
+				if (isset(nextSibling)) { 
+					dropNode = nextSibling 
+					dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+				} else {
+					dropNode.get('parentNode').append(dragNode);
+				}
+			} else {
+				dropNode.get('parentNode').insertBefore(dragNode, dropNode);
 			}
-			//Add the node to this list
-			dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+		}
+	
+		if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
+			dropNode.append(dragNode);
 		}
 		
 
@@ -96,7 +107,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		//Set some styles here
 		dragNode.setStyle('opacity', '.25');
 		// copy the node's contents into dragNode
-		dragNode.set('innerHTML', dragNode.get('innerHTML'));
+		//dragNode.set('innerHTML', dragNode.get('innerHTML'));
 		// make dragNode's style match node but at 50% opacity
 		dragNode.setStyles({
 			opacity: '.5',
@@ -115,24 +126,24 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 			opacity: '1'
 		});
 		
-		removeEmptyStatement(dragNode)
+		// don't automatically remove for the moment,
+		// let user delete manually
+		//removeEmptyStatement(dragNode)
 	});
 
-	Y.DD.DDM.on('drag:drophit', function(e) {
-		Y.log('drag:drophit');
+	//Y.DD.DDM.on('drag:drophit', function(e) {
+		/*Y.log('drag:drophit');
 		
 		var dropNode = e.drop.get('node'),
 			dragNode = e.drag.get('node');
 
 		//if we are not on an li, we must have been dropped on a ul
-		if (dropNode.get('tagName').toLowerCase() !== 'li') {
+		if (dropNode.hasClass('statement-list')) {
 			if (!dropNode.contains(dragNode)) {
-				dropNode.appendChild(dragNode);
+				dropNode.append(dragNode);
 			}
-		}
-		
-		//removeEmptyStatement(dragNode)
-	});
+		}		*/
+	//});
 	
 	function removeEmptyStatement(dragNode){
 		//if (isset(dragNode.oldList)) {
