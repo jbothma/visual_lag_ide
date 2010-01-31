@@ -19,7 +19,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	LAGVEStmt.goingUp	= false;
 	LAGVEStmt.lastY		= 0;
 	
-	LAGVEStmt.newStatement = function() {
+	LAGVEStmt.newStatement = function(config) {
 		var statement		= Y.Node.create( '<div class="statement"></div>' );		
 		var statementUL		= Y.Node.create( '<ul class="statement-list"></ul>' );
 
@@ -27,23 +27,31 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 												groups:	['statement-list']  });
 		
 		/////// START TESTING NONSENSE ///////////
-		statementChildContainer = LAGVEStmt.newStatementChildContainer()
-		var testAction = LAGVEActn.newAction();
+		//statementChildContainer = LAGVEStmt.newStatementChildContainer()
+		//var testAction = LAGVEActn.newAction();
 		//testAction.setStyle('position','relative');
-		statementChildContainer.oldList = statementUL;
-		statementChildContainer.append( testAction );
-		statementUL.append(statementChildContainer);		
+		//statementChildContainer.oldList = statementUL;
+		//statementChildContainer.append( testAction );
+		//statementUL.append(statementChildContainer);		
 		/////// END TESTING NONSENSE ///////////
 		
-		
+		if (isset(config) && isset(config.initialChild)) {
+			var initialChildContainer = newStatementChildContainer(config.initialChild);
+			initialChildContainer.oldList = statementUL;
+			statementUL.append(initialChildContainer);
+		}
 		//statementUL.append(placeholderLI);
 		
 		statement.append(statementUL);
 		
-		Y.one('#workspace').append(statement);
+		if (isset(config) && isset(config.targetId)) {
+			Y.one('#' + config.targetId).append(statement);
+		}
+		
+		return statement;
 	};
 	
-	LAGVEStmt.newStatementChildContainer = function() {
+	newStatementChildContainer = function(initialChild) {
 		var statementChildContainer	= Y.Node.create( '<li class="statement-child-container"></li>' );
 	
 		var actionContainerDrag = new Y.DD.Drag({	node:	statementChildContainer,
@@ -54,6 +62,8 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		var actionContainerDrop = new Y.DD.Drop({	node:	statementChildContainer,
 													groups:	['statement-list']  });
 
+		statementChildContainer.append(initialChild);
+		
 		return statementChildContainer;
 	};
 		
@@ -113,7 +123,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		
 		// make dragNode's style match node but at 50% opacity
 		drag.get('dragNode').setStyles({
-			opacity: 	'.5'
+			opacity: 	'.5',
 			borderColor: 		drag.get('node').getStyle('borderColor'),
 			backgroundColor: 	drag.get('node').getStyle('backgroundColor')
 		});

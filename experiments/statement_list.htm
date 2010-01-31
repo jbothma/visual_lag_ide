@@ -29,7 +29,8 @@
 	<body class="yui-skin-sam">
 
 		
-		<p><a href="#" onclick="LAGVEStmt.newStatement()">Insert Statement</a></p>
+		<p><a href="#" onclick="LAGVEStmt.newStatement({targetId:'workspace'})">Insert Statement</a></p>
+		<p><a href="#" onclick="LAGVEStmt.newStatement({targetId:'workspace',initialChild:LAGVEActn.newAction()})">Insert Statement with an Action</a></p>
 		<div id="workspace" style="position:relative;width:80%;height:400px;border:1px solid black;">
 			<div style="position:absolute;color:#AAA">text inside visual-editing-workspace</div>
 		</div>
