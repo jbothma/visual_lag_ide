@@ -1,7 +1,8 @@
 LAGVEStmt = new Object();
 LAGVEStmt.scriptName = 'statement.js';
 
-getMyY().use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
+getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (Y) {
+	new Y.Console().render();
 	
 	/**
 	 * 
@@ -20,17 +21,19 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
 	
 	LAGVEStmt.newStatement = function() {
 		var statement		= Y.Node.create( '<div class="statement"></div>' );		
-		var statementUL		= Y.Node.create( '<ul></ul>' );
+		var statementUL		= Y.Node.create( '<ul class="statement-list"></ul>' );
 		
 		//var placeholderLI	= Y.Node.create( '<li class="statement-placeholder">placeholder</li>' );
 		//var placeholderLIDrop = new Y.DD.Drop({node: placeholderLI });
+		var statementULDrop = new Y.DD.Drop({node: statementUL });
 		
 		/////// START TESTING NONSENSE ///////////
-		actionContainer = LAGVEStmt.newStatementChildContainer()
-		var bob = LAGVEActn.newAction();
-		bob.setStyle('position','relative');
-		actionContainer.append( bob );
-		statementUL.append(actionContainer);		
+		statementChildContainer = LAGVEStmt.newStatementChildContainer()
+		var testAction = LAGVEActn.newAction();
+		testAction.setStyle('position','relative');
+		statementChildContainer.oldList = statementUL;
+		statementChildContainer.append( testAction );
+		statementUL.append(statementChildContainer);		
 		/////// END TESTING NONSENSE ///////////
 		
 		
@@ -61,13 +64,15 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
 		if (dropNode.get('tagName').toLowerCase() === 'li') {
 			//Are we going down? (not going up)
 			// then we want to insert below, but not below a placeholder
-			if (!LAGVEStmt.goingUp && !dropNode.hasClass('statement-placeholder')) {
+			if (!LAGVEStmt.goingUp) {
 				var nextSibling = dropNode.get('nextSibling');
 				if (isset(nextSibling)) {dropNode = nextSibling}				
 			}
 			//Add the node to this list
 			dropNode.get('parentNode').insertBefore(dragNode, dropNode);
 		}
+		
+
 	});
 
 	Y.DD.DDM.on('drag:drag', function(e) {
@@ -87,37 +92,65 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event', function (Y) {
 
 	Y.DD.DDM.on('drag:start', function(e) {
 		//Get our drag object
-		var drag = e.target;
+		var dragNode = e.target.get('node');
 		//Set some styles here
-		drag.get('node').setStyle('opacity', '.25');
+		dragNode.setStyle('opacity', '.25');
 		// copy the node's contents into dragNode
-		drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
+		dragNode.set('innerHTML', dragNode.get('innerHTML'));
 		// make dragNode's style match node but at 50% opacity
-		drag.get('dragNode').setStyles({
+		dragNode.setStyles({
 			opacity: '.5',
-			borderColor: drag.get('node').getStyle('borderColor'),
-			backgroundColor: drag.get('node').getStyle('backgroundColor')
+			borderColor: 		dragNode.getStyle('borderColor'),
+			backgroundColor: 	dragNode.getStyle('backgroundColor')
 		});
 	});
 
 	Y.DD.DDM.on('drag:end', function(e) {
-		var drag = e.target;
+		Y.log('drag:end');
+		
+		var dragNode = e.target.get('node');
 
-		drag.get('node').setStyles({
+		dragNode.setStyles({
 			visibility: '',
 			opacity: '1'
 		});
+		
+		removeEmptyStatement(dragNode)
 	});
 
 	Y.DD.DDM.on('drag:drophit', function(e) {
-		var drop = e.drop.get('node'),
-			drag = e.drag.get('node');
+		Y.log('drag:drophit');
+		
+		var dropNode = e.drop.get('node'),
+			dragNode = e.drag.get('node');
 
 		//if we are not on an li, we must have been dropped on a ul
-		if (drop.get('tagName').toLowerCase() !== 'li') {
-			if (!drop.contains(drag)) {
-				drop.appendChild(drag);
+		if (dropNode.get('tagName').toLowerCase() !== 'li') {
+			if (!dropNode.contains(dragNode)) {
+				dropNode.appendChild(dragNode);
 			}
 		}
+		
+		//removeEmptyStatement(dragNode)
 	});
+	
+	function removeEmptyStatement(dragNode){
+		//if (isset(dragNode.oldList)) {
+			if (dragNode.oldList.get('parentNode').hasClass('statement')) {
+				var hasChildren = dragNode.oldList.hasChildNodes();
+				if (!hasChildren) {
+					Y.log('Node\' old statement list is now empty - removing it.');
+					
+					dragNode.oldList.get('parentNode').remove();
+				}
+		//	}
+		}
+
+		var list = dragNode.get('parentNode');
+		if (list.hasClass('statement-list')) {
+			Y.log('Updating dragNode.oldList.');
+			
+			dragNode.oldList = list;
+		}
+	}
 });
