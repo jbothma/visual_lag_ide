@@ -4,7 +4,7 @@ LAGVEActn.scriptName = 'action.js';
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEActn.newAction = function() {
-		var action 				= Y.Node.create( '<div class="action"></div>' );
+		var action 				= Y.Node.create( '<div class="action deletable"></div>' );
 		
 		var attributeContainer	= Y.Node.create( '<div class="action-attribute-container action-child-container" title="Drop an attribute here."></div>' );
 		var valueContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container" title="Drop an attribute or value here."></div>' );
@@ -50,5 +50,28 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		return action;
 	}
 	
+	LAGVEActn.insertActionChild = function(target,child) {
+		if (target.hasClass('action-child-container')) {
+			if (!target.hasChildNodes()) {			
+				target.append(child);
+				child.setStyle('position','relative');
+				child.setStyle('left',0);
+				child.setStyle('top',0);
+			} else {
+				Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
+			}
+		} else {
+			Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target wasn\'t a child container.');
+		}
+	}
 	
+	Y.DD.DDM.on('drop:enter',function(e) {
+		LAGVEActn.insertActionChild(e.drop.get('node'),e.drag.get('node'))
+		//Y.log('drop:enter');
+	});
+	
+	Y.DD.DDM.on('drop:hit',function(e) {
+		LAGVEActn.insertActionChild(e.drop.get('node'),e.drag.get('node'));
+		//Y.log('drop:hit');
+	});
 });
