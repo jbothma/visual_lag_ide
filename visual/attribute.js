@@ -64,6 +64,7 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 																		
 		attributeDD.node = lowestAttrLevel;
 		lowestAttrLevel.addClass('deletable');
+		lowestAttrLevel.addClass('action-child');
 		
 		// append to the node found by CSS id #targetId
 		Y.one('#' + targetId).append(lowestAttrLevel);
