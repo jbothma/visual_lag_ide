@@ -58,13 +58,19 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 				Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
 			}
 			
-			if (target.contains(child)) {
-				child.setStyle('position','relative');
-				child.setStyle('left',0);
-				child.setStyle('top',0);
-			}
+			//if (target.contains(child)) {
+				LAGVEActn._positionChild(child);
+			//}
 		} else {
 			Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target wasn\'t a child container.');
+		}
+	}
+	
+	LAGVEActn._positionChild = function(child) {
+		if (child.hasClass('action-child')) {
+			child.setStyles({	position:	'relative',
+								left:		'0px',
+								top:		'0px'});
 		}
 	}
 	
@@ -76,5 +82,9 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 	Y.DD.DDM.on('drop:hit',function(e) {
 		LAGVEActn.insertActionChild(e.drop.get('node'),e.drag.get('node'));
 		//Y.log('drop:hit');
+	});
+	
+	Y.DD.DDM.on('drag:dropmiss',function(e) {
+		LAGVEActn._positionChild(e.target.get('node'));
 	});
 });
