@@ -24,10 +24,33 @@ getMyY().use("node-menunav",'console', function(Y) {
 	var isWorkspace = function(node) {
 		return node.get('id') === 'VE-workspace';
 	}
+	
+	/**
+	 *	LAGVE.deleteItem
+	 *
+	 *	Recursively search ancestors of given node until:
+	 *	- node with class 'deletable' is found and removed
+	 *	- workspace node is found
+	 *	- body tag is found
+	 */
+	LAGVE.deleteItem = function(node) {
+		if (isWorkspace(node) || node.get('tagName') === 'body') {
+			return
+		}
+		
+		if (node.hasClass('deletable')) {
+			if (confirm("Are you sure you want to delete this item?")) {
+				node.remove();
+				return;
+			}
+		} else {
+			LAGVE.deleteItem(node.get('parentNode'));
+		}
+	}
 		
 	 Y.on('contextmenu', function(e) {
-		if (isWorkspace(e.target) || e.target.ancestor(isWorkspace)) {
-			alert(e.target.get('tagName'));
+		if (e.target.ancestor(isWorkspace)) {
+			LAGVE.deleteItem(e.target);
 			e.preventDefault();
 		}
 	});

@@ -24,18 +24,20 @@
 
 	</head>
 	<body class="yui-skin-sam">
+		<ul> Quick tips
+			<li>Right-click an item and confirm to delete.</li>
+			<li>Drag Attributes onto Actions to insert.</li>
+			<li>Drag Actions between Statements to re-order.</li>
+		</ul>
 		<div id="VE-window">
 			<div id="VE-menu-container">
 				<div id="VE-menu" class="yui-menu yui-menu-horizontal">
 					<div class="yui-menu-content">
 						<ul class="first-of-type"> 
-							<!-- Menu items -->
-							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="javascript:alert('Delete not yet implemented.\nPlease refresh page to clear contents.')">delete tool</a>
-							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menu-label" href="#LAG-Attr-Menu" title="Insert a LAG Attribute or value">
-									<img class="menu-button-img" src="images/LAGAttrIcon.gif" alt="LAG Attribute">
+									<!--<img class="menu-button-img" src="images/LAGAttrIcon.gif" alt="LAG Attribute">-->
+									Insert Attribute
 								</a>
 								<div id="LAG-Attr-Menu" class="yui-menu">
 									<div class="yui-menu-content">
@@ -173,10 +175,10 @@
 								</div> <!-- end LAG-attr-menu -->
 							</li>
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVEActn.newAction()})">Action</a>
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVEActn.newAction()})">Insert Action</a>
 							</li>
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace'})">Statement</a>
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace'})">Insert Statement block</a>
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="showHelp()">Help</a>

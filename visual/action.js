@@ -4,7 +4,7 @@ LAGVEActn.scriptName = 'action.js';
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEActn.newAction = function() {
-		var action 				= Y.Node.create( '<div class="action deletable"></div>' );
+		var action 				= Y.Node.create( '<div class="action"></div>' );
 		
 		var attributeContainer	= Y.Node.create( '<div class="action-attribute-container action-child-container" title="Drop an attribute here."></div>' );
 		var valueContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container" title="Drop an attribute or value here."></div>' );
@@ -53,12 +53,15 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 	LAGVEActn.insertActionChild = function(target,child) {
 		if (target.hasClass('action-child-container')) {
 			if (!target.hasChildNodes()) {			
-				target.append(child);
+				target.append(child);				
+			} else {
+				Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
+			}
+			
+			if (target.contains(child)) {
 				child.setStyle('position','relative');
 				child.setStyle('left',0);
 				child.setStyle('top',0);
-			} else {
-				Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
 			}
 		} else {
 			Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target wasn\'t a child container.');

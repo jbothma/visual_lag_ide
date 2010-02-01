@@ -32,7 +32,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	 *	}
 	 */
 	LAGVEStmt.newStatement = function(config) {
-		var statement		= Y.Node.create( '<div class="statement"></div>' );		
+		var statement		= Y.Node.create( '<div class="statement deletable"></div>' );		
 		var statementUL		= Y.Node.create( '<ul class="statement-list"></ul>' );
 
 		var statementULDrop = new Y.DD.Drop({	node:	statementUL,
@@ -64,7 +64,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	};
 	
 	newStatementChildContainer = function(initialChild) {
-		var statementChildContainer	= Y.Node.create( '<li class="statement-child-container"></li>' );
+		var statementChildContainer	= Y.Node.create( '<li class="statement-child-container deletable"></li>' );
 	
 		var actionContainerDrag = new Y.DD.Drag({	node:	statementChildContainer,
 													groups:	['statement-list'] });
