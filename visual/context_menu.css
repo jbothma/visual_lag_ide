@@ -7,8 +7,10 @@
 .context-menu-item {
 	margin:		1px;
 	border:		1px solid black;
-	backgoround-color:	white;
+	background-color:	white;
+	padding:	2px;
 }
 .context-menu-item:hover {
-	backgoround-color:	#AAGGAA
+	background-color:	#CCCCFF;
+	cursor:				default
 }
