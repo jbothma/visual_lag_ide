@@ -2,7 +2,7 @@ LAGVE = new Object();
 LAGVE.scriptName = 'visual_editor.js';
 
 getMyY().use("node-menunav",'console', function(Y) {
-	new Y.Console().render();
+	//new Y.Console().render();
 	
 	var menu = Y.one("#VE-menu");
 	menu.plug(	Y.Plugin.NodeMenuNav, 
