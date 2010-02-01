@@ -21,28 +21,16 @@ getMyY().use("node-menunav",'console', function(Y) {
 		attrMenu.addClass('yui-menu-hidden');
 	}
 
-	var appendNode = function(target,node) {
-		target.append(node);
-		node.setStyle('position','relative');
-		node.setStyle('left',0);
-		node.setStyle('top',0);
-		//Y.log('appendNode target: ' + target.getAttribute('class'));
-		//Y.log('appendNode node: ' + node.getAttribute('class'));
+	var isWorkspace = function(node) {
+		return node.get('id') === 'VE-workspace';
 	}
-	
-	Y.DD.DDM.on('drop:enter',function(e) {
-		appendNode(e.drop.node,e.drag.node)
-		//Y.log('drop:enter');
+		
+	 Y.on('contextmenu', function(e) {
+		if (isWorkspace(e.target) || e.target.ancestor(isWorkspace)) {
+			alert(e.target.get('tagName'));
+			e.preventDefault();
+		}
 	});
-	
-	Y.DD.DDM.on('drop:hit',function(e) {
-		appendNode(e.drop.node,e.drag.node);
-		//Y.log('drop:hit');
-	});
-	
-	var workspace = Y.one('#VE-workspace');
-	var workspaceDT = new Y.DD.Drop({ node:  workspace });
-	workspaceDT.node = workspace;
 });
 
 function showHelp() {document.getElementById('VE-help').style.visibility = 'visible';}
