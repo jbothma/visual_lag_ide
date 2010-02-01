@@ -12,16 +12,18 @@
 		<link rel=StyleSheet href="connector.css" type="text/css">
 		<link rel=StyleSheet href="visual_editor.css" type="text/css">
 		<link rel=StyleSheet href="action.css" type="text/css">
+		<link rel=StyleSheet href="statement.css" type="text/css">
 
 		<script type="text/javascript" src="lib/yui/yui/yui.js"></script>
 
 		<script type="text/javascript" src="utility.js"></script>
 		<script type="text/javascript" src="attribute.js"></script>		
 		<script type="text/javascript" src="action.js"></script>
+		<script type="text/javascript" src="statement.js"></script>
 		<script type="text/javascript" src="visual_editor.js"></script>
 
 	</head>
-	<body onload="" class="yui-skin-sam">
+	<body class="yui-skin-sam">
 		<div id="VE-window">
 			<div id="VE-menu-container">
 				<div id="VE-menu" class="yui-menu yui-menu-horizontal">
@@ -171,7 +173,10 @@
 								</div> <!-- end LAG-attr-menu -->
 							</li>
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="LAGVEActn.newAction('VE-workspace')">Action</a>
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVEActn.newAction()})">Action</a>
+							</li>
+							<li class="yui-menuitem">
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace'})">Statement</a>
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="showHelp()">Help</a>
