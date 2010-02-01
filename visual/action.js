@@ -31,21 +31,7 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		action.append(operatorContainer);
 		action.append(valueContainer);
 		
-		/*	if action will always be inside a statement li,
-			action shouldn't be a drag becuase it will get dragged out of the li
 		
-		var actionDD =	new Y.DD.Drag({node:action})
-		
-		if (isset(targetId)) {
-			actionDD.plug(	Y.Plugin.DDConstrained,
-							{ constrain2node: '#' + targetId});
-		}
-		
-		actionDD.node = action;*/
-		
-		/*if (isset(targetId)) {
-			Y.one('#' + targetId).append(action);
-		}*/
 		
 		return action;
 	}
@@ -55,14 +41,13 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			if (!target.hasChildNodes()) {			
 				target.append(child);				
 			} else {
-				Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
+				//Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
 			}
 			
-			//if (target.contains(child)) {
-				LAGVEActn._positionChild(child);
-			//}
+			LAGVEActn._positionChild(child);
+			
 		} else {
-			Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target wasn\'t a child container.');
+			//Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target wasn\'t a child container.');
 		}
 	}
 	
