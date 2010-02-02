@@ -1,0 +1,30 @@
+.condition {
+	position:	relative;
+	top:		0px;
+	left:		0px;
+	border:		1px solid black;
+	height:		65px;
+	background-color:	white;
+	-moz-border-radius: 14px;
+	-webkit-border-radius: 14px;
+	padding:	7px;
+}
+.condition-child-container {
+	min-width:	20px;
+	border:		1px solid black;
+	padding:	1px;
+	margin:		1px;
+	float:		left;
+}
+.condition-attribute-container {
+	min-width:	50px;
+	min-height:	50px;
+	height:		59px;
+}
+.condition-comparator-container {
+	position:	relative;
+	top:		16px;
+}
+.comparator-select {
+	font-size:	1.5em;			
+}

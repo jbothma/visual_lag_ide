@@ -12,6 +12,7 @@
 		<link rel=StyleSheet href="connector.css" type="text/css">
 		<link rel=StyleSheet href="visual_editor.css" type="text/css">
 		<link rel=StyleSheet href="action.css" type="text/css">
+		<link rel=StyleSheet href="condition.css" type="text/css">
 		<link rel=StyleSheet href="statement.css" type="text/css">
 		<link rel=StyleSheet href="context_menu.css" type="text/css">
 
@@ -20,6 +21,7 @@
 		<script type="text/javascript" src="utility.js"></script>
 		<script type="text/javascript" src="attribute.js"></script>		
 		<script type="text/javascript" src="action.js"></script>
+		<script type="text/javascript" src="condition.js"></script>
 		<script type="text/javascript" src="statement.js"></script>
 		<script type="text/javascript" src="visual_editor.js"></script>
 		<script type="text/javascript" src="context_menu.js"></script>
@@ -178,6 +180,9 @@
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVEActn.newAction()})">Insert Action</a>
+							</li>
+							<li class="yui-menuitem">
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVECondition.newCondition()})">Insert Condition</a>
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace'})">Insert Statement block</a>
