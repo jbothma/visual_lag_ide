@@ -15,8 +15,6 @@ getMyY().use("node-menunav",'console', function(Y) {
 		LAGVE._editorReady();		
 	}	
 	
-	Y.on("contentready", LAGVE._init,"body");
-	
 	LAGVE._editorReady = function() {
 		Y.one('#VE-loading-msg').setStyle('visibility','hidden');
 		Y.one('#VE-window').setStyle('visibility','');
@@ -59,9 +57,13 @@ getMyY().use("node-menunav",'console', function(Y) {
 		var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
 		
 		statementBox = LAGVEStmt.newStatement();
+		statementBox.removeClass('deletable');
+		statementBox.setStyle('minWidth','400px');
+		statementBox.setStyle('minHeight','150px');
 		
 		LAGVE.initialization.append(title);
 		LAGVE.initialization.append(statementBox);
+		
 		
 		return LAGVE.initialization;
 	}
@@ -71,6 +73,9 @@ getMyY().use("node-menunav",'console', function(Y) {
 		var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
 		
 		statementBox = LAGVEStmt.newStatement();
+		statementBox.removeClass('deletable');
+		statementBox.setStyle('minWidth','400px');
+		statementBox.setStyle('minHeight','150px');
 		
 		LAGVE.implementation.append(title);
 		LAGVE.implementation.append(statementBox);
@@ -86,6 +91,14 @@ getMyY().use("node-menunav",'console', function(Y) {
 		LAGVEAttr.insertNewAttr(attributeLevelsArr, targetId);
 		LAGVE.attrMenu.addClass('yui-menu-hidden');
 	}
+	
+	LAGVE.select = function (e) {
+		//e.target
+	}
+	
+	Y.on("contentready", LAGVE._init,"body");
+	
+	Y.on('click',LAGVE.select);
 });
 
 LAGVE.showHelp = function() {document.getElementById('VE-help').style.visibility = 'visible';}

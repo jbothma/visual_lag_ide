@@ -7,14 +7,16 @@
 }
 #VE-window {
 	min-height:	400px;
-	width:		90%;
 	border:		1px solid black;
 	margin:		1px;
+	float:		left;
 }
 #VE-workspace {
 	position:	relative;
 	min-height:	368px;
 	border:		1px solid black;
+	padding:	5px;
+	float:		left;
 }
 #VE-help {
 	position:	fixed;
@@ -56,8 +58,7 @@
 	float:		left;
 	background-color:#ffff88;
 	border:		2px solid #99ccff;
-	height:		3em;
-	line-height:3em;
+	min-height:		3em;
 	padding:	8px;
 }
 #VE-loading-msg-centering {
