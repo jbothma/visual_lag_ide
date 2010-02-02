@@ -12,7 +12,7 @@
 .statement-child-container {
 	border:		1px dashed #AAA;
 	min-height:	20px;
-	position:	relative
+	position:	relative;
 	background-color:	white;
 	float:left;
 	clear:both;
