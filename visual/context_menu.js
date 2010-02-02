@@ -13,21 +13,21 @@ getMyY().use('event', function(Y) {
 	*/
 	
 	
+	LAGVEContext._init = function() {
+		// MENU
+		LAGVEContext.menu		= Y.Node.create( '<div id="context-menu"></div>' );
+		
+		// MENU ITEM
+		var menuItemDelete	= Y.Node.create( '<div id="delete" class="context-menu-item">Delete</div>' );
+		menuItemDelete.on('click',function() { LAGVEContext.deleteItem(LAGVEContext.context); });
+		//menuItemDelete.on('click',LAGVEContext.deleteItem,LAGVEContext.context);
+		LAGVEContext.menu.append(menuItemDelete);
+		
+		// create context menu (but it should be hidden by CSS until needed
+		Y.one('body').append(LAGVEContext.menu);
+	}
 	
-	// MENU
-	LAGVEContext.menu		= Y.Node.create( '<div id="context-menu"></div>' );
-	
-	// MENU ITEM
-	var menuItemDelete	= Y.Node.create( '<div id="delete" class="context-menu-item">Delete</div>' );
-	menuItemDelete.on('click',function() { LAGVEContext.deleteItem(LAGVEContext.context); });
-	//menuItemDelete.on('click',LAGVEContext.deleteItem,LAGVEContext.context);
-	LAGVEContext.menu.append(menuItemDelete);
-	
-	// render context menu (but it should be hidden until needed by CSS
-	Y.one('body').append(LAGVEContext.menu);
-	
-	
-	var isWorkspace = function(node) {
+	LAGVEContext._isWorkspace = function(node) {
 		return node.get('id') === 'VE-workspace';
 	}
 	
@@ -41,7 +41,7 @@ getMyY().use('event', function(Y) {
 	 */
 	LAGVEContext.deleteItem = function(node) {
 		// limit/safety stop case
-		if (isWorkspace(node) || node.get('tagName') === 'body') {
+		if (LAGVEContext._isWorkspace(node) || node.get('tagName') === 'body') {
 			return
 		}
 		
@@ -59,7 +59,7 @@ getMyY().use('event', function(Y) {
 		
 	 Y.on('contextmenu', function(e) {
 		LAGVEContext.context = e.target;
-		if (LAGVEContext.context.ancestor(isWorkspace)) {
+		if (LAGVEContext.context.ancestor(LAGVEContext._isWorkspace)) {
 			LAGVEContext.menu.setStyles({	left:		e.clientX + 'px',
 											top:		e.clientY + 'px',
 											visibility:	'visible'});
@@ -70,4 +70,6 @@ getMyY().use('event', function(Y) {
 	Y.on('click', function() {
 		LAGVEContext.menu.setStyle('visibility','hidden');
 	});
+	
+	Y.on("contentready", LAGVEContext._init,"body");
 });
