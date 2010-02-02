@@ -8,39 +8,26 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 		<title>Visual LAG Editor</title>
 
-		<link rel=StyleSheet href="attribute.css" type="text/css">
-		<link rel=StyleSheet href="connector.css" type="text/css">
-		<link rel=StyleSheet href="visual_editor.css" type="text/css">
-		<link rel=StyleSheet href="action.css" type="text/css">
-		<link rel=StyleSheet href="condition.css" type="text/css">
-		<link rel=StyleSheet href="statement.css" type="text/css">
-		<link rel=StyleSheet href="context_menu.css" type="text/css">
+		<link rel="stylesheet" href="attribute.css" type="text/css">
+		<link rel="stylesheet" href="connector.css" type="text/css">
+		<link rel="stylesheet" href="visual_editor.css" type="text/css">
+		<link rel="stylesheet" href="action.css" type="text/css">
+		<link rel="stylesheet" href="ifthenelse.css" type="text/css">
+		<link rel="stylesheet" href="condition.css" type="text/css">
+		<link rel="stylesheet" href="statement.css" type="text/css">
+		<link rel="stylesheet" href="context_menu.css" type="text/css">
 
-		<script type="text/javascript" src="lib/yui/yui/yui.js"></script>
-
-		<script type="text/javascript" src="utility.js"></script>
-		<script type="text/javascript" src="attribute.js"></script>		
-		<script type="text/javascript" src="action.js"></script>
-		<script type="text/javascript" src="condition.js"></script>
-		<script type="text/javascript" src="statement.js"></script>
-		<script type="text/javascript" src="visual_editor.js"></script>
-		<script type="text/javascript" src="context_menu.js"></script>
-
+		
+		
 	</head>
-	<body class="yui-skin-sam">
-		<ul> Quick tips
-			<li>Right-click an item, select <em>Delete</em> then confirm to delete.</li>
-			<li>Drag Attributes onto Actions to insert.</li>
-			<li>Drag Actions between Statements to re-order.</li>
-		</ul>
-		<div id="VE-window">
+	<body class="yui-skin-sam">	
+		<div id="VE-window" style="visibility:hidden">
 			<div id="VE-menu-container">
 				<div id="VE-menu" class="yui-menu yui-menu-horizontal">
 					<div class="yui-menu-content">
 						<ul class="first-of-type"> 
 							<li class="yui-menuitem">
-								<a class="yui-menu-label" href="#LAG-Attr-Menu" title="Insert a LAG Attribute or value">
-									<!--<img class="menu-button-img" src="images/LAGAttrIcon.gif" alt="LAG Attribute">-->
+								<a class="yui-menu-label" href="#LAG-Attr-Menu" title="Insert a LAG Attribute or value">									
 									Insert Attribute
 								</a>
 								<div id="LAG-Attr-Menu" class="yui-menu">
@@ -131,12 +118,7 @@
 																	<div class="yui-menu-content">
 																		<ul> 
 																			<li class="yui-menuitem">
-																				<form 
-																					action="#" 
-																					class="yui-menuitem-content" 
-																					onsubmit="LAGVE.insertNewAttr(['UM','Concept',document.getElementById('UM-Concept-custom').value],'VE-workspace');return false"
-																					title="Replace the text with out custom value and press Enter to finish"
-																				>
+																				<form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM','Concept',document.getElementById('UM-Concept-custom').value],'VE-workspace');return false" title="Replace the text with out custom value and press Enter to finish">
 																					<div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text"></div>
 																				</form>
 																			</li>
@@ -145,12 +127,7 @@
 																</div> <!-- end UM.Concept -->
 															</li>
 															<li class="yui-menuitem">
-																<form
-																	action="#" 
-																	class="yui-menuitem-content" 
-																	onsubmit="LAGVE.insertNewAttr(['UM',document.getElementById('UM-custom').value],'VE-workspace');return false"
-																	title="Replace the text with out custom value and press Enter to finish"
-																>
+																<form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM',document.getElementById('UM-custom').value],'VE-workspace');return false" title="Replace the text with out custom value and press Enter to finish">
 																	<div><input id="UM-custom" class="menu-form-input" value="custom" type="text"></div>
 																</form>
 															</li>
@@ -165,12 +142,7 @@
 												<a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['false'],'VE-workspace')">false</a>
 											</li>
 											<li class="yui-menuitem">
-												<form
-													action="#" 
-													class="yui-menuitem-content" 
-													onsubmit="LAGVE.insertNewAttr([document.getElementById('custom').value],'VE-workspace');return false"
-													title="Replace the text with out custom value and press Enter to finish"
-												>
+												<form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr([document.getElementById('custom').value],'VE-workspace');return false"	title="Replace the text with out custom value and press Enter to finish">
 													<div><input id="custom" class="menu-form-input" value="value" type="text"></div>
 												</form>
 											</li>
@@ -182,7 +154,7 @@
 								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVEActn.newAction()})">Insert Action</a>
 							</li>
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVECondition.newCondition()})">Insert Condition</a>
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf({targetId:'VE-workspace'})">Insert IfThenElse</a>
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace'})">Insert Statement block</a>
@@ -197,13 +169,29 @@
 			<div id="VE-workspace">
 			</div>
 		</div> <!-- end VE-window -->
-		
 		<div id="VE-help">
 			<div id="VE-help-titlebar">
-				Visual LAG Editor Help (<a href="help.htm" target="_blank" onclick="hideHelp()">new window</a>)
+				Visual LAG Editor Help (<a href="help.htm" onclick="hideHelp()">Page link</a>)
 			</div>
 			<div id="VE-help-closeBtn" onclick="hideHelp()">X</div>
-			<iframe id="VE-help-iframe" src="help.htm">
+			<!--<iframe id="VE-help-iframe" src="help.htm">-->
+		</div>		
+		<div id="VE-loading-msg-centering">
+			<div id="VE-loading-msg">
+				Please wait while the Visual LAG Editor loads...
+			</div>
 		</div>
+		
+		<script type="text/javascript" src="lib/yui/yui/yui.js"></script>
+
+		<script type="text/javascript" src="utility.js"></script>
+		<script type="text/javascript" src="attribute.js"></script>		
+		<script type="text/javascript" src="action.js"></script>
+		<script type="text/javascript" src="ifthenelse.js"></script>
+		<script type="text/javascript" src="condition.js"></script>
+		<script type="text/javascript" src="statement.js"></script>
+		<script type="text/javascript" src="context_menu.js"></script>
+		<script type="text/javascript" src="visual_editor.js"></script>
 	</body>
 </html>
+

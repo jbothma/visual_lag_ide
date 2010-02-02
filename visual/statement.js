@@ -38,21 +38,12 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		var statementULDrop = new Y.DD.Drop({	node:	statementUL,
 												groups:	['statement-list']  });
 		
-		/////// START TESTING NONSENSE ///////////
-		//statementChildContainer = LAGVEStmt.newStatementChildContainer()
-		//var testAction = LAGVEActn.newAction();
-		//testAction.setStyle('position','relative');
-		//statementChildContainer.oldList = statementUL;
-		//statementChildContainer.append( testAction );
-		//statementUL.append(statementChildContainer);		
-		/////// END TESTING NONSENSE ///////////
 		
 		if (isset(config) && isset(config.initialChild)) {
 			var initialChildContainer = newStatementChildContainer(config.initialChild);
 			initialChildContainer.oldList = statementUL;
 			statementUL.append(initialChildContainer);
 		}
-		//statementUL.append(placeholderLI);
 		
 		statement.append(statementUL);
 		

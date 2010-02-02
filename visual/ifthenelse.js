@@ -3,8 +3,8 @@ LAGVEIf.scriptName = 'ifthenelse.js';
 
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
-	LAGVEIf.newIf = function() {
-		var ifThenElse			= Y.Node.create('<div class="ifthenelse"></div>');
+	LAGVEIf.newIf = function(config) {
+		var ifThenElse			= Y.Node.create('<div class="ifthenelse deletable"></div>');
 		var condCenteringOuter	= Y.Node.create('<div class="ifthenelse-condition-centering-outer"></div>');
 		var condCenteringInner	= Y.Node.create('<div class="ifthenelse-condition-centering-inner"></div>');
 		var ifDiamondIMG		= Y.Node.create('<img	alt="if-then-else diamond shape" \
@@ -24,30 +24,35 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		/*	Node structure:
 			
-			ifThenElse
-				condCenteringOuter
-					condCenteringInner
-						ifDiamondIMG
-						conditionContainer
-				thenAndElse
-					thenBlock
-						thenBlockTitle
-					elseBlock
-						elseBlockTitle
+		ifThenElse
+			condCenteringOuter
+				condCenteringInner
+					ifDiamondIMG
+					conditionContainer
+			thenAndElse
+				thenBlock
+					thenBlockTitle
+				elseBlock
+					elseBlockTitle
 		*/
-		ifThenElse.append(			condCenteringOuter);
-		condCenteringOuter.append(	condCenteringInner);
-		condCenteringInner.append(	ifDiamondIMG);
-		condCenteringInner.append(	conditionContainer);
-		ifThenElse.append(			thenAndElse);
-		thenAndElse.append(			thenBlock);
-		thenBlock.append(			thenBlockTitle);
-		thenAndElse.append(			elseBlock);
-		elseBlock.append(			elseBlockTitle);
+		ifThenElse.append(			condCenteringOuter	);
+		condCenteringOuter.append(	condCenteringInner	);
+		condCenteringInner.append(	ifDiamondIMG		);
+		condCenteringInner.append(	conditionContainer	);
+		ifThenElse.append(			thenAndElse			);
+		thenAndElse.append(			thenBlock			);
+		thenBlock.append(			thenBlockTitle		);
+		thenAndElse.append(			elseBlock			);
+		elseBlock.append(			elseBlockTitle		);
 		
-		Y.one('body').append(ifThenElse);
+		//Y.one('body').append(ifThenElse);
+		if (isset(config) && isset(config.targetId)) {
+			Y.one('#' + config.targetId).append(ifThenElse);
+		}
+		
+		return ifThenElse;
 	}
 	
-	Y.on('click',function() {LAGVEIf.newIf()});
+	//Y.on('click',function() {LAGVEIf.newIf()});
 });
 		

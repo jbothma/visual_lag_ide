@@ -3,6 +3,17 @@ LAGVEContext.scriptName = 'context_menu.js';
 
 getMyY().use('event', function(Y) {
 
+	/*
+	switch (context.name) {
+		case 'action': _useButton(LAGVEContext.action);
+		case 'x': _useButton(LAGVEContext.x);
+	}
+	
+	context.hasClass('deletable') { _useButton(LAGVEContext.delete) };
+	*/
+	
+	
+	
 	// MENU
 	LAGVEContext.menu		= Y.Node.create( '<div id="context-menu"></div>' );
 	
