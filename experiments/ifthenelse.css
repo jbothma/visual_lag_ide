@@ -11,6 +11,8 @@
 .ifthenelse-condition-container {
 	position: 		relative;
 	height:			59px;
+	min-width:		120px;
+	margin:			10px 40px 10px 40px;
 	border:			1px dashed #AAA;
 }
 .ifthenelse-diamond-image {
@@ -41,7 +43,7 @@
 	border:		1px solid black;
 	margin:		2px;
 	position:	relative;
-	float:		left;
+	float:		right;
 	min-width:	150px;
 	min-height:	50px;
 	background-color:	white;
@@ -64,4 +66,14 @@
 	font-size:	1em;
 	line-height:1em;
 	right:		5px;
+}
+ .ifthenelse-condition-centering-outer {
+	float:				left;
+	position:			relative;
+	left:				50%;
+}
+.ifthenelse-condition-centering-inner {
+	float:				left;
+	position:			relative;
+	left:				-50%;
 }
