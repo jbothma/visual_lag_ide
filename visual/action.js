@@ -3,7 +3,7 @@ LAGVEActn.scriptName = 'action.js';
 
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
-	LAGVEActn.newAction = function() {
+	LAGVEActn.newAction = function(targetNode) {
 		var action 				= Y.Node.create( '<div class="action statement-child"></div>' );
 		
 		var attributeContainer	= Y.Node.create( '<div class="action-attribute-container action-child-container selectable" title="Drop an attribute here."></div>' );
@@ -31,7 +31,9 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		action.append(operatorContainer);
 		action.append(valueContainer);
 		
-		
+		if (isset(targetNode)) {
+			targetNode.LAGVEInsert(action);
+		}
 		
 		return action;
 	}
