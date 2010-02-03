@@ -54,7 +54,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		 */
 		statement.LAGVEInsert = function(node) {
 			if (node.hasClass('statement-child')) {
-				statement.LAGVEUL.append(initialChildContainer);				
+				statement.LAGVEUL.append(LAGVEStmt._newStatementChildContainer(node));				
 			} else {
 				alert(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
 			}
@@ -66,7 +66,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		return statement;
 	};
 	
-	newStatementChildContainer = function(child) {
+	LAGVEStmt._newStatementChildContainer = function(child) {
 		var statementChildContainer	= Y.Node.create( '<li class="statement-child-container deletable"></li>' );
 	
 		var actionContainerDrag = new Y.DD.Drag({	node:	statementChildContainer,

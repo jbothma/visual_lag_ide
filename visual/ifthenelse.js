@@ -3,15 +3,15 @@ LAGVEIf.scriptName = 'ifthenelse.js';
 
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
-	LAGVEIf.newIf = function(config) {
-		var ifThenElse			= Y.Node.create('<div class="ifthenelse deletable"></div>');
+	LAGVEIf.newIf = function(targetNode) {
+		var ifThenElse			= Y.Node.create('<div class="ifthenelse deletable statement-child"></div>');
 		var condCenteringOuter	= Y.Node.create('<div class="ifthenelse-condition-centering-outer"></div>');
 		var condCenteringInner	= Y.Node.create('<div class="ifthenelse-condition-centering-inner"></div>');
 		var ifDiamondIMG		= Y.Node.create('<img	alt="if-then-else diamond shape" \
 														class="ifthenelse-diamond-image" \
 														src="../visual/images/ifthenelse_diamond.png" >\
 												</img>' );
-		var conditionContainer 	= Y.Node.create('<div class="ifthenelse-condition-container"></div>');
+		var conditionContainer 	= Y.Node.create('<div class="ifthenelse-condition-container selectable"></div>');
 		var thenAndElse			= Y.Node.create('<div class="ifthenelse-thenelse"></div>');
 		var thenBlock			= Y.Node.create('<div class="ifthenelse-then"></div>');
 		var thenBlockTitle		= Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
@@ -45,9 +45,8 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		thenAndElse.append(			elseBlock			);
 		elseBlock.append(			elseBlockTitle		);
 		
-		//Y.one('body').append(ifThenElse);
-		if (isset(config) && isset(config.targetId)) {
-			Y.one('#' + config.targetId).append(ifThenElse);
+		if (isset(targetNode)) {
+			targetNode.LAGVEInsert(ifThenElse);
 		}
 		
 		return ifThenElse;
