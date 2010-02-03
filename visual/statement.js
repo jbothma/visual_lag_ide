@@ -31,30 +31,42 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	 *		initialChild	A node that would be appended to the new statement, if set.
 	 *	}
 	 */
-	LAGVEStmt.newStatement = function(config) {
-		var statement		= Y.Node.create( '<div class="statement deletable"></div>' );		
-		var statementUL		= Y.Node.create( '<ul class="statement-list"></ul>' );
+	LAGVEStmt.newStatement = function(targetNode) {
+		var statement		= Y.Node.create( '<div class="statement deletable selectable"></div>' );		
+		statement.LAGVEUL	= Y.Node.create( '<ul class="statement-list"></ul>' );
 
-		var statementULDrop = new Y.DD.Drop({	node:	statementUL,
+		var statementULDrop = new Y.DD.Drop({	node:	statement.LAGVEUL,
 												groups:	['statement-list']  });
 		
 		
-		if (isset(config) && isset(config.initialChild)) {
+		/*if (isset(config) && isset(config.initialChild)) {
 			var initialChildContainer = newStatementChildContainer(config.initialChild);
-			initialChildContainer.oldList = statementUL;
-			statementUL.append(initialChildContainer);
+			initialChildContainer.oldList = statement.LAGVEUL;
+			statement.LAGVEUL.append(initialChildContainer);
+		}*/
+		
+		statement.append(statement.LAGVEUL);
+
+		statement.LAGVEName = 'Statement Block';
+		
+		/**
+		 * Function to insert nodes asked to be inserted.
+		 */
+		statement.LAGVEInsert = function(node) {
+			if (node.hasClass('statement-child')) {
+				statement.LAGVEUL.append(initialChildContainer);				
+			} else {
+				alert(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
+			}
 		}
 		
-		statement.append(statementUL);
-		
-		if (isset(config) && isset(config.targetId)) {
-			Y.one('#' + config.targetId).append(statement);
+		if (isset(targetNode)) {
+			targetNode.LAGVEInsert(statement);
 		}
-		
 		return statement;
 	};
 	
-	newStatementChildContainer = function(initialChild) {
+	newStatementChildContainer = function(child) {
 		var statementChildContainer	= Y.Node.create( '<li class="statement-child-container deletable"></li>' );
 	
 		var actionContainerDrag = new Y.DD.Drag({	node:	statementChildContainer,
@@ -65,7 +77,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		var actionContainerDrop = new Y.DD.Drop({	node:	statementChildContainer,
 													groups:	['statement-list']  });
 
-		statementChildContainer.append(initialChild);
+		statementChildContainer.append(child);
 		
 		return statementChildContainer;
 	};

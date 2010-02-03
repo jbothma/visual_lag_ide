@@ -61,12 +61,23 @@ getMyY().use("node-menunav",'console', function(Y) {
 		
 		statementBox = LAGVEStmt.newStatement();
 		statementBox.removeClass('deletable');
+		// It'd be ambiguious if Initialization statement
+		// block could be selected because it's prettier
+		// if Init is selectable and Init's selectedness
+		// is passed through to the statement block anyway.
+		statementBox.removeClass('selectable');
 		statementBox.setStyle('minWidth','400px');
 		statementBox.setStyle('minHeight','150px');
 		
 		LAGVE.initialization.append(title);
 		LAGVE.initialization.append(statementBox);
 		
+		/**
+		 *	Pass Initialization's LAGVEInsert to statementBox's
+		 */
+		LAGVE.initialization.LAGVEInsert = function(node) {
+			statementBox.LAGVEInsert(node);
+		}
 		
 		return LAGVE.initialization;
 	}
@@ -77,11 +88,23 @@ getMyY().use("node-menunav",'console', function(Y) {
 		
 		statementBox = LAGVEStmt.newStatement();
 		statementBox.removeClass('deletable');
+		// It'd be ambiguious if implementation statement
+		// block could be selected because it's prettier
+		// if Init is selectable and Init's selectedness
+		// is passed through to the statement block anyway.
+		statementBox.removeClass('selectable');
 		statementBox.setStyle('minWidth','400px');
 		statementBox.setStyle('minHeight','150px');
 		
 		LAGVE.implementation.append(title);
 		LAGVE.implementation.append(statementBox);
+		
+		/**
+		 *	Pass Initialization's LAGVEInsert to statementBox's
+		 */
+		LAGVE.implementation.LAGVEInsert = function(node) {
+			statementBox.LAGVEInsert(node);
+		}
 		
 		return LAGVE.implementation;
 	}
