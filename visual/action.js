@@ -5,9 +5,14 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEActn.newAction = function(targetNode) {
 		var action 				= Y.Node.create( '<div class="action statement-child"></div>' );
+		action.LAGVEName = 'Action';
 		
 		var attributeContainer	= Y.Node.create( '<div class="action-attribute-container action-child-container selectable" title="Drop an attribute here."></div>' );
+		attributeContainer.LAGVEName = 'Attribute position';
+		
 		var valueContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container selectable" title="Drop an attribute or value here."></div>' );
+		valueContainer.LAGVEName = 'Value position';
+		
 		var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-child-container" title="Select an operator from the list."></div>' );
 		
 		var attributeContainerDT	= new Y.DD.Drop({	node:	attributeContainer,
@@ -18,6 +23,9 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		attributeContainerDT.node	= attributeContainer;
 		valueContainerDT.node		= valueContainer;
+		
+		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.insertActionChild(attributeContainer,node)};
+		valueContainer.LAGVEInsert		= function(node) {LAGVEActn.insertActionChild(valueContainer,node)};
 		
 		var operatorSelect =  Y.Node.create( '<select class="operator-select">' +
 											 '<option value="=">=</option>' +
@@ -39,17 +47,22 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 	}
 	
 	LAGVEActn.insertActionChild = function(target,child) {
-		if (target.hasClass('action-child-container')) {
-			if (!target.hasChildNodes()) {			
-				target.append(child);				
+		if (child.hasClass('action-child')) {
+			if (target.hasClass('action-child-container')) {
+				if (!target.hasChildNodes()) {			
+					target.append(child);				
+				} else {
+					//Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
+				}
+				
+				LAGVEActn._positionChild(child);
+				
 			} else {
-				//Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target had a child.');
+				//Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target wasn\'t a child container.');
 			}
-			
-			LAGVEActn._positionChild(child);
-			
 		} else {
-			//Y.log('LAGVEActn.insertActionChild() didn\'t insert. Target wasn\'t a child container.');
+			//alert(child.LAGVEName + ' can not be inserted into a ' + target.LAGVEName + '.');
+			Y.log(child.LAGVEName + ' can not be inserted into a ' + target.LAGVEName + '.');
 		}
 	}
 	
