@@ -24,8 +24,8 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		attributeContainerDT.node	= attributeContainer;
 		valueContainerDT.node		= valueContainer;
 		
-		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.insertActionChild(attributeContainer,node)};
-		valueContainer.LAGVEInsert		= function(node) {LAGVEActn.insertActionChild(valueContainer,node)};
+		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.tryInsertActionChild(attributeContainer,node)};
+		valueContainer.LAGVEInsert		= function(node) {LAGVEActn.tryInsertActionChild(valueContainer,node)};
 		
 		var operatorSelect =  Y.Node.create( '<select class="operator-select">' +
 											 '<option value="=">=</option>' +
@@ -46,12 +46,16 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		return action;
 	}
 	
-	LAGVEActn.insertActionChild = function(target,child) {
-		if (!target.hasChildNodes()) {			
-			target.append(child);				
-		}
+	LAGVEActn.tryInsertActionChild = function(target,child) {
+		if (target.hasClass('action-child-container')) {
+			if (child.hasClass('action-child')) {
+				if (!target.hasChildNodes()) {			
+					target.append(child);				
+				}
 		
-		LAGVEActn._positionChild(child);
+				LAGVEActn._positionChild(child);
+			}
+		}
 	}
 	
 	LAGVEActn._positionChild = function(child) {
@@ -63,23 +67,15 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 	}
 	
 	Y.DD.DDM.on('drop:enter',function(e) {
-		if (e.drag.get('node').hasClass('action-child')) {
-			if (e.drop.get('node').hasClass('action-child-container')) {
-				LAGVEActn.insertActionChild(e.drop.get('node'),e.drag.get('node'))
-			}
-		}
+		LAGVEActn.tryInsertActionChild(e.drop.get('node'),e.drag.get('node'));
 	});
 	
 	Y.DD.DDM.on('drop:hit',function(e) {
-		if (e.drag.get('node').hasClass('action-child')) {
-			if (e.drop.get('node').hasClass('action-child-container')) {
-				LAGVEActn.insertActionChild(e.drop.get('node'),e.drag.get('node'))
-			}
-		}
+		LAGVEActn.tryInsertActionChild(e.drop.get('node'),e.drag.get('node'))
 	});
 	
 	Y.DD.DDM.on('drag:dropmiss',function(e) {
-		if (e.drag.get('node').hasClass('action-child')) {
+		if (e.target.get('node').hasClass('action-child')) {
 			LAGVEActn._positionChild(e.target.get('node'));
 		}
 	});
