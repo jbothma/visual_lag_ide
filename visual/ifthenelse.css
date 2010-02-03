@@ -25,7 +25,10 @@
 .ifthenelse-condition-positioning {
 	position:	relative;
 	border:		1px solid #AAAAAA;
-
+}
+.ifthenelse-thenelse {
+	clear:both;
+	float:left;
 }
 .ifthenelse-then {
 	border:		1px solid black;

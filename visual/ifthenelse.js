@@ -14,8 +14,10 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		var conditionContainer 	= Y.Node.create('<div class="ifthenelse-condition-container selectable"></div>');
 		var thenAndElse			= Y.Node.create('<div class="ifthenelse-thenelse"></div>');
 		var thenBlock			= Y.Node.create('<div class="ifthenelse-then"></div>');
+		thenBlock.append(LAGVEStmt.newStatement());
 		var thenBlockTitle		= Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
 		var elseBlock			= Y.Node.create('<div class="ifthenelse-else"></div>');
+		elseBlock.append(LAGVEStmt.newStatement());
 		var elseBlockTitle		= Y.Node.create('<div class="ifthenelse-else-title">ELSE</div>');		
 		
 		var conditionContainer		= Y.Node.create('<div class="ifthenelse-condition-container"></div>');
