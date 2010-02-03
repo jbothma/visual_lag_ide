@@ -1,7 +1,7 @@
 LAGVE = new Object();
 LAGVE.scriptName = 'visual_editor.js';
 
-getMyY().use("node-menunav",'console', function(Y) {
+getMyY().use('node-menunav','console', 'io', function(Y) {
 	//new Y.Console().render();
 
 	LAGVE._init = function() {		
@@ -11,6 +11,7 @@ getMyY().use("node-menunav",'console', function(Y) {
 		
 		LAGVE._setupMainMenu();
 		LAGVE._setupWorkspace();
+		LAGVE.getHelp();
 		
 		LAGVE._editorReady();		
 	}	
@@ -119,18 +120,48 @@ getMyY().use("node-menunav",'console', function(Y) {
 	}
 	
 	LAGVE.select = function (selectedNode) {
-		// if the thing I clicked on is something I can select
-		if (selectedNode.hasClass('selectable')) {
-			if (isset(LAGVE.selectedNode)) {
-				//remove clas from previously selected item
-				LAGVE.selectedNode.removeClass('selected');
+		if (isset(selectedNode)) {
+			// if the thing I clicked on is something I can select
+			if (selectedNode.hasClass('selectable')) {
+				if (isset(LAGVE.selectedNode)) {
+					//remove clas from previously selected item
+					LAGVE.selectedNode.removeClass('selected');
+				}
+				// set LAGVE.seletedNode to the thing I selected
+				LAGVE.selectedNode = selectedNode;
+				// give it the selected class which makes it obvious it's selected
+				LAGVE.selectedNode.addClass('selected');
+			} else {
+				// limit/safety stop case
+				if (selectedNode.hasClass('select-propagation-stop') || selectedNode.get('tagName') === 'body') {
+					return
+				} else {
+					LAGVE.select(selectedNode.get('parentNode'));
+				}
 			}
-			// set LAGVE.seletedNode to the thing I selected
-			LAGVE.selectedNode = selectedNode;
-			// give it the selected class which makes it obvious it's selected
-			LAGVE.selectedNode.addClass('selected');
 		}
 	}
+	
+	LAGVE.getHelp = function() {
+		var uri = 'help.htm';
+	 
+		// Make an HTTP request to 'get.php'.
+		// NOTE: This transaction does not use a configuration object.
+		var request = Y.io(uri);
+	}
+	
+	// Define a function to handle the response data.
+	LAGVE.getHelpComplete = function(id, o, args) {
+		var id = id; // Transaction ID.
+		var data = o.responseText;
+		Y.one('#VE-help-container').append(Y.Node.create(data));
+	};
+	
+	// Subscribe to event "io:complete", and pass an array
+    // as an argument to the event handler "complete", since
+    // "complete" is global.   At this point in the transaction
+    // lifecycle, success or failure is not yet known.
+    Y.on('io:complete', LAGVE.getHelpComplete);
 	
 	Y.on("contentready", LAGVE._init, "body");
 	

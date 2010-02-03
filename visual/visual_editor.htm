@@ -151,30 +151,27 @@
 								</div> <!-- end LAG-attr-menu -->
 							</li>
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement({targetId:'VE-workspace',initialChild:LAGVEActn.newAction()})">Insert Action</a>
+								<a class="yui-menuitem-content" href="#" onclick="LAGVEActn.newAction(LAGVE.selectedNode)">Insert Action</a>
 							</li>
 							<li class="yui-menuitem">
 								<a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVE.selectedNode)">Insert IfThenElse</a>
 							</li>
 							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="LAGVEStmt.newStatement(LAGVE.selectedNode)">Insert Statement block</a>
-							</li>
-							<li class="yui-menuitem">
-								<a class="yui-menuitem-content" href="#" onclick="showHelp()">Help</a>
+								<a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
 							</li>
 						</ul>
 					</div>
 				</div> <!-- end VE-menu -->
 			</div> <!-- end VE-menu-container -->
-			<div id="VE-workspace">
+			<div id="VE-workspace" class="select-propagation-stop">
 			</div>
 		</div> <!-- end VE-window -->
 		<div id="VE-help">
 			<div id="VE-help-titlebar">
-				Visual LAG Editor Help (<a href="help.htm" onclick="hideHelp()">Page link</a>)
+				Visual LAG Editor Help (<a href="help.htm" onclick="LAGVE.hideHelp()">Page link</a>)
 			</div>
-			<div id="VE-help-closeBtn" onclick="hideHelp()">X</div>
-			<!--<iframe id="VE-help-iframe" src="help.htm">-->
+			<div id="VE-help-closeBtn" onclick="LAGVE.hideHelp()">X</div>
+			<div id="VE-help-container"></div>
 		</div>		
 		<div id="VE-loading-msg-centering">
 			<div id="VE-loading-msg">
