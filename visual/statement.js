@@ -16,7 +16,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	// or downwards.
 	// Cache last mouse position.
 	// Downwards is default.
-	LAGVEStmt.goingUp	= false;
+	LAGVEStmt.goingDown	= true;
 	LAGVEStmt.lastY		= 0;
 	
 	/**
@@ -33,6 +33,8 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	 */
 	LAGVEStmt.newStatement = function(targetNode) {
 		var statement		= Y.Node.create( '<div class="statement deletable selectable"></div>' );		
+		statement.LAGVEName = 'Statement Block';
+		
 		statement.LAGVEUL	= Y.Node.create( '<ul class="statement-list"></ul>' );
 
 		var statementULDrop = new Y.DD.Drop({	node:	statement.LAGVEUL,
@@ -47,7 +49,6 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		
 		statement.append(statement.LAGVEUL);
 
-		statement.LAGVEName = 'Statement Block';
 		
 		/**
 		 * Function to insert nodes asked to be inserted.
@@ -57,7 +58,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 				statement.LAGVEUL.append(LAGVEStmt._newStatementChildContainer(node));				
 			} else {
 				//alert(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
-				Y.log(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
+				Y.log(node.LAGVEName + ' can not be inserted into ' + statement.LAGVEName + '.');
 			}
 		}
 		
@@ -82,8 +83,8 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		
 		return statementChildContainer;
 	};
-		
-	Y.DD.DDM.on('drop:over', function(e) {
+	
+	LAGVEStmt._dropOverHandler = function(e) {
 		//Get a reference to out drag and drop nodes
 		var dragNode = e.drag.get('node'),
 			dropNode = e.drop.get('node');
@@ -92,7 +93,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		if (dropNode.hasClass('statement-child-container')) {
 			//Are we going down? (not going up)
 			// then we want to insert below, but not below a placeholder
-			if (!LAGVEStmt.goingUp) {
+			if (LAGVEStmt.goingDown) {
 				var nextSibling = dropNode.get('nextSibling');
 				if (isset(nextSibling)) { 
 					dropNode = nextSibling 
@@ -108,9 +109,9 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
 			dropNode.append(dragNode);
 		}
+	}
 		
-
-	});
+	Y.DD.DDM.on('drop:over', LAGVEStmt._dropOverHandler);
 
 	Y.DD.DDM.on('drag:drag', function(e) {
 		//Get the last y point
@@ -118,10 +119,10 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		//is it greater than the lastY var?
 		if (y < LAGVEStmt.lastY) {
 			//We are going up
-			LAGVEStmt.goingUp = true;
+			LAGVEStmt.goingDown = false;
 		} else {
 			//We are going down..
-			LAGVEStmt.goingUp = false;
+			LAGVEStmt.goingDown = true;
 		}
 		//Cache for next check
 		LAGVEStmt.lastY = y;
