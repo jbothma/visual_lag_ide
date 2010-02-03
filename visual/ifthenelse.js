@@ -5,25 +5,37 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEIf.newIf = function(targetNode) {
 		var ifThenElse			= Y.Node.create('<div class="ifthenelse statement-child"></div>');
+		
+		///////    IF    ////////
 		var condCenteringOuter	= Y.Node.create('<div class="ifthenelse-condition-centering-outer"></div>');
 		var condCenteringInner	= Y.Node.create('<div class="ifthenelse-condition-centering-inner"></div>');
 		var ifDiamondIMG		= Y.Node.create('<img	alt="if-then-else diamond shape" \
 														class="ifthenelse-diamond-image" \
 														src="../visual/images/ifthenelse_diamond.png" >\
-												</img>' );
-		var conditionContainer 	= Y.Node.create('<div class="ifthenelse-condition-container selectable"></div>');
-		var thenAndElse			= Y.Node.create('<div class="ifthenelse-thenelse"></div>');
+												</img>' );												
+		var conditionContainer 	= Y.Node.create('<div class="selectable ifthenelse-condition-container"></div>');
+		var conditionContainerDrop	= new Y.DD.Drop({	node:	conditionContainer,
+														groups:	['condition'] });
+		conditionContainer.LAGVEInsert = function(child) {
+			if (child.hasClass('condition')) {
+				if (!conditionContainer.hasChildNodes()) {			
+					conditionContainer.append(child);				
+				}
+			} 
+		}
+		
+		thenAndElse			= Y.Node.create('<div class="ifthenelse-thenelse"></div>');
+		
+		///////    THEN    ////////
 		var thenBlock			= Y.Node.create('<div class="ifthenelse-then"></div>');
 		thenBlock.append(LAGVEStmt.newStatement());
 		var thenBlockTitle		= Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
+		
+		///////    ELSE    ////////
 		var elseBlock			= Y.Node.create('<div class="ifthenelse-else"></div>');
 		elseBlock.append(LAGVEStmt.newStatement());
 		var elseBlockTitle		= Y.Node.create('<div class="ifthenelse-else-title">ELSE</div>');		
-		
-		var conditionContainer		= Y.Node.create('<div class="ifthenelse-condition-container"></div>');
-		var conditionContainerDrop	= new Y.DD.Drop({	node:	conditionContainer,
-														groups:	['condition'] });
-		
+				
 		/*	Node structure:
 			
 		ifThenElse
