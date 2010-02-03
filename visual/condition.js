@@ -1,5 +1,5 @@
 LAGVECondition = new Object();
-LAGVEActn.scriptName = 'condition.js';
+LAGVECondition.scriptName = 'condition.js';
 
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		

@@ -56,7 +56,8 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 			if (node.hasClass('statement-child')) {
 				statement.LAGVEUL.append(LAGVEStmt._newStatementChildContainer(node));				
 			} else {
-				alert(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
+				//alert(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
+				Y.log(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
 			}
 		}
 		
