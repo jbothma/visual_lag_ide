@@ -46,14 +46,17 @@ getMyY().use("node-menunav",'console', function(Y) {
 		var workspaceDT = new Y.DD.Drop({ node: LAGVE.workspace });
 		
 		//create initialization
-		LAGVE.workspace.append(LAGVE._createInitialization());
+			
+		var initialization = LAGVE._createInitialization();
+		LAGVE.select(initialization);
+		LAGVE.workspace.append(initialization);
 		
 		//create implementation
 		LAGVE.workspace.append(LAGVE._createImplementation());
 	}
 	
 	LAGVE._createInitialization = function() {
-		LAGVE.initialization	= Y.Node.create( '<div id="initialization"></div>' );
+		LAGVE.initialization	= Y.Node.create( '<div id="initialization" class="selectable"></div>' );
 		var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
 		
 		statementBox = LAGVEStmt.newStatement();
@@ -69,7 +72,7 @@ getMyY().use("node-menunav",'console', function(Y) {
 	}
 	
 	LAGVE._createImplementation = function() {
-		LAGVE.implementation	= Y.Node.create( '<div id="implementation"></div>' );
+		LAGVE.implementation	= Y.Node.create( '<div id="implementation" class="selectable"></div>' );
 		var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
 		
 		statementBox = LAGVEStmt.newStatement();
@@ -92,13 +95,23 @@ getMyY().use("node-menunav",'console', function(Y) {
 		LAGVE.attrMenu.addClass('yui-menu-hidden');
 	}
 	
-	LAGVE.select = function (e) {
-		//e.target
+	LAGVE.select = function (selectedNode) {
+		// if the thing I clicked on is something I can select
+		if (selectedNode.hasClass('selectable')) {
+			if (isset(LAGVE.selectedNode)) {
+				//remove clas from previously selected item
+				LAGVE.selectedNode.removeClass('selected');
+			}
+			// set LAGVE.seletedNode to the thing I selected
+			LAGVE.selectedNode = selectedNode;
+			// give it the selected class which makes it obvious it's selected
+			LAGVE.selectedNode.addClass('selected');
+		}
 	}
 	
-	Y.on("contentready", LAGVE._init,"body");
+	Y.on("contentready", LAGVE._init, "body");
 	
-	Y.on('click',LAGVE.select);
+	Y.on('click',function(e){LAGVE.select(e.target)});
 });
 
 LAGVE.showHelp = function() {document.getElementById('VE-help').style.visibility = 'visible';}
