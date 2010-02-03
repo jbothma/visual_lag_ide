@@ -4,7 +4,7 @@ LAGVEIf.scriptName = 'ifthenelse.js';
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEIf.newIf = function(targetNode) {
-		var ifThenElse			= Y.Node.create('<div class="ifthenelse deletable statement-child"></div>');
+		var ifThenElse			= Y.Node.create('<div class="ifthenelse statement-child"></div>');
 		var condCenteringOuter	= Y.Node.create('<div class="ifthenelse-condition-centering-outer"></div>');
 		var condCenteringInner	= Y.Node.create('<div class="ifthenelse-condition-centering-inner"></div>');
 		var ifDiamondIMG		= Y.Node.create('<img	alt="if-then-else diamond shape" \
