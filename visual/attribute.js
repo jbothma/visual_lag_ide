@@ -41,7 +41,7 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 	 *  would append PM.GM.accessed to the element 
 	 *	with id visual-editing-workspace
 	 */
-	LAGVEAttr.insertNewAttr = function(levels,targetId) {
+	LAGVEAttr.insertNewAttr = function(levels,targetNode) {
 		var lowestAttrLevel;
 		
 		/*	create attribute levels in reverse
@@ -52,21 +52,33 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 			lowestAttrLevel = LAGVEAttr.newAttrLevel(levels[i],false,lowestAttrLevel);
 		}
 		
+		var newAttribute = lowestAttrLevel;
+		newAttribute.LAGVEName = 'Attribute/Value';
+		
 		// make the root attribute level box dragable
-		var attributeDD = new Y.DD.Drag({	node:	lowestAttrLevel,
+		var attributeDD = new Y.DD.Drag({	node:	newAttribute,
 											groups:	['attribute'] });
 		
 		//constrain attributes to their initial target for now.
 		//TODO: should prob be a sparate parameter once attributes 
 		//can be inserted in context.
 		attributeDD.plug(	Y.Plugin.DDConstrained,
-							{ constrain2node: '#' + targetId } );
+							{ constrain2node: Y.one('body') } );
 																		
-		attributeDD.node = lowestAttrLevel;
-		lowestAttrLevel.addClass('deletable');
-		lowestAttrLevel.addClass('action-child');
+		attributeDD.node = newAttribute;
 		
-		// append to the node found by CSS id #targetId
-		Y.one('#' + targetId).append(lowestAttrLevel);
+		newAttribute.addClass('deletable');
+		newAttribute.addClass('action-child');
+		
+		// Default to selected node.
+		if (!isset(targetNode)) {
+			targetNode = LAGVE.selectedNode;
+		}
+		
+		if (isset(targetNode)) {
+			targetNode.LAGVEInsert(newAttribute);
+		} 
+		
+		return newAttribute;
 	}
 });
