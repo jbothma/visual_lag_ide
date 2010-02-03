@@ -59,7 +59,7 @@ getMyY().use("node-menunav",'console', function(Y) {
 		LAGVE.initialization	= Y.Node.create( '<div id="initialization" class="selectable"></div>' );
 		var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
 		
-		statementBox = LAGVEStmt.newStatement();
+		var statementBox = LAGVEStmt.newStatement();
 		statementBox.removeClass('deletable');
 		// It'd be ambiguious if Initialization statement
 		// block could be selected because it's prettier
@@ -86,7 +86,7 @@ getMyY().use("node-menunav",'console', function(Y) {
 		LAGVE.implementation	= Y.Node.create( '<div id="implementation" class="selectable"></div>' );
 		var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
 		
-		statementBox = LAGVEStmt.newStatement();
+		var statementBox = LAGVEStmt.newStatement();
 		statementBox.removeClass('deletable');
 		// It'd be ambiguious if implementation statement
 		// block could be selected because it's prettier
