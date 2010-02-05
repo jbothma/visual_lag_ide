@@ -2,7 +2,7 @@
 <html>
 	<head>
 		<style type="text/css">
-			div {
+			div.demo {
 				border:				1px solid black;
 				width:				30px;
 				height:				30px;				
@@ -35,24 +35,44 @@
 				border-color:	blue;
 				z-index:	1000;
 			}
+			#demo-space {
+				width:		300px;
+				height:		300px;
+				border:		1px solid black;
+				margin:		10px;
+				position:	relative;
+				float:		left;
+			}
 
 		</style>
 		
 	</head>
-	<body>
-		<div id="a">a</div>
-		<div id="b">b</div>
-		<div id="c">
-			c
-			<div id="d">d</div>
+	<body class="yui-skin-sam">
+		<div id="demo-space">
+			<div id="a" class="demo">a</div>
+			<div id="b" class="demo">b</div>
+			<div id="c" class="demo">
+				c
+				<div id="d" class="demo">d</div>
+			</div>
+			<div id="e" class="demo">e</div>
 		</div>
-		<div id="e">e</div>
-		
 		
 		<script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
 		<script type="text/javascript">
-			YUI().use('dd-drag','dd-drop','node', function(Y){
-			
+			YUI().use('dd-drag','dd-drop','node','console-filters', function(Y){
+				var moveConsole = new Y.Console({
+					style:'inline',
+					plugins: [ Y.Plugin.ConsoleFilters ],
+				}).render();
+				moveConsole.filter.hideSource('mouseover','drop_enter','drop_exit');
+				
+				var otherConsole = new Y.Console({
+					style:'inline',
+					plugins: [ Y.Plugin.ConsoleFilters ],
+				}).render();
+				otherConsole.filter.hideSource('drag_over');
+				
 				var dropA = new Y.DD.Drop({
 					node:		Y.one('#a'),
 				});
@@ -74,19 +94,26 @@
 					bubbles:	false,
 				});
 				
-				function logId(e) {
-					e.halt();
-					Y.log('Over ' + e.drop.get('node').get('id'));
-				}
 				
-				dragE.on('drag:over',logId);
+				
+				dragE.on('drag:over',function(e) {
+					Y.log('Moved over ' + e.drop.get('node').get('id'),'info','drag_over');
+				});
 				
 				dragE.on('drag:start', function(e) {
-					e.target.deltaXY = ['-50','-50'];
+					//e.target.deltaXY = ['-50','-50'];
 				});
 				
 				Y.on('mouseover',function(e) {
-					Y.log('mouseover ' + e.target.get('id'))
+					Y.log('mouseover ' + e.target.get('id'),'info','mouseover')
+				});
+				
+				Y.DD.DDM.on('drop:enter',function(e) {
+					Y.log('Enter ' + e.target.get('node').get('id'),'info','drop_enter')
+				});
+				
+				Y.DD.DDM.on('drop:exit',function(e) {
+					Y.log('Exit ' + e.target.get('node').get('id'),'info','drop_exit')
 				});
 			});
 		</script>
