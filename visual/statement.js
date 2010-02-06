@@ -1,5 +1,6 @@
 LAGVEStmt = new Object();
 LAGVEStmt.scriptName = 'statement.js';
+LAGVEStmt.overHandledTimestamp = new Date().getTime();
 
 getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (Y) {
 	//new Y.Console().render();
@@ -87,30 +88,40 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		var topOfDropStack = LAGVE.dropStack.peek();
 		if (topOfDropStack) {
 			//Y.log('Top of stack is ' + topOfDropStack.get('id'));
-
-			//Get a reference to out drag and drop nodes
-			var dragNode = e.drag.get('node'),
-				dropNode = topOfDropStack;
 			
-			//Are we dropping on a li node?
-			if (dropNode.hasClass('statement-child-container')) {
-				//Are we going down? (not going up)
-				// then we want to insert below, but not below a placeholder
-				if (LAGVEStmt.goingDown) {
-					var nextSibling = dropNode.get('nextSibling');
-					if (isset(nextSibling)) { 
-						dropNode = nextSibling 
-						dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+			// Optimisation to prevent running through all this code for each containing
+			// ancestor statement block ancestor. Each of these will fire the drag:over event 
+			// but, using the LAGVE.dropStack, each will insert to the top statement block (correctly)
+			// therefore we don't need to do it again for all of them on each move. The timestamp will
+			// probably be the same for most if not all events fired for a given move.
+			var currentTime = new Date().getTime();
+			if (currentTime !== LAGVEStmt.overHandledTimestamp) {
+				LAGVEStmt.overHandledTimestamp = currentTime;
+				
+				//Get a reference to out drag and drop nodes
+				var dragNode = e.drag.get('node'),
+					dropNode = topOfDropStack;
+				
+				//Are we dropping on a li node?
+				if (dropNode.hasClass('statement-child-container')) {
+					//Are we going down? (not going up)
+					// then we want to insert below, but not below a placeholder
+					if (LAGVEStmt.goingDown) {
+						var nextSibling = dropNode.get('nextSibling');
+						if (isset(nextSibling)) { 
+							dropNode = nextSibling 
+							dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+						} else {
+							dropNode.get('parentNode').append(dragNode);
+						}
 					} else {
-						dropNode.get('parentNode').append(dragNode);
+						dropNode.get('parentNode').insertBefore(dragNode, dropNode);
 					}
-				} else {
-					dropNode.get('parentNode').insertBefore(dragNode, dropNode);
 				}
-			}
-		
-			if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
-				dropNode.append(dragNode);
+			
+				if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
+					dropNode.append(dragNode);
+				}
 			}
 		}
 	});
