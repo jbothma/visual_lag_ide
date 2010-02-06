@@ -15,11 +15,15 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-child-container" title="Select an operator from the list."></div>' );
 		
-		var attributeContainerDT	= new Y.DD.Drop({	node:	attributeContainer,
-														groups:	['attribute'] });
+		var attributeContainerDT	= new Y.DD.Drop({
+			node:		attributeContainer,
+			groups:		['attribute'],
+		});
 		
-		var valueContainerDT 		= new Y.DD.Drop({	node:	valueContainer,
-														groups:	['attribute']  });
+		var valueContainerDT 		= new Y.DD.Drop({
+			node:	valueContainer,
+			groups:	['attribute'],
+		});
 		
 		attributeContainerDT.node	= attributeContainer;
 		valueContainerDT.node		= valueContainer;
