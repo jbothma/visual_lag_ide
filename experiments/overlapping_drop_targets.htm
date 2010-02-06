@@ -60,6 +60,23 @@
 		
 		<script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
 		<script type="text/javascript">
+			/**
+			 * Add peek() to the Javascript Array prototype
+			 * Returns the top of the stack or null
+			 * if the stack is empty without pop()ing it off.
+			 * http://ajax.sys-con.com/node/347048 accessed 06/02/2010
+			 * Reprint of Real-World AJAX: Secrets of the Masters published by SYS-CON ISBN 0-9777622-0-3 
+			 */
+			Array.prototype.peek = function(){
+				if (this.length > 0){
+					return this[this.length - 1];
+				} else {
+					return null;
+				}
+			}
+				
+			var dragStack = new Array;
+
 			YUI().use('dd-drag','dd-drop','node','console-filters', function(Y){
 				var moveConsole = new Y.Console({
 					style:'inline',
@@ -94,26 +111,40 @@
 					bubbles:	false,
 				});
 				
-				
-				
+
 				dragE.on('drag:over',function(e) {
 					Y.log('Moved over ' + e.drop.get('node').get('id'),'info','drag_over');
+					
+					var topOfStack = dragStack.peek();
+					if (topOfStack) {
+						Y.log('Top of stack is ' + topOfStack.get('id'),'info','drag_over');
+					}
 				});
 				
 				dragE.on('drag:start', function(e) {
-					//e.target.deltaXY = ['-50','-50'];
+					dragStack = new Array;
 				});
 				
 				Y.on('mouseover',function(e) {
-					Y.log('mouseover ' + e.target.get('id'),'info','mouseover')
+					Y.log('mouseover ' + e.target.get('id'),'info','mouseover');
 				});
 				
 				Y.DD.DDM.on('drop:enter',function(e) {
-					Y.log('Enter ' + e.target.get('node').get('id'),'info','drop_enter')
+					Y.log('Enter ' + e.target.get('node').get('id'),'info','drop_enter');
+					
+					dragStack.push(e.drop.get('node'));					
+					Y.log('Pushed ' + e.target.get('node').get('id'),'info','drop_enter');
 				});
 				
 				Y.DD.DDM.on('drop:exit',function(e) {
-					Y.log('Exit ' + e.target.get('node').get('id'),'info','drop_exit')
+					Y.log('Exit ' + e.target.get('node').get('id'),'info','drop_exit');
+					
+					dragStack.pop();
+					Y.log('Popped ' + e.target.get('node').get('id'),'info','drop_exit');
+				});
+				
+				Y.DD.DDM.on('drag:end', function(e) {
+					dragStack = new Array;
 				});
 			});
 		</script>
