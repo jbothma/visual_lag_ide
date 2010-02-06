@@ -1,7 +1,8 @@
 LAGVE = new Object();
 LAGVE.scriptName = 'visual_editor.js';
+LAGVE.dropStack = new Array;
 
-getMyY().use('node-menunav','console', 'io', function(Y) {
+getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	//new Y.Console().render();
 
 	LAGVE._init = function() {		
@@ -54,6 +55,8 @@ getMyY().use('node-menunav','console', 'io', function(Y) {
 		
 		//create implementation
 		LAGVE.workspace.append(LAGVE._createImplementation());
+		
+		Y.DD.DDM.set('dragMode','point');
 	}
 	
 	LAGVE._createInitialization = function() {
@@ -163,9 +166,25 @@ getMyY().use('node-menunav','console', 'io', function(Y) {
     // lifecycle, success or failure is not yet known.
     Y.on('io:complete', LAGVE.getHelpComplete);
 	
-	Y.on("contentready", LAGVE._init, "body");
+	Y.on('contentready', LAGVE._init, 'body');
 	
-	Y.on('click',function(e){LAGVE.select(e.target)});
+	Y.on('click', function(e){LAGVE.select(e.target)});
+	
+	Y.DD.DDM.on('drop:enter', function(e) {
+		LAGVE.dropStack.push(e.drop.get('node'));
+	});
+	
+	Y.DD.DDM.on('drop:exit', function(e) {
+		LAGVE.dropStack.pop();
+	});
+	
+	Y.DD.DDM.on('drag:end', function(e) {
+		LAGVE.dropStack = new Array;
+	});
+	
+	Y.DD.DDM.on('drag:start', function(e) {
+		LAGVE.dropStack = new Array;
+	});
 });
 
 LAGVE.showHelp = function() {document.getElementById('VE-help').style.visibility = 'visible';}

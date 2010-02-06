@@ -37,15 +37,10 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		
 		statement.LAGVEUL	= Y.Node.create( '<ul class="statement-list"></ul>' );
 
-		var statementULDrop = new Y.DD.Drop({	node:	statement.LAGVEUL,
-												groups:	['statement-list']  });
-		
-		
-		/*if (isset(config) && isset(config.initialChild)) {
-			var initialChildContainer = newStatementChildContainer(config.initialChild);
-			initialChildContainer.oldList = statement.LAGVEUL;
-			statement.LAGVEUL.append(initialChildContainer);
-		}*/
+		var statementULDrop = new Y.DD.Drop({
+			node:		statement.LAGVEUL,
+			groups:		['statement-list'],
+		});
 		
 		statement.append(statement.LAGVEUL);
 
@@ -69,49 +64,56 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	};
 	
 	LAGVEStmt._newStatementChildContainer = function(child) {
-		var statementChildContainer	= Y.Node.create( '<li class="statement-child-container deletable"></li>' );
+		var childContainer	= Y.Node.create( '<li class="statement-child-container deletable"></li>' );
 	
-		var actionContainerDrag = new Y.DD.Drag({	node:	statementChildContainer,
-													groups:	['statement-list'] });
+		var childContainerDrag = new Y.DD.Drag({
+			node:		childContainer,
+			groups:		['statement-list'],
+		});
 													
-		actionContainerDrag.plug(Y.Plugin.DDProxy, { moveOnEnd: false });
+		childContainerDrag.plug(Y.Plugin.DDProxy, { moveOnEnd: false });
 		
-		var actionContainerDrop = new Y.DD.Drop({	node:	statementChildContainer,
-													groups:	['statement-list']  });
+		var stateContainerDrop = new Y.DD.Drop({
+			node:	childContainer,
+			groups:	['statement-list'],
+		});
 
-		statementChildContainer.append(child);
+		childContainer.append(child);
 		
-		return statementChildContainer;
+		return childContainer;
 	};
 	
-	LAGVEStmt._dropOverHandler = function(e) {
-		//Get a reference to out drag and drop nodes
-		var dragNode = e.drag.get('node'),
-			dropNode = e.drop.get('node');
-		
-		//Are we dropping on a li node?
-		if (dropNode.hasClass('statement-child-container')) {
-			//Are we going down? (not going up)
-			// then we want to insert below, but not below a placeholder
-			if (LAGVEStmt.goingDown) {
-				var nextSibling = dropNode.get('nextSibling');
-				if (isset(nextSibling)) { 
-					dropNode = nextSibling 
-					dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+	Y.DD.DDM.on('drag:over', function(e) {
+		var topOfDropStack = LAGVE.dropStack.peek();
+		if (topOfDropStack) {
+			//Y.log('Top of stack is ' + topOfDropStack.get('id'));
+
+			//Get a reference to out drag and drop nodes
+			var dragNode = e.drag.get('node'),
+				dropNode = topOfDropStack;
+			
+			//Are we dropping on a li node?
+			if (dropNode.hasClass('statement-child-container')) {
+				//Are we going down? (not going up)
+				// then we want to insert below, but not below a placeholder
+				if (LAGVEStmt.goingDown) {
+					var nextSibling = dropNode.get('nextSibling');
+					if (isset(nextSibling)) { 
+						dropNode = nextSibling 
+						dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+					} else {
+						dropNode.get('parentNode').append(dragNode);
+					}
 				} else {
-					dropNode.get('parentNode').append(dragNode);
+					dropNode.get('parentNode').insertBefore(dragNode, dropNode);
 				}
-			} else {
-				dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+			}
+		
+			if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
+				dropNode.append(dragNode);
 			}
 		}
-	
-		if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
-			dropNode.append(dragNode);
-		}
-	}
-		
-	Y.DD.DDM.on('drop:over', LAGVEStmt._dropOverHandler);
+	});
 
 	Y.DD.DDM.on('drag:drag', function(e) {
 		//Get the last y point
