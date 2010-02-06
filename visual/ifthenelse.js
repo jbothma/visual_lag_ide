@@ -28,12 +28,18 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		///////    THEN    ////////
 		var thenBlock			= Y.Node.create('<div class="ifthenelse-then"></div>');
-		thenBlock.append(LAGVEStmt.newStatement());
+		var thenStatementBlock	= LAGVEStmt.newStatement();
+		thenStatementBlock.addClass('ifthenelse-then-statement');
+		thenStatementBlock.removeClass('deletable');
+		thenBlock.append(thenStatementBlock);
 		var thenBlockTitle		= Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
 		
 		///////    ELSE    ////////
 		var elseBlock			= Y.Node.create('<div class="ifthenelse-else"></div>');
-		elseBlock.append(LAGVEStmt.newStatement());
+		var elseStatementBlock	= LAGVEStmt.newStatement();
+		elseStatementBlock.addClass('ifthenelse-else-statement');
+		elseStatementBlock.removeClass('deletable');
+		elseBlock.append(elseStatementBlock);
 		var elseBlockTitle		= Y.Node.create('<div class="ifthenelse-else-title">ELSE</div>');		
 				
 		/*	Node structure:
