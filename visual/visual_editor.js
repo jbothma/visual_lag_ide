@@ -42,6 +42,8 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 				submenuShowDelay:	0,
 				submenuHideDelay:	999999
 			});
+			
+		LAGVE.mainMenu.attrMenuLabel = Y.one('#LAG-Attr-menulabel');
 	}
 	
 	LAGVE._setupWorkspace = function() {
@@ -120,6 +122,7 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	LAGVE.insertNewAttr = function(attributeLevelsArr, targetId) {
 		LAGVEAttr.insertNewAttr(attributeLevelsArr, targetId);
 		LAGVE.attrMenu.addClass('yui-menu-hidden');
+		LAGVE.mainMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
 	}
 	
 	LAGVE.select = function (selectedNode) {
