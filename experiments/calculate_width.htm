@@ -2,7 +2,10 @@
 <html>
 	<head>
 		<style type="text/css">
-
+			#unstyled-div {
+				float:	left;
+				clear:	both;
+			}
 
 		</style>
 		
@@ -14,7 +17,9 @@
 		
 		<script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
 		<script type="text/javascript">
-			alert('width is ' + document.getElementById('unstyled-div').width);
+			YUI().use('node', function(Y) {
+				alert('width is ' + Y.one('#unstyled-div').getComputedStyle('width'));
+			});
 		</script>
 	</body>
 </html>
