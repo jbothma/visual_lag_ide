@@ -173,7 +173,7 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	
 	Y.on('contentready', LAGVE._init, 'body');
 	
-	Y.on('click', function(e){
+	Y.on('click', function(e){LAGVE.select(e.target)});
 	
 	Y.DD.DDM.on('drop:enter', function(e) {
 		LAGVE.dropStack.push(e.drop.get('node'));
