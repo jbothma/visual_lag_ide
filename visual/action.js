@@ -28,6 +28,7 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		attributeContainerDT.node	= attributeContainer;
 		valueContainerDT.node		= valueContainer;
 		
+		action.resize 					= function()	 {this.get('parentNode').resize('child action.resize')};
 		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.tryInsertActionChild(attributeContainer,node)};
 		valueContainer.LAGVEInsert		= function(node) {LAGVEActn.tryInsertActionChild(valueContainer,node)};
 		
