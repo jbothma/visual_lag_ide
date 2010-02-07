@@ -4,49 +4,82 @@ LAGVEIf.scriptName = 'ifthenelse.js';
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEIf.newIf = function(targetNode) {
-		var ifThenElse			= Y.Node.create('<div class="ifthenelse statement-child"></div>');
+		var ifThenElse = Y.Node.create('<div id=' + Y.guid('ifthenelse-') + ' class="ifthenelse statement-child"></div>');
 		
 		///////    IF    ////////
-		var condCenteringOuter	= Y.Node.create('<div class="ifthenelse-condition-centering-outer"></div>');
-		var condCenteringInner	= Y.Node.create('<div class="ifthenelse-condition-centering-inner"></div>');
-		var ifDiamondIMG		= Y.Node.create('<img	alt="if-then-else diamond shape" \
-														class="ifthenelse-diamond-image" \
-														src="../visual/images/ifthenelse_diamond.png" >\
-												</img>' );												
-		var conditionContainer 	= Y.Node.create('<div class="selectable ifthenelse-condition-container"></div>');
-		var conditionContainerDrop	= new Y.DD.Drop({	node:	conditionContainer,
-														groups:	['condition'] });
-		conditionContainer.LAGVEInsert = function(child) {
+		ifThenElse.conditionPositioning	= Y.Node.create('<div class="ifthenelse-condition-positioning"></div>');
+		ifThenElse.ifDiamondIMG			= Y.Node.create(
+			'<img	alt="if-then-else diamond shape" \
+					class="ifthenelse-diamond-image" \
+					src="../visual/images/ifthenelse_diamond.png" >\
+			</img>'
+		);												
+		ifThenElse.conditionContainer 	= Y.Node.create('<div id=' + Y.guid('condition-container-') + ' class="selectable ifthenelse-condition-container"></div>');
+		var conditionContainerDrop		= new Y.DD.Drop({	
+			node:	ifThenElse.conditionContainer,
+			groups:	['condition'],
+		});
+		
+		ifThenElse.conditionContainer.LAGVEInsert = function(child) {
 			if (child.hasClass('condition')) {
-				if (!conditionContainer.hasChildNodes()) {			
-					conditionContainer.append(child);				
+				if (!ifThenElse.conditionContainer.hasChildNodes()) {			
+					ifThenElse.conditionContainer.append(child);
 				}
-			} 
+			}
 		}
 		
-		thenAndElse			= Y.Node.create('<div class="ifthenelse-thenelse"></div>');
+		ifThenElse.resize = function(reason) {
+			Y.log('ifThenElse.resize triggered by ' + reason);
+			// Setup
+			var ifWidth			= parseInt(ifThenElse.conditionPositioning.getComputedStyle('width'));
+			var thenWidth		= parseInt(ifThenElse.thenBlock.getComputedStyle('width'));
+			var thenHMargins	= parseInt(ifThenElse.thenBlock.getStyle('marginLeft')) + 
+									parseInt(ifThenElse.thenBlock.getStyle('marginRight'));
+			var elseWidth		= parseInt(ifThenElse.elseBlock.getComputedStyle('width'));
+			var elseHMargins	= parseInt(ifThenElse.elseBlock.getStyle('marginLeft')) + 
+									parseInt(ifThenElse.elseBlock.getStyle('marginRight'));
+			
+			// Compute
+			ifLeft				= thenWidth + thenHMargins - Math.floor(ifWidth/2);
+			//plus 8 for the borders which can double in width because i can't be 
+			//bothered to look them up scriptomatically right now
+			ifThenElseWidth		= thenWidth + thenHMargins + elseWidth + elseHMargins +8;
+			
+			// Output
+			ifThenElse.conditionPositioning.setStyle('left', ifLeft + 'px');
+			ifThenElse.setStyle('width', ifThenElseWidth + 'px');
+			
+			// "bubble up"
+			//if (ifThenElse.get('parentNode').resize) {
+				ifThenElse.get('parentNode').resize('child ifThenElse.resize');
+			//}
+		}
+		
+		
+		ifThenElse.thenAndElse = Y.Node.create('<div class="ifthenelse-thenelse"></div>');
 		
 		///////    THEN    ////////
-		var thenBlock			= Y.Node.create('<div class="ifthenelse-then"></div>');
-		var thenStatementBlock	= LAGVEStmt.newStatement();
-		thenStatementBlock.addClass('ifthenelse-then-statement');
-		thenStatementBlock.removeClass('deletable');
-		thenBlock.append(thenStatementBlock);
-		var thenBlockTitle		= Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
+		ifThenElse.thenBlock = Y.Node.create('<div class="ifthenelse-then"></div>');
+		ifThenElse.thenStatementBlock = LAGVEStmt.newStatement();
+		ifThenElse.thenStatementBlock.addClass('ifthenelse-then-statement');
+		ifThenElse.thenStatementBlock.removeClass('deletable');
+		ifThenElse.thenStatementBlock.resize = ifThenElse.resize;	// replace statement's resize()
+		ifThenElse.thenBlock.append(ifThenElse.thenStatementBlock);
+		ifThenElse.thenBlockTitle = Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
 		
 		///////    ELSE    ////////
-		var elseBlock			= Y.Node.create('<div class="ifthenelse-else"></div>');
-		var elseStatementBlock	= LAGVEStmt.newStatement();
-		elseStatementBlock.addClass('ifthenelse-else-statement');
-		elseStatementBlock.removeClass('deletable');
-		elseBlock.append(elseStatementBlock);
-		var elseBlockTitle		= Y.Node.create('<div class="ifthenelse-else-title">ELSE</div>');		
+		ifThenElse.elseBlock = Y.Node.create('<div class="ifthenelse-else"></div>');
+		ifThenElse.elseStatementBlock = LAGVEStmt.newStatement();
+		ifThenElse.elseStatementBlock.addClass('ifthenelse-else-statement');
+		ifThenElse.elseStatementBlock.removeClass('deletable');
+		ifThenElse.elseStatementBlock.resize = ifThenElse.resize;	// replace statement's resize()
+		ifThenElse.elseBlock.append(ifThenElse.elseStatementBlock);
+		ifThenElse.elseBlockTitle = Y.Node.create('<div class="ifthenelse-else-title">ELSE</div>');	
 				
 		/*	Node structure:
 			
 		ifThenElse
-			condCenteringOuter
-				condCenteringInner
+				ifThenElse.conditionPositioning
 					ifDiamondIMG
 					conditionContainer
 			thenAndElse
@@ -55,23 +88,21 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 				elseBlock
 					elseBlockTitle
 		*/
-		ifThenElse.append(			condCenteringOuter	);
-		condCenteringOuter.append(	condCenteringInner	);
-		condCenteringInner.append(	ifDiamondIMG		);
-		condCenteringInner.append(	conditionContainer	);
-		ifThenElse.append(			thenAndElse			);
-		thenAndElse.append(			thenBlock			);
-		thenBlock.append(			thenBlockTitle		);
-		thenAndElse.append(			elseBlock			);
-		elseBlock.append(			elseBlockTitle		);
+		ifThenElse.append(						ifThenElse.conditionPositioning	);
+		ifThenElse.conditionPositioning.append(	ifThenElse.ifDiamondIMG			);
+		ifThenElse.conditionPositioning.append(	ifThenElse.conditionContainer	);
+		ifThenElse.append(						ifThenElse.thenAndElse			);
+		ifThenElse.thenAndElse.append(			ifThenElse.thenBlock			);
+		ifThenElse.thenBlock.append(			ifThenElse.thenBlockTitle		);
+		ifThenElse.thenAndElse.append(			ifThenElse.elseBlock			);
+		ifThenElse.elseBlock.append(			ifThenElse.elseBlockTitle		);	
 		
 		if (isset(targetNode)) {
 			targetNode.LAGVEInsert(ifThenElse);
+			//ifThenElse.resize('new ifthenelse');
 		}
 		
 		return ifThenElse;
 	}
-	
-	//Y.on('click',function() {LAGVEIf.newIf()});
 });
 		

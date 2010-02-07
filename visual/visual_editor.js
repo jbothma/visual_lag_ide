@@ -24,6 +24,8 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	
 	LAGVE._findAttrMenu = function() {
 		LAGVE.attrMenu = Y.one("#LAG-Attr-Menu");
+			
+		LAGVE.attrMenu.attrMenuLabel = Y.one('#LAG-Attr-menulabel');
 	}
 	
 	LAGVE._findMainMenu = function() {
@@ -42,8 +44,6 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 				submenuShowDelay:	0,
 				submenuHideDelay:	999999
 			});
-			
-		LAGVE.mainMenu.attrMenuLabel = Y.one('#LAG-Attr-menulabel');
 	}
 	
 	LAGVE._setupWorkspace = function() {
@@ -57,12 +57,12 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 		
 		//create implementation
 		LAGVE.workspace.append(LAGVE._createImplementation());
-		
-		Y.DD.DDM.set('dragMode','point');
 	}
 	
 	LAGVE._createInitialization = function() {
 		LAGVE.initialization	= Y.Node.create( '<div id="initialization" class="selectable"></div>' );
+		LAGVE.initialization.resize = function() {}
+		
 		var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
 		
 		var statementBox = LAGVEStmt.newStatement();
@@ -90,6 +90,8 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	
 	LAGVE._createImplementation = function() {
 		LAGVE.implementation	= Y.Node.create( '<div id="implementation" class="selectable"></div>' );
+		LAGVE.implementation.resize = function() {}
+		
 		var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
 		
 		var statementBox = LAGVEStmt.newStatement();
@@ -122,7 +124,7 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	LAGVE.insertNewAttr = function(attributeLevelsArr, targetId) {
 		LAGVEAttr.insertNewAttr(attributeLevelsArr, targetId);
 		LAGVE.attrMenu.addClass('yui-menu-hidden');
-		LAGVE.mainMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
+		LAGVE.attrMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
 	}
 	
 	LAGVE.select = function (selectedNode) {
@@ -171,7 +173,7 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	
 	Y.on('contentready', LAGVE._init, 'body');
 	
-	Y.on('click', function(e){LAGVE.select(e.target)});
+	Y.on('click', function(e){
 	
 	Y.DD.DDM.on('drop:enter', function(e) {
 		LAGVE.dropStack.push(e.drop.get('node'));

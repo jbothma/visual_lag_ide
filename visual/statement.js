@@ -25,19 +25,20 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	 *
 	 *	Creates a new LAG STATEMENT block.
 	 *  Returns the statement.
-	 *
-	 *	Configurable by:
-	 *	{
-	 *		targetId		Id of node to which new statement must be appended, if set.
-	 *		initialChild	A node that would be appended to the new statement, if set.
-	 *	}
 	 */
 	LAGVEStmt.newStatement = function(targetNode) {
-		var statement		= Y.Node.create( '<div class="statement deletable selectable"></div>' );		
+		var statement		= Y.Node.create( '<div id=' + Y.guid('statement-') + ' class="statement deletable selectable"></div>' );
+		
+		statement.resize = function() {	
+			// "bubble up"
+			this.get('parentNode').resize('child statement.resize');
+		}
+		
 		statement.LAGVEName = 'Statement Block';
 		
-		statement.LAGVEUL	= Y.Node.create( '<ul class="statement-list"></ul>' );
-
+		statement.LAGVEUL	= Y.Node.create( '<ul id=' + Y.guid('statement-ul-') + ' class="statement-list"></ul>' );
+		statement.LAGVEUL.resize = statement.resize;
+		
 		var statementULDrop = new Y.DD.Drop({
 			node:		statement.LAGVEUL,
 			groups:		['statement-list'],
@@ -51,16 +52,19 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		 */
 		statement.LAGVEInsert = function(node) {
 			if (node.hasClass('statement-child')) {
-				statement.LAGVEUL.append(LAGVEStmt._newStatementChildContainer(node));				
+				var newChildContainer = LAGVEStmt._newStatementChildContainer(node)
+				statement.LAGVEUL.append(newChildContainer);
+				newChildContainer.parentChanged();
+				node.resize('statement.LAGVEInsert');
 			} else {
-				//alert(node.LAGVEName + ' can not be inserted into a ' + statement.LAGVEName + '.');
 				Y.log(node.LAGVEName + ' can not be inserted into ' + statement.LAGVEName + '.');
 			}
 		}
-		
+				
 		if (isset(targetNode)) {
 			targetNode.LAGVEInsert(statement);
 		}
+		
 		return statement;
 	};
 	
@@ -78,12 +82,24 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 			node:	childContainer,
 			groups:	['statement-list'],
 		});
+		
+		childContainer.parentChanged = function() {
+			if (this.get('parentNode')) {
+				this.resize = this.get('parentNode').resize;
+				this.resize('new parent');
+			}
+			if (this._oldParent) {
+				this._oldParent.resize('parentChanged');
+			}
+			this._oldParent = this.get('parentNode');
+		}
 
 		childContainer.append(child);
+		childContainer.parentChanged();
 		
 		return childContainer;
 	};
-	
+		
 	Y.DD.DDM.on('drag:over', function(e) {
 		var topOfDropStack = LAGVE.dropStack.peek();
 		if (topOfDropStack) {
@@ -113,14 +129,17 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 							dropNode.get('parentNode').insertBefore(dragNode, dropNode);
 						} else {
 							dropNode.get('parentNode').append(dragNode);
+							dragNode.parentChanged();
 						}
 					} else {
 						dropNode.get('parentNode').insertBefore(dragNode, dropNode);
+						dragNode.parentChanged();
 					}
 				}
 			
 				if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
 					dropNode.append(dragNode);
+					dragNode.parentChanged();
 				}
 			}
 		}
@@ -159,9 +178,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		});
 	});
 
-	Y.DD.DDM.on('drag:end', function(e) {
-		//Y.log('drag:end');
-		
+	Y.DD.DDM.on('drag:end', function(e) {		
 		var dragNode = e.target.get('node');
 
 		dragNode.setStyles({
@@ -169,29 +186,5 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 			opacity: '1',
 			filter: 'alpha(opacity = 100)'
 		});
-		
-		// don't automatically remove for the moment,
-		// let user delete manually
-		//removeEmptyStatement(dragNode)
 	});
-	
-	function removeEmptyStatement(dragNode){
-		//if (isset(dragNode.oldList)) {
-			if (dragNode.oldList.get('parentNode').hasClass('statement')) {
-				var hasChildren = dragNode.oldList.hasChildNodes();
-				if (!hasChildren) {
-					Y.log('Node\' old statement list is now empty - removing it.');
-					
-					dragNode.oldList.get('parentNode').remove();
-				}
-		//	}
-		}
-
-		var list = dragNode.get('parentNode');
-		if (list.hasClass('statement-list')) {
-			Y.log('Updating dragNode.oldList.');
-			
-			dragNode.oldList = list;
-		}
-	}
 });
