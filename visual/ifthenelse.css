@@ -15,6 +15,31 @@
 	float:		left;
 	/*padding:	10%;*/
 }
+.ifthenelse-arrows {
+	position:	absolute;
+	top:		50%;
+	left:		0px;
+	height:		50%;
+	width:		100%;
+	border-left:2px solid black;
+	border-right:2px solid black;
+}
+.ifthenelse-arrowhead-left {
+	position:	absolute;
+	left:		-9px;
+	bottom:		0px;
+	width:		16px;
+	height:		16px;
+	background-image:	url('images/arrowhead_down.png');
+}
+.ifthenelse-arrowhead-right {
+	position:	absolute;
+	right:		-9px;
+	bottom:		0px;
+	width:		16px;
+	height:		16px;
+	background-image:	url('images/arrowhead_down.png');
+}
 .ifthenelse-condition-container {
 	position: 		relative;
 	min-height:		59px;

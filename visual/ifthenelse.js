@@ -39,6 +39,9 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		///////    IF    ////////
 		ifThenElse.conditionPositioning	= Y.Node.create('<div class="ifthenelse-condition-positioning"></div>');
+		ifThenElse.arrows				= Y.Node.create('<div class="ifthenelse-arrows"></div>');
+		ifThenElse.arrowheadLeft		= Y.Node.create('<div class="ifthenelse-arrowhead-left"></div>');
+		ifThenElse.arrowheadRight		= Y.Node.create('<div class="ifthenelse-arrowhead-right"></div>');
 		ifThenElse.ifDiamondIMG			= Y.Node.create(
 			'<img	alt="if-then-else diamond shape" \
 			class="ifthenelse-diamond-image" \
@@ -108,7 +111,11 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			
 		ifThenElse
 				ifThenElse.conditionPositioning
+					arrows
+						arrowhead left
+						arrowhead right
 					ifDiamondIMG
+					ifDiamondIMGSelected
 					conditionContainer
 			thenAndElse
 				thenBlock
@@ -117,6 +124,9 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 					elseBlockTitle
 		*/
 		ifThenElse.append(						ifThenElse.conditionPositioning	);
+		ifThenElse.arrows.append(				ifThenElse.arrowheadLeft		);
+		ifThenElse.arrows.append(				ifThenElse.arrowheadRight		);
+		ifThenElse.conditionPositioning.append(	ifThenElse.arrows				);
 		ifThenElse.conditionPositioning.append(	ifThenElse.ifDiamondIMG			);
 		ifThenElse.conditionPositioning.append(	ifThenElse.ifDiamondIMGSelected	);
 		ifThenElse.conditionPositioning.append(	ifThenElse.conditionContainer	);
