@@ -46,11 +46,15 @@ getMyY().use('event', function(Y) {
 		}
 		
 		if (node.hasClass('deletable')) {
+			var parent = node.get('parentNode');
+			
 			// Do work
 			if (confirm('Are you sure you want to delete this ' + node.getName() + '?')) {
 				node.remove();
-				return;
 			}
+			
+			parent.resize('child deleted');
+			LAGVE.select(parent);
 		} else {
 			// Recurse
 			LAGVEContext.deleteItem(node.get('parentNode'));
