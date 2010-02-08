@@ -4,37 +4,51 @@ LAGVEActn.scriptName = 'action.js';
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEActn.newAction = function(targetNode) {
-		var action 				= Y.Node.create( '<div class="action statement-child"></div>' );
-		action._LAGVEName 		= 'Action';
+		//////    ACTION    //////
+		var action 			= Y.Node.create( '<div class="action statement-child"></div>' );
+		action.resize 					= function()	 {this.get('parentNode').resize('child action.resize')};
+		action._LAGVEName 	= 'Action';
+		action.getName					= function()	 {return this._LAGVEName};
 		
-		var attributeContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container selectable" title="Drop an attribute here."></div>' );
-		attributeContainer._LAGVEName= 'Attribute position';
-		
-		var valueContainer			= Y.Node.create( '<div class="action-attribute-container action-child-container selectable" title="Drop an attribute or value here."></div>' );
-		valueContainer._LAGVEName	= 'Value position';
-		
-		var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-child-container" title="Select an operator from the list."></div>' );
-		
-		var attributeContainerDT	= new Y.DD.Drop({
+		//////    ATTRIBUTE CONTAINER    //////
+		var attributeContainer			= Y.Node.create('\
+			<div	class="action-attribute-container action-child-container selectable" \
+					\title="Drop an attribute here."></div>\
+		');
+		attributeContainer._LAGVEName	= 'Action attribute';
+		attributeContainer.select 		= LAGVE._genericSelect;
+		attributeContainer.deSelect 	= LAGVE._genericDeSelect;
+		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.tryInsertActionChild(attributeContainer,node)};
+		attributeContainer.getName		= function()	 {return this._LAGVEName};
+		attributeContainer.resize 		= function()	 {action.resize('child attributeContainer.resize')};
+		new Y.DD.Drop({
 			node:		attributeContainer,
 			groups:		['attribute'],
 		});
 		
-		var valueContainerDT 		= new Y.DD.Drop({
+		
+		//////    VALUE CONTAINER    //////
+		var valueContainer				= Y.Node.create('\
+			<div class="action-attribute-container action-child-container selectable" \
+			title="Drop an attribute or value here."></div>\
+		');
+		valueContainer._LAGVEName	= 'Action value';
+		valueContainer.select 		= LAGVE._genericSelect;
+		valueContainer.deSelect 	= LAGVE._genericDeSelect;
+		valueContainer.resize 		= function()	 {action.resize('child attributeContainer.resize')};
+		new Y.DD.Drop({
 			node:	valueContainer,
 			groups:	['attribute'],
 		});
-		
-		attributeContainerDT.node	= attributeContainer;
-		valueContainerDT.node		= valueContainer;
-		
-		action.resize 					= function()	 {this.get('parentNode').resize('child action.resize')};
-		action.getName					= function()	 {return this._LAGVEName};
-		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.tryInsertActionChild(attributeContainer,node)};
-		attributeContainer.getName		= function()	 {return this._LAGVEName};
 		valueContainer.LAGVEInsert		= function(node) {LAGVEActn.tryInsertActionChild(valueContainer,node)};
 		valueContainer.getName			= function()	 {return this._LAGVEName};
 		
+		
+		//////    OPERATOR CONTAINER    //////
+		var operatorContainer 		= Y.Node.create('\
+			<div class="action-operator-container action-child-container" \
+			title="Select an operator from the list."></div>\
+		');
 		var operatorSelect =  Y.Node.create( '<select class="operator-select">' +
 											 '<option value="=">=</option>' +
 											 '<option value="+=" title="Add to the current value">+=</option>' +
@@ -43,6 +57,8 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 											 '</select>');
 		operatorContainer.append(operatorSelect);
 		
+		
+		//////      BUILD AND INSERT/RETURN    //////
 		action.append(attributeContainer);
 		action.append(operatorContainer);
 		action.append(valueContainer);
@@ -58,7 +74,8 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		if (target.hasClass('action-child-container')) {
 			if (child.hasClass('action-child')) {
 				if (!target.hasChildNodes()) {			
-					target.append(child);				
+					target.append(child);
+					target.resize();
 				}
 		
 				LAGVEActn._positionChild(child);

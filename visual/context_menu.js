@@ -64,9 +64,11 @@ getMyY().use('event', function(Y) {
 	 Y.on('contextmenu', function(e) {
 		LAGVEContext.context = e.target;
 		if (LAGVEContext.context.ancestor(LAGVEContext._isWorkspace)) {
-			LAGVEContext.menu.setStyles({	left:		e.clientX + 'px',
-											top:		e.clientY + 'px',
-											visibility:	'visible'});
+			LAGVEContext.menu.setStyles({
+				left:		e.clientX + 'px',
+				top:		e.clientY + 'px',
+				visibility:	'visible',
+			});
 			e.preventDefault();
 		}
 	});

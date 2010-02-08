@@ -27,26 +27,19 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 	 *  Returns the statement.
 	 */
 	LAGVEStmt.newStatement = function(targetNode) {
-		var statement		= Y.Node.create( '<div id=' + Y.guid('statement-') + ' class="statement deletable selectable"></div>' );
+	
+		//////    STATEMENT BLOCK   ///////
+		var statement = Y.Node.create( '<div id=' + Y.guid('statement-') + ' class="statement deletable selectable"></div>' );
 		
 		statement.resize = function() {	
 			// "bubble up"
 			this.get('parentNode').resize('child statement.resize');
 		}
 		
-		statement._LAGVEName = 'Statement Block';
-		
-		statement.LAGVEUL	= Y.Node.create( '<ul id=' + Y.guid('statement-ul-') + ' class="statement-list"></ul>' );
-		statement.LAGVEUL.resize = statement.resize;
-		
-		var statementULDrop = new Y.DD.Drop({
-			node:		statement.LAGVEUL,
-			groups:		['statement-list'],
-		});
-		
-		statement.append(statement.LAGVEUL);
-
-		statement.getName = function() {return this._LAGVEName};
+		statement._LAGVEName	= 'Statement Block';
+		statement.getName		= function() {return this._LAGVEName};
+		statement.select 		= LAGVE._genericSelect;
+		statement.deSelect 		= LAGVE._genericDeSelect;
 		
 		/**
 		 * Function to insert nodes asked to be inserted.
@@ -61,7 +54,22 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 				Y.log(node.getName() + ' can not be inserted into ' + statement.getName() + '.');
 			}
 		}
-				
+		
+		//////    LIST   ///////
+		statement.LAGVEUL = Y.Node.create( '<ul id=' + Y.guid('statement-ul-') + ' class="statement-list"></ul>' );
+		statement.LAGVEUL.resize = statement.resize;
+		statement.LAGVEUL.plug(
+			Y.Plugin.Drop,
+			{
+				node:		statement.LAGVEUL,
+				groups:		['statement-list'],
+			}
+		);		
+		
+		statement.append(statement.LAGVEUL);
+		
+		
+		//////    INSERT/RETURN   ///////
 		if (isset(targetNode)) {
 			targetNode.LAGVEInsert(statement);
 		}

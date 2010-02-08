@@ -63,13 +63,12 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 		//constrain attributes to their initial target for now.
 		//TODO: should prob be a sparate parameter once attributes 
 		//can be inserted in context.
-		attributeDD.plug(	Y.Plugin.DDConstrained,
-							{ constrain2node: Y.one('body') } );
-																		
-		attributeDD.node = newAttribute;
-		
+		/*attributeDD.plug(	Y.Plugin.DDConstrained,
+							{ constrain2node: Y.one('body') } );*/
+																				
 		newAttribute.addClass('deletable');
 		newAttribute.addClass('action-child');
+		newAttribute.addClass('comparison-child');
 		
 		// Default to selected node.
 		if (!isset(targetNode)) {

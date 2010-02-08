@@ -19,8 +19,10 @@
 	position: 		relative;
 	min-height:		59px;
 	min-width:		120px;
-	margin:			10%;
+	margin:			10% 20%;
 	border:			1px dashed #AAA;
+	list-style-type:none;
+	padding:		0px;
 }
 .ifthenelse-diamond-image {
 	position:	absolute;
@@ -28,6 +30,14 @@
 	top:		0px;
 	width:		100%;
 	height:		100%;
+}
+.ifthenelse-diamond-image-selected {
+	position:	absolute;
+	left:		0px;
+	top:		0px;
+	width:		100%;
+	height:		100%;
+	visibility:	hidden;
 }
 .ifthenelse-thenelse {
 	clear:both;

@@ -60,8 +60,10 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	}
 	
 	LAGVE._createInitialization = function() {
-		LAGVE.initialization	= Y.Node.create( '<div id="initialization" class="selectable"></div>' );
-		LAGVE.initialization.resize = function() {}
+		LAGVE.initialization			= Y.Node.create( '<div id="initialization" class="selectable"></div>' );
+		LAGVE.initialization.resize 	= function() {}
+		LAGVE.initialization.select 	= LAGVE._genericSelect;
+		LAGVE.initialization.deSelect 	= LAGVE._genericDeSelect;
 		
 		var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
 		
@@ -89,8 +91,10 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	}
 	
 	LAGVE._createImplementation = function() {
-		LAGVE.implementation	= Y.Node.create( '<div id="implementation" class="selectable"></div>' );
-		LAGVE.implementation.resize = function() {}
+		LAGVE.implementation			= Y.Node.create( '<div id="implementation" class="selectable"></div>' );
+		LAGVE.implementation.resize 	= function() {};
+		LAGVE.implementation.select 	= LAGVE._genericSelect;
+		LAGVE.implementation.deSelect 	= LAGVE._genericDeSelect;
 		
 		var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
 		
@@ -127,18 +131,34 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 		LAGVE.attrMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
 	}
 	
+	/**
+	 *	Selectable nodes that don't have specific
+	 *	de-select actions can set their select() to this one
+	 */
+	LAGVE._genericSelect = function() {
+		// give it the selected class which makes it obvious it's selected
+		this.addClass('selected');
+	}
+	
+	/**
+	 *	Selectable nodes that don't have specific
+	 *	de-select actions can set their deSelect() to this one
+	 */
+	LAGVE._genericDeSelect = function() {
+		//remove clas from previously selected item
+		this.removeClass('selected');
+	}
+	
 	LAGVE.select = function (selectedNode) {
 		if (isset(selectedNode)) {
 			// if the thing I clicked on is something I can select
 			if (selectedNode.hasClass('selectable')) {
 				if (isset(LAGVE.selectedNode)) {
-					//remove clas from previously selected item
-					LAGVE.selectedNode.removeClass('selected');
+					LAGVE.selectedNode.deSelect();
 				}
-				// set LAGVE.seletedNode to the thing I selected
+				// replace or set LAGVE.seletedNode to the thing I selected
 				LAGVE.selectedNode = selectedNode;
-				// give it the selected class which makes it obvious it's selected
-				LAGVE.selectedNode.addClass('selected');
+				LAGVE.selectedNode.select();				
 			} else {
 				// limit/safety stop case
 				if (selectedNode.hasClass('select-propagation-stop') || selectedNode.get('tagName') === 'body') {
