@@ -3,6 +3,7 @@
 	border:				1px solid black;
 	background-color:	white;
 	visibility:			hidden;
+	z-index:			1000;
 }
 .context-menu-item {
 	margin:		1px;
