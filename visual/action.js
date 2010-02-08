@@ -5,13 +5,13 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEActn.newAction = function(targetNode) {
 		var action 				= Y.Node.create( '<div class="action statement-child"></div>' );
-		action.LAGVEName 		= 'Action';
+		action._LAGVEName 		= 'Action';
 		
 		var attributeContainer		= Y.Node.create( '<div class="action-attribute-container action-child-container selectable" title="Drop an attribute here."></div>' );
-		attributeContainer.LAGVEName= 'Attribute position';
+		attributeContainer._LAGVEName= 'Attribute position';
 		
 		var valueContainer			= Y.Node.create( '<div class="action-attribute-container action-child-container selectable" title="Drop an attribute or value here."></div>' );
-		valueContainer.LAGVEName	= 'Value position';
+		valueContainer._LAGVEName	= 'Value position';
 		
 		var operatorContainer 	= Y.Node.create( '<div class="action-operator-container action-child-container" title="Select an operator from the list."></div>' );
 		
@@ -29,8 +29,11 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		valueContainerDT.node		= valueContainer;
 		
 		action.resize 					= function()	 {this.get('parentNode').resize('child action.resize')};
+		action.getName					= function()	 {return this._LAGVEName};
 		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.tryInsertActionChild(attributeContainer,node)};
+		attributeContainer.getName		= function()	 {return this._LAGVEName};
 		valueContainer.LAGVEInsert		= function(node) {LAGVEActn.tryInsertActionChild(valueContainer,node)};
+		valueContainer.getName			= function()	 {return this._LAGVEName};
 		
 		var operatorSelect =  Y.Node.create( '<select class="operator-select">' +
 											 '<option value="=">=</option>' +

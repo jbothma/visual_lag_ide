@@ -53,7 +53,8 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 		}
 		
 		var newAttribute = lowestAttrLevel;
-		newAttribute.LAGVEName = 'Attribute/Value';
+		newAttribute._LAGVEName = 'Attribute/Value';
+		newAttribute.getName = function() { return this._LAGVEName }
 		
 		// make the root attribute level box dragable
 		var attributeDD = new Y.DD.Drag({	node:	newAttribute,

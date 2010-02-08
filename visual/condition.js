@@ -5,13 +5,16 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVECondition.newCondition = function(targetNode) {
 		var condition 			= Y.Node.create( '<div class="condition"></div>' );
-		condition.LAGVEName = 'Condition';
+		condition._LAGVEName = 'Condition';		
+		condition.getName = function() {return this._LAGVEName};
 		
 		var attributeContainer	= Y.Node.create( '<div class="condition-attribute-container condition-child-container selectable" title="Drop an attribute here."></div>' );
-		attributeContainer.LAGVEName = 'Attribute position';
+		attributeContainer._LAGVEName = 'Attribute position';
+		attributeContainer.getName = function() {return this._LAGVEName};
 		
 		var valueContainer		= Y.Node.create( '<div class="condition-attribute-container condition-child-container selectable" title="Drop an attribute or value here."></div>' );
-		attributeContainer.LAGVEName = 'Value position';
+		attributeContainer._LAGVEName = 'Value position';
+		attributeContainer.getName = function() {return this._LAGVEName};
 		var comparatorContainer = Y.Node.create( '<div class="condition-comparator-container condition-child-container" title="Select an comparator from the list."></div>' );
 		
 		var attributeContainerDT	= new Y.DD.Drop({	node:	attributeContainer,

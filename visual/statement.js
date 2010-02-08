@@ -34,7 +34,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 			this.get('parentNode').resize('child statement.resize');
 		}
 		
-		statement.LAGVEName = 'Statement Block';
+		statement._LAGVEName = 'Statement Block';
 		
 		statement.LAGVEUL	= Y.Node.create( '<ul id=' + Y.guid('statement-ul-') + ' class="statement-list"></ul>' );
 		statement.LAGVEUL.resize = statement.resize;
@@ -46,6 +46,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		
 		statement.append(statement.LAGVEUL);
 
+		statement.getName = function() {return this._LAGVEName};
 		
 		/**
 		 * Function to insert nodes asked to be inserted.
@@ -57,7 +58,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 				newChildContainer.parentChanged();
 				node.resize('statement.LAGVEInsert');
 			} else {
-				Y.log(node.LAGVEName + ' can not be inserted into ' + statement.LAGVEName + '.');
+				Y.log(node.getName() + ' can not be inserted into ' + statement.getName() + '.');
 			}
 		}
 				
@@ -92,6 +93,10 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 				this._oldParent.resize('parentChanged');
 			}
 			this._oldParent = this.get('parentNode');
+		}
+		
+		childContainer.getName = function() {
+			return child.getName();
 		}
 
 		childContainer.append(child);

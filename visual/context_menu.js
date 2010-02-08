@@ -47,7 +47,7 @@ getMyY().use('event', function(Y) {
 		
 		if (node.hasClass('deletable')) {
 			// Do work
-			if (confirm('Are you sure you want to delete this item?')) {
+			if (confirm('Are you sure you want to delete this ' + node.getName() + '?')) {
 				node.remove();
 				return;
 			}

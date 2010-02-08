@@ -5,6 +5,8 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 	LAGVEIf.newIf = function(targetNode) {
 		var ifThenElse = Y.Node.create('<div id=' + Y.guid('ifthenelse-') + ' class="ifthenelse statement-child"></div>');
+		ifThenElse._LAGVEName = 'If-Then-Else block';
+		ifThenElse.getName = function() { return this._LAGVEName; }
 		
 		///////    IF    ////////
 		ifThenElse.conditionPositioning	= Y.Node.create('<div class="ifthenelse-condition-positioning"></div>');
