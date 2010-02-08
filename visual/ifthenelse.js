@@ -38,7 +38,17 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		
 		///////    IF    ////////
-		ifThenElse.conditionPositioning	= Y.Node.create('<div class="ifthenelse-condition-positioning"></div>');
+		ifThenElse.conditionPositioning			= Y.Node.create('<div class="ifthenelse-condition-positioning selectable"></div>');
+		ifThenElse.conditionPositioning.select 	= function() {
+			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','hidden');
+			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','visible');
+		};
+		ifThenElse.conditionPositioning.deSelect 	= function() {
+			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','hidden');
+			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','visible');
+		};
+		ifThenElse.conditionPositioning.LAGVEInsert = function(child) {ifThenElse.conditionContainer.LAGVEInsert(child);};
+		
 		ifThenElse.arrows				= Y.Node.create('<div class="ifthenelse-arrows"></div>');
 		ifThenElse.arrowheadLeft		= Y.Node.create('<div class="ifthenelse-arrowhead-left"></div>');
 		ifThenElse.arrowheadRight		= Y.Node.create('<div class="ifthenelse-arrowhead-right"></div>');
@@ -52,29 +62,20 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 					class="ifthenelse-diamond-image-selected" \
 					src="../visual/images/ifthenelse_diamond_selected.png" >\
 			</img>'
-		);												
+		);
+		
 		ifThenElse.conditionContainer 			= Y.Node.create('\
 			<ul id=' + Y.guid('condition-container-') + ' \
-			class="selectable ifthenelse-condition-container"></ul>\
+			class="ifthenelse-condition-container"></ul>\
 		');
-		ifThenElse.conditionContainer.resize = ifThenElse.resize;
-		ifThenElse.conditionContainer.select 	= function() {
-			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','hidden');
-			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','visible');
-		};
-		ifThenElse.conditionContainer.deSelect 	= function() {
-			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','hidden');
-			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','visible');
-		};
-		ifThenElse.conditionContainer.resize 	= function(reason) { ifThenElse.resize(reason); };
 		ifThenElse.conditionContainer.plug(
 			Y.Plugin.Drop,
 			{
 				groups:	['condition'],
 			}
-		);
-		
-		ifThenElse.conditionContainer.LAGVEInsert = function(child) {
+		);		
+		ifThenElse.conditionContainer.resize 		= function(reason) { ifThenElse.resize(reason); };
+		ifThenElse.conditionContainer.LAGVEInsert	= function(child) {
 			if (child.hasClass('condition')) {
 				if (!ifThenElse.conditionContainer.hasChildNodes()) {			
 					ifThenElse.conditionContainer.append(child);

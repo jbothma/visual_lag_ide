@@ -17,12 +17,13 @@
 }
 .ifthenelse-arrows {
 	position:	absolute;
-	top:		50%;
-	left:		0px;
-	height:		50%;
+	top:		44%;
+	left:		-2px;
+	height:		59%;
 	width:		100%;
 	border-left:2px solid black;
 	border-right:2px solid black;
+	z-index:	10;
 }
 .ifthenelse-arrowhead-left {
 	position:	absolute;
