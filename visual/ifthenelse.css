@@ -46,7 +46,7 @@
 	position: 		relative;
 	min-height:		59px;
 	min-width:		120px;
-	margin:			12% 26%;
+	margin:			8% 18%;
 	/*border:			1px dashed #AAA;*/
 	list-style-type:none;
 	padding:		0px;
@@ -71,44 +71,44 @@
 	float:left;
 }
 .ifthenelse-then {
-	border:		1px solid black;
-	margin:		2px;
-	position:	relative;
-	float:		left;
-	min-width:	150px;
-	min-height:	50px;
+	border:			1px solid black;
+	margin:			2px;
+	position:		relative;
+	float:			left;
+	min-width:		150px;
+	min-height:		50px;
 	background-color:	white;
-	padding-top:0.5em;
-	margin-right:10px;
+	padding-top:	0.5em;
+	margin-right:	10px;
 	/*	not sure why this is set as it is
 	left:		-20px;*/
 }
 .ifthenelse-else {
-	border:		1px solid black;
-	margin:		2px;
-	position:	relative;
-	float:		right;
-	min-width:	150px;
-	min-height:	50px;
+	border:			1px solid black;
+	margin:			2px;
+	position:		relative;
+	float:			right;
+	min-width:		150px;
+	min-height:		50px;
 	background-color:	white;
-	padding-top:0.5em;
-	margin-left:10px;
+	padding-top:	0.5em;
+	margin-left:	10px;
 	/*	not sure why this is set as it is
 	right:		-20px;*/
 }
 .ifthenelse-then-title {
 	background-color:	white;
-	position:	absolute;
-	top:		-0.5em;
-	font-size:	1em;
-	line-height:1em;
-	left:		5px;
+	position:			absolute;
+	top:				-0.5em;
+	font-size:			1em;
+	line-height:		1em;
+	left:				5px;
 }
 .ifthenelse-else-title {
 	background-color:	white;
-	position:	absolute;
-	top:		-0.5em;
-	font-size:	1em;
-	line-height:1em;
-	right:		5px;
+	position:			absolute;
+	top:				-0.5em;
+	font-size:			1em;
+	line-height:		1em;
+	right:				5px;
 }

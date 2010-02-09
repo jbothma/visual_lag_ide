@@ -24,11 +24,24 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 									parseInt(ifThenElse.elseBlock.getStyle('marginRight'));
 			
 			// Compute
-			ifLeft				= thenWidth + thenHMargins - Math.floor(ifWidth/2);
-			ifThenElseWidth		= thenWidth + thenHMargins + elseWidth + elseHMargins + 12;
+			/*	If block left side must be at least 100px to the right of Then block left side.
+				If-Then-Else must be wider than the maximal of Then+Else and If
+				Then block right side must be at least 100px to the right of the If block 
+				but its left side no less than 100px to the left of the right side of the If block.
+			*/
+			var ifLeft		= thenWidth + thenHMargins - Math.floor(ifWidth/2);
+			
+			if (ifLeft < 100) {
+				ifLeft = 100;
+			}
+			
+			var elseLeft = ifLeft + ifWidth - 100 - thenWidth - 15;
+			
+			var ifThenElseWidth	= Math.max((thenWidth + elseLeft + elseWidth + 39), (ifLeft + ifWidth + 100 + 15));
 			
 			// Output
 			ifThenElse.conditionPositioning.setStyle('left', ifLeft + 'px');
+			ifThenElse.elseBlock.setStyle('left', elseLeft + 'px');
 			ifThenElse.setStyle('width', ifThenElseWidth + 'px');
 			
 			ifThenElse.get('parentNode').resize('ifThenElse.resize | ' + reason);
@@ -96,7 +109,7 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 				if (!ifThenElse.conditionContainer.hasChildNodes()) {			
 					ifThenElse.conditionContainer.append(child);
 					child.parentChanged();
-					child.resize();
+					child.resize('ifThenElse.conditionContainer.LAGVEInsert');
 				}
 			}
 		}

@@ -39,7 +39,7 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			}
 		};
 		action.attributeContainer.getName		= function() { return this._LAGVEName };
-		action.attributeContainer.resize 		= function() { 
+		action.attributeContainer.resize 		= function( reason ) { 
 			action.resize('child action.attributeContainer.resize | ' + reason) 
 		};
 		new Y.DD.Drop({
@@ -56,7 +56,7 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		action.valueContainer._LAGVEName	= 'Action value';
 		action.valueContainer.select 		= LAGVE._genericSelect;
 		action.valueContainer.deSelect 	= LAGVE._genericDeSelect;
-		action.valueContainer.resize 		= function() { 
+		action.valueContainer.resize 		= function( reason ) { 
 			action.resize('child action.valueContainer.resize | ' + reason);
 		};
 		new Y.DD.Drop({

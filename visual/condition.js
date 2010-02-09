@@ -76,10 +76,10 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 			//NEVER call parent's resize(), it's the containing parent that calls this to resize.
 		}
 		
-		comparison.resize = function(){
+		comparison.resize = function( reason){
 			this._resize(comparison.resize);
 			
-			this.get('parentNode').resize(comparison.resize);
+			this.get('parentNode').resize('comparison.resize');
 		}
 		
 		
@@ -98,7 +98,7 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 		comparison.attributeContainer.deSelect 		= LAGVE._genericDeSelect;
 		comparison.attributeContainer.LAGVEInsert	= function(node) {
 			if (LAGVECondition.tryInsertComparisonChild(comparison.attributeContainer,node)) {
-				node.resize();
+				node.resize('comparison.attributeContainer.LAGVEInsert');
 			}
 		};
 		comparison.attributeContainer.resize 		= function(reason)	 {
@@ -133,10 +133,10 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 		comparison.valueContainer.getName 		= function() 	 { return this._LAGVEName };		
 		comparison.valueContainer.LAGVEInsert	= function(node) {
 			if (LAGVECondition.tryInsertComparisonChild(comparison.valueContainer,node)) {
-				node.resize();
+				node.resize('comparison.valueContainer.LAGVEInsert');
 			}
 		};
-		comparison.valueContainer.resize 		= function()	 { 
+		comparison.valueContainer.resize 		= function( reason )	 { 
 			comparison.resize('child comparison.valueContainer.resize | ' + reason);
 		};
 		comparison.valueContainer.select 		= LAGVE._genericSelect;
