@@ -23,16 +23,16 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 			}
 		);
 		
-		var conditionLIdd = new Y.DD.Drop({
-			groups:	['condition'],
-			node:	conditionLI,
-			}
-		);
-		
+		conditionLI.resize = function(reason) { 			
+			this.get('firstChild')._resize('conditionLI.resize')
+			
+			//Bubble
+			this.get('parentNode').resize('conditionLI.resize')
+		}
 		conditionLI.parentChanged = function() {
 			if (this.get('parentNode')) {
-				this.resize = this.get('parentNode').resize;
-				this.resize('new parent');
+				//this.resize = this.get('parentNode').resize;
+				//this.resize('new parent');
 			}
 			if (this._oldParent) {
 				this._oldParent.resize('parentChanged');
@@ -45,7 +45,8 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 		}
 
 		conditionLI.append(child);
-		conditionLI.parentChanged();
+		conditionLI.parentChanged();		
+		//child.resize('new condition');
 		
 		return conditionLI;
 	};
@@ -54,33 +55,63 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 		///////    COMPARISON    ///////
 		var comparison 			= Y.Node.create( '<div class="comparison"></div>' );
 		comparison._LAGVEName	= 'Comparison';		
-		comparison.getName		= function() {return this._LAGVEName};
-		comparison.resize 		= function()	 {this.get('parentNode').resize('child comparison.resize')};
+		
+		comparison.getName		= function() {
+			return this._LAGVEName
+		};
+		
+		comparison._resize = function(reason) {
+			Y.log('comparison._resize by ' + reason);
+			// Setup
+			var attributeContainerWidth	= parseInt(this.attributeContainer.getComputedStyle('width'));
+			var comparatorContainerWidth= parseInt(this.comparatorContainer.getComputedStyle('width'));
+			var valueContainerWidth		= parseInt(this.valueContainer.getComputedStyle('width'));
+						
+			// Compute
+			var comparisonWidth				= attributeContainerWidth + comparatorContainerWidth + valueContainerWidth + 22;
+			
+			// Output
+			this.setStyle('width', comparisonWidth + 'px');
+			
+			//NEVER call parent's resize(), it's the containing parent that calls this to resize.
+		}
+		
+		comparison.resize = function(){
+			this._resize(comparison.resize);
+			
+			this.get('parentNode').resize(comparison.resize);
+		}
 		
 		
 		//////    ATTRIBUTE CONTAINER    //////
-		var attributeContainer			= Y.Node.create('\
+		comparison.attributeContainer			= Y.Node.create('\
 			<div class="comparison-attribute-container comparison-child-container selectable" \
 			title="Drop an attribute here."></div>\
 		');
 		var attributeContainerDT		= new Y.DD.Drop({
-			node:	attributeContainer,
+			node:	comparison.attributeContainer,
 			groups:	['attribute'],
 		});
-		attributeContainer._LAGVEName 	= 'Attribute position';
-		attributeContainer.getName 		= function() {return this._LAGVEName};
-		attributeContainer.select 		= LAGVE._genericSelect;
-		attributeContainer.deSelect 	= LAGVE._genericDeSelect;
-		attributeContainer.LAGVEInsert	= function(node) {LAGVECondition.tryInsertComparisonChild(attributeContainer,node)};
-		attributeContainer.resize 		= function()	 {comparison.resize('child attributeContainer.resize')};
+		comparison.attributeContainer._LAGVEName 	= 'Attribute position';
+		comparison.attributeContainer.getName 		= function() {return this._LAGVEName};
+		comparison.attributeContainer.select 		= LAGVE._genericSelect;
+		comparison.attributeContainer.deSelect 		= LAGVE._genericDeSelect;
+		comparison.attributeContainer.LAGVEInsert	= function(node) {
+			if (LAGVECondition.tryInsertComparisonChild(comparison.attributeContainer,node)) {
+				node.resize();
+			}
+		};
+		comparison.attributeContainer.resize 		= function(reason)	 {
+			comparison.resize('child comparison.attributeContainer.resize | ' + reason)
+		};
 		
 		
 		//////    COMPARATOR    //////
-		var comparatorContainer			= Y.Node.create('\
+		comparison.comparatorContainer			= Y.Node.create('\
 			<div class="comparison-comparator-container comparison-child-container" \
 			title="Select an comparator from the list."></div>\
 		');
-		var comparatorSelect =  Y.Node.create('\
+		comparison.comparatorSelect =  Y.Node.create('\
 			<select class="comparator-select">\
 				<option value="==">==</option>\
 				<option value="&gt;">&gt;</option>\
@@ -90,27 +121,33 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 		
 		
 		//////    VALUE CONTAINER    //////
-		var valueContainer			= Y.Node.create('\
+		comparison.valueContainer			= Y.Node.create('\
 			<div class="comparison-attribute-container comparison-child-container selectable" \
 			title="Drop an attribute here."></div>\
 		');
 		var valueContainerDT 		= new Y.DD.Drop({
-			node:	valueContainer,
+			node:	comparison.valueContainer,
 			groups:	['attribute'],
 		});
-		valueContainer._LAGVEName	= 'Value position';
-		valueContainer.getName 		= function() {return this._LAGVEName};		
-		valueContainer.LAGVEInsert	= function(node) {LAGVECondition.tryInsertComparisonChild(valueContainer,node)};
-		valueContainer.resize 		= function()	 {comparison.resize('child attributeContainer.resize')};
-		valueContainer.select 		= LAGVE._genericSelect;
-		valueContainer.deSelect 	= LAGVE._genericDeSelect;
+		comparison.valueContainer._LAGVEName	= 'Value position';
+		comparison.valueContainer.getName 		= function() 	 { return this._LAGVEName };		
+		comparison.valueContainer.LAGVEInsert	= function(node) {
+			if (LAGVECondition.tryInsertComparisonChild(comparison.valueContainer,node)) {
+				node.resize();
+			}
+		};
+		comparison.valueContainer.resize 		= function()	 { 
+			comparison.resize('child comparison.valueContainer.resize | ' + reason);
+		};
+		comparison.valueContainer.select 		= LAGVE._genericSelect;
+		comparison.valueContainer.deSelect 		= LAGVE._genericDeSelect;
 		
 		
 		//////    BUILD, INSERT/RETURN    //////
-		comparison.append(			attributeContainer);
-		comparatorContainer.append(	comparatorSelect);
-		comparison.append(			comparatorContainer);
-		comparison.append(			valueContainer);
+		comparison.append(			comparison.attributeContainer);
+		comparison.comparatorContainer.append( comparison.comparatorSelect );
+		comparison.append(			comparison.comparatorContainer);
+		comparison.append(			comparison.valueContainer);
 		
 		// Wrap comparison in an LI as a generic Condition
 		var condition = LAGVECondition.wrapConditionInLI(comparison);
@@ -127,7 +164,8 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 			if (child.hasClass('comparison-child')) {
 				if (!target.hasChildNodes()) {			
 					target.append(child);
-					target.resize();
+					target.resize('LAGVECondition.tryInsertComparisonChild');
+					return true;
 				} else {
 					//Y.log('LAGVECondition.insertComparisonChild() didn\'t insert. Target had a child.');
 				}
@@ -135,6 +173,7 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 				LAGVECondition._positionChild(child);
 			} 
 		}
+		return false;
 	}
 	
 	LAGVECondition._positionChild = function(child) {

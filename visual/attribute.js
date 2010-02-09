@@ -55,6 +55,23 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 		var newAttribute = lowestAttrLevel;
 		newAttribute._LAGVEName = 'Attribute/Value';
 		newAttribute.getName = function() { return this._LAGVEName }
+		/**
+		 *
+		 */
+		newAttribute.resize = function(reason) {
+			//Y.log('newAttribute.resize triggered by ' + reason);
+			// Setup
+			var valueWidth			= parseInt(this.valueDiv.getComputedStyle('width'));
+			var subLevelWidth		= parseInt(this.subLevelContainer.getComputedStyle('width'));
+						
+			// Compute
+			attributeWidth			= valueWidth + subLevelWidth + 28;
+			
+			// Output
+			this.setStyle('width', attributeWidth + 'px');
+			
+			this.get('parentNode').resize('attribute resize | ' + reason);
+		}
 		
 		// make the root attribute level box dragable
 		var attributeDD = new Y.DD.Drag({	node:	newAttribute,

@@ -6,62 +6,89 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 	LAGVEActn.newAction = function(targetNode) {
 		//////    ACTION    //////
 		var action 			= Y.Node.create( '<div class="action statement-child"></div>' );
-		action.resize 					= function()	 {this.get('parentNode').resize('child action.resize')};
+		action.resize 		= function(reason) {
+			//Y.log('action.resize triggered by ' + reason);
+			// Setup
+			var attributeContainerWidth	= parseInt(this.attributeContainer.getComputedStyle('width'));
+			var valueContainerWidth		= parseInt(this.valueContainer.getComputedStyle('width'));
+			var operatorContainerWidth	= parseInt(this.operatorContainer.getComputedStyle('width'));
+						
+			// Compute
+			actionWidth					= attributeContainerWidth + operatorContainerWidth + valueContainerWidth + 22;
+			
+			// Output
+			this.setStyle('width', actionWidth + 'px');
+			
+			// Bubble
+			this.get('parentNode').resize('action.resize | ' + reason);
+		}
 		action._LAGVEName 	= 'Action';
-		action.getName					= function()	 {return this._LAGVEName};
+		action.getName		= function() { return this._LAGVEName };
 		
 		//////    ATTRIBUTE CONTAINER    //////
-		var attributeContainer			= Y.Node.create('\
+		action.attributeContainer			= Y.Node.create('\
 			<div	class="action-attribute-container action-child-container selectable" \
 					\title="Drop an attribute here."></div>\
 		');
-		attributeContainer._LAGVEName	= 'Action attribute';
-		attributeContainer.select 		= LAGVE._genericSelect;
-		attributeContainer.deSelect 	= LAGVE._genericDeSelect;
-		attributeContainer.LAGVEInsert	= function(node) {LAGVEActn.tryInsertActionChild(attributeContainer,node)};
-		attributeContainer.getName		= function()	 {return this._LAGVEName};
-		attributeContainer.resize 		= function()	 {action.resize('child attributeContainer.resize')};
+		action.attributeContainer._LAGVEName	= 'Action attribute';
+		action.attributeContainer.select 		= LAGVE._genericSelect;
+		action.attributeContainer.deSelect 	= LAGVE._genericDeSelect;
+		action.attributeContainer.LAGVEInsert	= function(node) {
+			if (LAGVEActn.tryInsertActionChild(action.attributeContainer,node)) {
+				node.resize('action.attributeContainer.LAGVEInsert');
+			}
+		};
+		action.attributeContainer.getName		= function() { return this._LAGVEName };
+		action.attributeContainer.resize 		= function() { 
+			action.resize('child action.attributeContainer.resize | ' + reason) 
+		};
 		new Y.DD.Drop({
-			node:		attributeContainer,
+			node:		action.attributeContainer,
 			groups:		['attribute'],
 		});
 		
 		
 		//////    VALUE CONTAINER    //////
-		var valueContainer				= Y.Node.create('\
+		action.valueContainer				= Y.Node.create('\
 			<div class="action-attribute-container action-child-container selectable" \
 			title="Drop an attribute or value here."></div>\
 		');
-		valueContainer._LAGVEName	= 'Action value';
-		valueContainer.select 		= LAGVE._genericSelect;
-		valueContainer.deSelect 	= LAGVE._genericDeSelect;
-		valueContainer.resize 		= function()	 {action.resize('child attributeContainer.resize')};
+		action.valueContainer._LAGVEName	= 'Action value';
+		action.valueContainer.select 		= LAGVE._genericSelect;
+		action.valueContainer.deSelect 	= LAGVE._genericDeSelect;
+		action.valueContainer.resize 		= function() { 
+			action.resize('child action.valueContainer.resize | ' + reason);
+		};
 		new Y.DD.Drop({
-			node:	valueContainer,
+			node:	action.valueContainer,
 			groups:	['attribute'],
 		});
-		valueContainer.LAGVEInsert		= function(node) {LAGVEActn.tryInsertActionChild(valueContainer,node)};
-		valueContainer.getName			= function()	 {return this._LAGVEName};
+		action.valueContainer.LAGVEInsert		= function(node) {
+			if (LAGVEActn.tryInsertActionChild(action.valueContainer,node)) {
+				node.resize('action.valueContainer.LAGVEInsert');
+			}
+		};
+		action.valueContainer.getName			= function() { return this._LAGVEName };
 		
 		
 		//////    OPERATOR CONTAINER    //////
-		var operatorContainer 		= Y.Node.create('\
+		action.operatorContainer 		= Y.Node.create('\
 			<div class="action-operator-container action-child-container" \
 			title="Select an operator from the list."></div>\
 		');
-		var operatorSelect =  Y.Node.create( '<select class="operator-select">' +
+		action.operatorSelect =  Y.Node.create( '<select class="operator-select">' +
 											 '<option value="=">=</option>' +
 											 '<option value="+=" title="Add to the current value">+=</option>' +
 											 '<option value="-=">-=</option>' +
 											 '<option value=".=">.=</option>' +
 											 '</select>');
-		operatorContainer.append(operatorSelect);
+		action.operatorContainer.append(action.operatorSelect);
 		
 		
 		//////      BUILD AND INSERT/RETURN    //////
-		action.append(attributeContainer);
-		action.append(operatorContainer);
-		action.append(valueContainer);
+		action.append(action.attributeContainer);
+		action.append(action.operatorContainer);
+		action.append(action.valueContainer);
 				
 		if (isset(targetNode)) {
 			targetNode.LAGVEInsert(action);
@@ -75,12 +102,14 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			if (child.hasClass('action-child')) {
 				if (!target.hasChildNodes()) {			
 					target.append(child);
-					target.resize();
+					target.resize('LAGVEActn.tryInsertActionChild');
+					return true;
 				}
 		
 				LAGVEActn._positionChild(child);
 			}
 		}
+		return false;
 	}
 	
 	LAGVEActn._positionChild = function(child) {

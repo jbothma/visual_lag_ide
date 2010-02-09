@@ -11,14 +11,6 @@
 	top:		0px;
 	left:		0px;
 }*/
-#dev-workspace{
-	position:	relative;
-	top:		0px;
-	left:		0px;
-	width:		700px;
-	height:		200px;
-	border:		1px solid black;
-}
 .action-child-container {
 	min-width:	20px;
 	border:		1px solid black;
@@ -36,5 +28,5 @@
 	top:		16px;	/* we know the height of of attributes so we know what height to expect an action block to be.*/
 }
 .operator-select {
-	font-size:	1.5em;			
+	font-size:	22px;			
 }

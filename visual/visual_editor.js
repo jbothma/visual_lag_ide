@@ -61,7 +61,9 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	
 	LAGVE._createInitialization = function() {
 		LAGVE.initialization			= Y.Node.create( '<div id="initialization" class="selectable"></div>' );
-		LAGVE.initialization.resize 	= function() {}
+		LAGVE.initialization.resize 	= function( reason ) {
+			Y.log('resize reached Initialization | ' + reason);
+		}
 		LAGVE.initialization.select 	= LAGVE._genericSelect;
 		LAGVE.initialization.deSelect 	= LAGVE._genericDeSelect;
 		
@@ -92,7 +94,9 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	
 	LAGVE._createImplementation = function() {
 		LAGVE.implementation			= Y.Node.create( '<div id="implementation" class="selectable"></div>' );
-		LAGVE.implementation.resize 	= function() {};
+		LAGVE.implementation.resize 	= function( reason ) {
+			Y.log('resize reached Implementation | ' + reason);
+		};
 		LAGVE.implementation.select 	= LAGVE._genericSelect;
 		LAGVE.implementation.deSelect 	= LAGVE._genericDeSelect;
 		

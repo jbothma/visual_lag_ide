@@ -51,10 +51,10 @@ getMyY().use('event', function(Y) {
 			// Do work
 			if (confirm('Are you sure you want to delete this ' + node.getName() + '?')) {
 				node.remove();
+				parent.resize('context delete');
+				LAGVE.select(parent);
 			}
 			
-			parent.resize('child deleted');
-			LAGVE.select(parent);
 		} else {
 			// Recurse
 			LAGVEContext.deleteItem(node.get('parentNode'));

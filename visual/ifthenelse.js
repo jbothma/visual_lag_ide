@@ -13,7 +13,7 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		 *
 		 */
 		ifThenElse.resize = function(reason) {
-			Y.log('ifThenElse.resize triggered by ' + reason);
+			//Y.log('ifThenElse.resize triggered by ' + reason);
 			// Setup
 			var ifWidth			= parseInt(ifThenElse.conditionPositioning.getComputedStyle('width'));
 			var thenWidth		= parseInt(ifThenElse.thenBlock.getComputedStyle('width'));
@@ -25,15 +25,13 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			
 			// Compute
 			ifLeft				= thenWidth + thenHMargins - Math.floor(ifWidth/2);
-			//plus 8 for the borders which can double in width because i can't be 
-			//bothered to look them up scriptomatically right now
-			ifThenElseWidth		= thenWidth + thenHMargins + elseWidth + elseHMargins +8;
+			ifThenElseWidth		= thenWidth + thenHMargins + elseWidth + elseHMargins + 12;
 			
 			// Output
 			ifThenElse.conditionPositioning.setStyle('left', ifLeft + 'px');
 			ifThenElse.setStyle('width', ifThenElseWidth + 'px');
 			
-			ifThenElse.get('parentNode').resize('child ifThenElse.resize');
+			ifThenElse.get('parentNode').resize('ifThenElse.resize | ' + reason);
 		}
 		
 		
@@ -47,7 +45,23 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','hidden');
 			ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','visible');
 		};
-		ifThenElse.conditionPositioning.LAGVEInsert = function(child) {ifThenElse.conditionContainer.LAGVEInsert(child);};
+		ifThenElse.conditionPositioning.LAGVEInsert = function(child) {
+			ifThenElse.conditionContainer.LAGVEInsert(child);
+		};
+		ifThenElse.conditionPositioning.resize = function(reason) {
+			Y.log('ifThenElse.conditionPositioning.resize triggered by ' + reason);
+			// Setup
+			var attributeContainerWidth	= parseInt(ifThenElse.conditionContainer.getComputedStyle('width'));
+						
+			// Compute
+			conditionPositioningWidth				= attributeContainerWidth * 1.5;
+			
+			// Output
+			this.setStyle('width', conditionPositioningWidth + 'px');
+			
+			// Bubble
+			this.get('parentNode').resize('child action.resize | ' + reason);
+		}
 		
 		ifThenElse.arrows				= Y.Node.create('<div class="ifthenelse-arrows"></div>');
 		ifThenElse.arrowheadLeft		= Y.Node.create('<div class="ifthenelse-arrowhead-left"></div>');
@@ -74,12 +88,15 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 				groups:	['condition'],
 			}
 		);		
-		ifThenElse.conditionContainer.resize 		= function(reason) { ifThenElse.resize(reason); };
+		ifThenElse.conditionContainer.resize 		= function(reason) {
+			ifThenElse.resize('ifThenElse.conditionContainer.resize | ' + reason);
+		};
 		ifThenElse.conditionContainer.LAGVEInsert	= function(child) {
 			if (child.hasClass('condition')) {
 				if (!ifThenElse.conditionContainer.hasChildNodes()) {			
 					ifThenElse.conditionContainer.append(child);
 					child.parentChanged();
+					child.resize();
 				}
 			}
 		}

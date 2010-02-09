@@ -31,9 +31,9 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		//////    STATEMENT BLOCK   ///////
 		var statement = Y.Node.create( '<div id=' + Y.guid('statement-') + ' class="statement deletable selectable"></div>' );
 		
-		statement.resize = function() {	
+		statement.resize = function(reason) {	
 			// "bubble up"
-			this.get('parentNode').resize('child statement.resize');
+			this.get('parentNode').resize('child statement.resize | ' + reason);
 		}
 		
 		statement._LAGVEName	= 'Statement Block';
@@ -57,7 +57,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		
 		//////    LIST   ///////
 		statement.LAGVEUL = Y.Node.create( '<ul id=' + Y.guid('statement-ul-') + ' class="statement-list"></ul>' );
-		statement.LAGVEUL.resize = statement.resize;
+		statement.LAGVEUL.resize = function(reason) { statement.resize(reason) };
 		statement.LAGVEUL.plug(
 			Y.Plugin.Drop,
 			{
@@ -95,10 +95,10 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 		childContainer.parentChanged = function() {
 			if (this.get('parentNode')) {
 				this.resize = this.get('parentNode').resize;
-				this.resize('new parent');
+				this.resize('statement child new parent');
 			}
 			if (this._oldParent) {
-				this._oldParent.resize('parentChanged');
+				this._oldParent.resize('statement child old parent.');
 			}
 			this._oldParent = this.get('parentNode');
 		}

@@ -1,13 +1,14 @@
 .comparison {
-	position:	relative;
-	top:		0px;
-	left:		0px;
-	border:		1px solid black;
-	height:		65px;
-	background-color:	white;
-	-moz-border-radius: 14px;
-	-webkit-border-radius: 14px;
-	padding:	7px;
+	position:				relative;
+	top:					0px;
+	left:					0px;
+	border:					1px solid black;
+	height:					65px;
+	background-color:		white;
+	-moz-border-radius: 	14px;
+	-webkit-border-radius: 	14px;
+	padding:				7px;
+	z-index:				11;				/* always be above the if-then-else arrow positioning DIV */
 }
 .comparison-child-container {
 	min-width:	20px;
@@ -26,5 +27,5 @@
 	top:		16px;
 }
 .comparator-select {
-	font-size:	1.5em;			
+	font-size:	22px;			
 }
