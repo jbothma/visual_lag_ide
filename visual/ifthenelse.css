@@ -17,14 +17,14 @@
 	/*margin:		0px 75px 0px 75px;*/
 }
 .ifthenelse-arrows {
-	position:	absolute;
-	top:		44%;
-	left:		-2px;
-	height:		59%;
-	width:		100%;
-	border-left:2px solid black;
-	border-right:2px solid black;
-	z-index:	10;
+	position:		absolute;
+	top:			50%;
+	left:			-2px;
+	height:			50%;
+	width:			100%;
+	border-left:	2px solid black;
+	border-right:	2px solid black;
+	z-index:		10;
 }
 .ifthenelse-arrowhead-left {
 	position:	absolute;
@@ -46,10 +46,12 @@
 	position: 		relative;
 	min-height:		59px;
 	min-width:		120px;
-	margin:			8% 18%;
+	/*margin:			8% 18%;*/
 	/*border:			1px dashed #AAA;*/
 	list-style-type:none;
 	padding:		0px;
+	float:			left;
+	clear:			both;
 }
 .ifthenelse-diamond-image {
 	position:	absolute;

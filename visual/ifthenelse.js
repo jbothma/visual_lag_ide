@@ -13,9 +13,9 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		 *
 		 */
 		ifThenElse.resize = function(reason) {
-			//Y.log('ifThenElse.resize triggered by ' + reason);
 			// Setup
-			var ifWidth			= parseInt(ifThenElse.conditionPositioning.getComputedStyle('width'));
+			var conditionWidth	= parseInt(ifThenElse.conditionContainer.getComputedStyle('width'));
+			var conditionHeight	= parseInt(ifThenElse.conditionContainer.getComputedStyle('height'));
 			var thenWidth		= parseInt(ifThenElse.thenBlock.getComputedStyle('width'));
 			var thenHMargins	= parseInt(ifThenElse.thenBlock.getStyle('marginLeft')) + 
 									parseInt(ifThenElse.thenBlock.getStyle('marginRight'));
@@ -29,7 +29,12 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 				Then block right side must be at least 100px to the right of the If block 
 				but its left side no less than 100px to the left of the right side of the If block.
 			*/
-			var ifLeft		= thenWidth + thenHMargins - Math.floor(ifWidth/2);
+			var ifWidth			= conditionWidth * 1.6;
+			var ifHeight		= conditionHeight * 2.6;
+			var ifLeft			= thenWidth + thenHMargins - ifWidth/2;
+			
+			var conditionLeft	= (ifWidth - conditionWidth)/2;
+			var conditionTop	= (ifHeight - conditionHeight)/2;
 			
 			if (ifLeft < 100) {
 				ifLeft = 100;
@@ -37,13 +42,20 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			
 			var elseLeft = ifLeft + ifWidth - 100 - thenWidth - 15;
 			
-			var ifThenElseWidth	= Math.max((thenWidth + elseLeft + elseWidth + 39), (ifLeft + ifWidth + 100 + 15));
+			var ifThenElseWidth	= Math.max((thenWidth + elseLeft + elseWidth + 43), (ifLeft + ifWidth + 100 + 15));
 			
 			// Output
+			ifThenElse.conditionPositioning.setStyle('width', ifWidth + 'px');
+			ifThenElse.conditionPositioning.setStyle('height', ifHeight + 'px');
 			ifThenElse.conditionPositioning.setStyle('left', ifLeft + 'px');
+			
+			ifThenElse.conditionContainer.setStyle('left', conditionLeft + 'px');
+			ifThenElse.conditionContainer.setStyle('top', conditionTop + 'px');
+			
 			ifThenElse.elseBlock.setStyle('left', elseLeft + 'px');
 			ifThenElse.setStyle('width', ifThenElseWidth + 'px');
 			
+			// Bubble
 			ifThenElse.get('parentNode').resize('ifThenElse.resize | ' + reason);
 		}
 		
@@ -114,7 +126,6 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 			}
 		}
 		
-		
 		///////    THEN and ELSE    ///////
 		ifThenElse.thenAndElse = Y.Node.create('<div class="ifthenelse-thenelse"></div>');
 		
@@ -174,5 +185,13 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 		
 		return ifThenElse;
 	}
+	
+	
+	Y.DD.DDM.on('drop:enter',function(e) {
+		var dropNode = e.target.get('node');
+		if (dropNode.hasClass('ifthenelse-condition-container')) {
+			dropNode.LAGVEInsert(e.drag.get('node'));
+		}
+	});
 });
 		

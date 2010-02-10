@@ -77,7 +77,7 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
 		}
 		
 		comparison.resize = function( reason){
-			this._resize(comparison.resize);
+			this._resize('comparison.resize');
 			
 			this.get('parentNode').resize('comparison.resize');
 		}

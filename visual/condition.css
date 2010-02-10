@@ -9,6 +9,8 @@
 	-webkit-border-radius: 	14px;
 	padding:				7px;
 	z-index:				11;				/* always be above the if-then-else arrow positioning DIV */
+	float:					left;
+	clear:					both;
 }
 .comparison-child-container {
 	min-width:	20px;
