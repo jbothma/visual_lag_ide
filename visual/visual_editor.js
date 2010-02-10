@@ -5,7 +5,8 @@ LAGVE.dropStack = new Array;
 getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	//new Y.Console().render();
 
-	LAGVE._init = function() {		
+	LAGVE._init = function() {
+		LAGVE._findWindow();
 		LAGVE._findMainMenu();
 		LAGVE._findAttrMenu();
 		LAGVE._findWorkspace();
@@ -19,7 +20,12 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	
 	LAGVE._editorReady = function() {
 		Y.one('#VE-loading-msg').setStyle('visibility','hidden');
-		Y.one('#VE-window').setStyle('visibility','');
+		LAGVE.window.setStyle('visibility','');
+		LAGVE.sizeWindow(Y.one('window').get('innerHeight'));
+	}
+	
+	LAGVE._findWindow = function() {
+		LAGVE.window = Y.one('#VE-window');
 	}
 	
 	LAGVE._findAttrMenu = function() {
@@ -189,6 +195,12 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 		Y.one('#VE-help-container').append(Y.Node.create(data));
 	};
 	
+	LAGVE.sizeWindow = function(newHeight) {		
+		LAGVE.window.setStyle('height', (newHeight-30) + 'px');
+		LAGVE.workspace.setStyle('height', (newHeight-64) + 'px');
+		Y.log('LAGVE Window height set to ' + newHeight);
+	}
+	
 	// Subscribe to event "io:complete", and pass an array
     // as an argument to the event handler "complete", since
     // "complete" is global.   At this point in the transaction
@@ -214,6 +226,19 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
 	Y.DD.DDM.on('drag:start', function(e) {
 		LAGVE.dropStack = new Array;
 	});
+	
+	Y.on('windowresize', function(e) {
+		LAGVE.sizeWindow(e.target.get('winHeight'));
+	});
+	
+	Y.on('scroll', function(e) {
+		// stop user from scrolling the window because we only want the editing window to scroll ever.
+		// can still scroll with mouse middle click and drag, and with arrows.
+		// this is a hack which should be avoided but i'll leve it here in case i dont find
+		// a better solution.
+		//scroll(0,0);
+	});
+	
 });
 
 LAGVE.showHelp = function() {document.getElementById('VE-help').style.visibility = 'visible';}
