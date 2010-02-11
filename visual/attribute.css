@@ -1,26 +1,26 @@
 /** CSS for attribute.htm **/
 .attr_box {
-	background-color:		white;
-	/*position:				absolute;*/
-	border:					1px solid black;
-	-moz-border-radius: 	14px;
-	-webkit-border-radius: 	14px;
-	height:					57px;
+    background-color:       white;
+    /*position:                absolute;*/
+    border:                 1px solid black;
+    -moz-border-radius:     14px;
+    -webkit-border-radius:  14px;
+    height:                 57px;
 }
 
 .sub_level_container {
-	float: right;
+    float:                  right;
 }
 
 .attr_box_value {
-	font-size:	22px;
-	margin:		14px;
-	float: 		left;
+    font-size:  22px;
+    margin:     14px;
+    float:      left;
 }
 
 .sub_level {
-	position:	relative;
-	top:		-1px;
-	right:		-1px;
+    position:   relative;
+    top:        -1px;
+    right:      -1px;
 }
 

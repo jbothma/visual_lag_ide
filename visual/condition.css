@@ -1,33 +1,33 @@
 .comparison {
-	position:				relative;
-	top:					0px;
-	left:					0px;
-	border:					1px solid black;
-	height:					65px;
-	background-color:		white;
-	-moz-border-radius: 	14px;
-	-webkit-border-radius: 	14px;
-	padding:				7px;
-	z-index:				11;				/* always be above the if-then-else arrow positioning DIV */
-	float:					left;
-	clear:					both;
+    position:               relative;
+    top:                    0px;
+    left:                   0px;
+    border:                 1px solid black;
+    height:                 65px;
+    background-color:       white;
+    -moz-border-radius:     14px;
+    -webkit-border-radius:  14px;
+    padding:                7px;
+    z-index:                11;                /* always be above the if-then-else arrow positioning DIV */
+    float:                  left;
+    clear:                  both;
 }
 .comparison-child-container {
-	min-width:	20px;
-	border:		1px solid black;
-	padding:	1px;
-	margin:		1px;
-	float:		left;
+    min-width:  20px;
+    border:     1px solid black;
+    padding:    1px;
+    margin:     1px;
+    float:      left;
 }
 .comparison-attribute-container {
-	min-width:	50px;
-	min-height:	50px;
-	height:		59px;
+    min-width:  50px;
+    min-height: 50px;
+    height:     59px;
 }
 .comparison-comparator-container {
-	position:	relative;
-	top:		16px;
+    position:   relative;
+    top:        16px;
 }
 .comparator-select {
-	font-size:	22px;			
+    font-size:  22px;            
 }
