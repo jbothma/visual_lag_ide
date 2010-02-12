@@ -160,7 +160,7 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
     }
     
     /**
-     *   Logical Conjunction visual item
+     *   Logical Con/Disjunction visual item
      *
      *                 
      *                                 __________________  
@@ -188,57 +188,75 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
      *  -   .resize() will need to widen the container DIV
      *
      */ 
-    LAGVECondition.newConjunction = function(targetNode) {
-        var conjunction = Y.Node.create('\
-            <div class="conjunction primary selectable">AND</div>\
+    LAGVECondition.newXjunction = function(options) {        
+        var xjunction = Y.Node.create('\
+            <div class="xjunction primary selectable"></div>\
         ');
-        conjunction._LAGVEName   = 'Conjunction';        
-        conjunction.getName      = function() {
+        
+        if ( isset( options ) && isset( options.type )) {
+            if (options.type === 'conjunction') {
+                xjunction._text         = 'AND';
+                xjunction._LAGVEName    = 'Conjunction';    
+            } else if (options.type === 'disjunction') {
+                xjunction._text         = 'OR';
+                xjunction._LAGVEName    = 'Disjunction';    
+            } else {
+                Y.log('options.type not specified correctly. conjunction and disjunction are allowed.','error');
+                return false;
+            }
+        } else {
+            Y.log('options.type not specified. conjunction and disjunction are allowed.','error');
+            return false;
+        }
+        
+        xjunction.set('innerHTML',xjunction._text);
+            
+        xjunction.getName       = function() {
             return this._LAGVEName
         };
         
-        conjunction._resize = function() {}
-        conjunction.select = function() { conjunction.conditionList.select() };
-        conjunction.deSelect = function() { conjunction.conditionList.deSelect() };
-        conjunction.LAGVEInsert = function(child) {
-            conjunction.conditionList.LAGVEInsert(child);
+        xjunction._resize       = function() {}
+        xjunction.select        = function() { xjunction.conditionList.select() };
+        xjunction.deSelect      = function() { xjunction.conditionList.deSelect() };
+        xjunction.LAGVEInsert   = function(child) {
+            xjunction.conditionList.LAGVEInsert(child);
         }
         
-        conjunction.diagonal = Y.Node.create('\
-            <div class="conjunction diagonal-container"></div>\
+        xjunction.diagonal = Y.Node.create('\
+            <div class="xjunction diagonal-container"></div>\
         ');
         
-        conjunction.conditionList = Y.Node.create('\
-            <ul class="conjunction condition-list selectable"></ul>\
+        xjunction.conditionList = Y.Node.create('\
+            <ul class="xjunction condition-list selectable"></ul>\
         ');
-        conjunction.conditionList.plug(
+        xjunction.conditionList.plug(
             Y.Plugin.Drop,
             {
                 groups:    ['condition'],
             }
         );        
-        conjunction.conditionList.resize        = function() {}
-        conjunction.conditionList.select        = LAGVE._genericSelect;
-        conjunction.conditionList.deSelect      = LAGVE._genericDeSelect;
+        xjunction.conditionList.resize        = function() {}
+        xjunction.conditionList.select        = LAGVE._genericSelect;
+        xjunction.conditionList.deSelect      = LAGVE._genericDeSelect;
 
-        conjunction.conditionList.LAGVEInsert   = function(child) {
+        xjunction.conditionList.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {
                 if (this.get('children').size() < 2) {            
                     this.append(child);
                     child.parentChanged();
-                    child.resize('conjunction.conditionList.LAGVEInsert');
+                    child.resize('xjunction.conditionList.LAGVEInsert');
                 }
             }
         }
         
-        conjunction.append(conjunction.diagonal);
-        conjunction.append(conjunction.conditionList);
+        xjunction.append(xjunction.diagonal);
+        xjunction.append(xjunction.conditionList);
         
-        // Wrap conjunction in an LI as a generic Condition
-        var condition = LAGVECondition.wrapConditionInLI( conjunction );
+        // Wrap xjunction in an LI as a generic Condition
+        var condition = LAGVECondition.wrapConditionInLI( xjunction );
 
-        if ( isset( targetNode )) {
-            targetNode.LAGVEInsert(condition);
+        if ( isset( options ) && isset( options.targetNode )) {
+            options.targetNode.LAGVEInsert(condition);
         }
         
         return condition;
@@ -273,7 +291,7 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
         var dropNode = e.target.get('node');
         var dragNode = e.drag.get('node');
         
-        if (dropNode.hasClass('conjunction') && dropNode.hasClass('condition-list')) {
+        if (dropNode.hasClass('xjunction') && dropNode.hasClass('condition-list')) {
             dropNode.LAGVEInsert(dragNode);
         }
         
