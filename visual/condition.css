@@ -1,7 +1,11 @@
+.condition {
+    z-index:    12;
+    /*float:      left;*/
+}
 .comparison {
     position:               relative;
     top:                    0px;
-    left:                   0px;
+    /*left:                   0px;*/
     border:                 1px solid black;
     height:                 65px;
     background-color:       white;
@@ -9,7 +13,7 @@
     -webkit-border-radius:  14px;
     padding:                7px;
     z-index:                11;                /* always be above the if-then-else arrow positioning DIV */
-    float:                  left;
+    /*float:                  left;*/
     clear:                  both;
 }
 .comparison-child-container {
@@ -40,14 +44,6 @@
     line-height:            40px;
     position:               relative;
     margin:                 auto;
-}
-.conjunction.innards-container {
-    position:               absolute;
-    left:                   0px;
-    bottom:                 0px;
-    /*border:                 1px dashed #AAA;*/
-    min-width:              100px;
-    min-height:             100px;
 }
 .conjunction.diagonal-container{
     position:               absolute;

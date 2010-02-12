@@ -1,7 +1,7 @@
 LAGVECondition = new Object();
 LAGVECondition.scriptName = 'condition.js';
 
-getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', function (Y) {
+getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',function (Y) {
     /**
      *    Dragable, reorderable HTML LI
      *    To be called by the function creating a new condition, e.g. a new Comparison
@@ -162,22 +162,22 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
     /**
      *   Logical Conjunction visual item
      *
-     *                 . . . . . . . . . . . . . . . . . . ..
-     *                innardsContainer  __________________  .
-     *                 .               |  ______________  | .
-     *                 .               | |              | | .
-     *                 .               | |  condition   | | .
-     *                 .               | |______________| | .
-     *                 .               |  ______________  | .
-     *                 .               | |              | | .
-     *                 .              /| |  condition   | | .
-     *                 .             / | |______________| | .
-     *                 .    _       /  |__________________| .
-     *                 .,`     `.  /                        .
-     *                /.          \                         .
-     *                !.   AND    !                         .
-     *                \.          /                         .
-     *                 .`.. _ ..`. . . . . . . . . . . . . ..
+     *                 
+     *                                 __________________  
+     *                                |  ______________  | 
+     *                                | |              | | 
+     *                                | |  condition   | | 
+     *                                | |______________| | 
+     *                                |  ______________  | 
+     *                                | |              | | 
+     *                               /| |  condition   | | 
+     *                              / | |______________| | 
+     *                     _       /  |__________________| 
+     *                 ,`     `.  /                        
+     *                /         \                         
+     *                !  AND    !                         
+     *                \         /                         
+     *                 ` . _ . `
      *
      *  -   Diagonal line is an image with transparent background. It just has to 
      *          start and end behind the things it's connecting, doesn't need to be exact.
@@ -185,17 +185,12 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
      *  -   Circle is contained in a Condition wrapper LI, Condition wrapper LI must scale 
      *          to circle's size but exclude condition list
      *  -   Condition container list is absolutely positioned.
-     *  -   Condition container list and diagonal line are contained by innardsContainer
      *  -   .resize() will need to widen the container DIV
      *
-     *  When user mouse over the circle, the entire conjunction element's 
-     *      z-index is set to something like 1000 to make sure all the conditions
-     *      are visible.
-     *      When user mouse out, z-index is restored.
      */ 
     LAGVECondition.newConjunction = function(targetNode) {
         var conjunction = Y.Node.create('\
-            <div class="conjunction primary">AND</div>\
+            <div class="conjunction primary selectable">AND</div>\
         ');
         conjunction._LAGVEName   = 'Conjunction';        
         conjunction.getName      = function() {
@@ -203,11 +198,12 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
         };
         
         conjunction._resize = function() {}
+        conjunction.select = function() { conjunction.conditionList.select() };
+        conjunction.deSelect = function() { conjunction.conditionList.deSelect() };
+        conjunction.LAGVEInsert = function(child) {
+            conjunction.conditionList.LAGVEInsert(child);
+        }
         
-        
-        conjunction.innardsContainer = Y.Node.create('\
-            <div class="conjunction innards-container"></div>\
-        ');
         conjunction.diagonal = Y.Node.create('\
             <div class="conjunction diagonal-container"></div>\
         ');
@@ -235,10 +231,8 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
             }
         }
         
-        conjunction.innardsContainer.append(conjunction.diagonal);
-        conjunction.innardsContainer.append(conjunction.conditionList);
-        
-        conjunction.append(conjunction.innardsContainer);
+        conjunction.append(conjunction.diagonal);
+        conjunction.append(conjunction.conditionList);
         
         // Wrap conjunction in an LI as a generic Condition
         var condition = LAGVECondition.wrapConditionInLI( conjunction );
@@ -276,7 +270,14 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
     }
     
     Y.DD.DDM.on('drop:enter',function(e) {
-        LAGVECondition.tryInsertComparisonChild(e.drop.get('node'),e.drag.get('node'));
+        var dropNode = e.target.get('node');
+        var dragNode = e.drag.get('node');
+        
+        if (dropNode.hasClass('conjunction') && dropNode.hasClass('condition-list')) {
+            dropNode.LAGVEInsert(dragNode);
+        }
+        
+        LAGVECondition.tryInsertComparisonChild(dropNode,dragNode);
     });
     
     Y.DD.DDM.on('drop:hit',function(e) {

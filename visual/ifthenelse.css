@@ -8,6 +8,7 @@
 .ifthenelse-condition-positioning {
     position:   relative;
     float:      left;
+    z-index:    9;
 }
 .ifthenelse-arrows {
     position:       absolute;
@@ -17,7 +18,7 @@
     width:          100%;
     border-left:    2px solid black;
     border-right:   2px solid black;
-    z-index:        10;
+    z-index:        1;
 }
 .ifthenelse-arrowhead-left {
     position:           absolute;
@@ -43,6 +44,7 @@
     padding:            0px;
     float:              left;
     clear:              both;
+    z-index:            2;
 }
 .ifthenelse-diamond-image {
     position:   absolute;

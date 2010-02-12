@@ -105,4 +105,5 @@ body {
 }
 .selected {
     border :    3px solid #00F !important;
+    z-index:    2000;
 }
