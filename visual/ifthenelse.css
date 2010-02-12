@@ -37,8 +37,8 @@
 }
 .ifthenelse-condition-container {
     position:           relative;
-    min-height:         59px;
-    min-width:          120px;
+    min-height:         50px;
+    min-width:          100px;
     list-style-type:    none;
     padding:            0px;
     float:              left;

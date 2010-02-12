@@ -159,11 +159,95 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event', functi
         return condition;
     }
     
-    LAGVECondition.newConjunction = function() {
-        /*
-            
-            
-        */
+    /**
+     *   Logical Conjunction visual item
+     *
+     *                 . . . . . . . . . . . . . . . . . . ..
+     *                innardsContainer  __________________  .
+     *                 .               |  ______________  | .
+     *                 .               | |              | | .
+     *                 .               | |  condition   | | .
+     *                 .               | |______________| | .
+     *                 .               |  ______________  | .
+     *                 .               | |              | | .
+     *                 .              /| |  condition   | | .
+     *                 .             / | |______________| | .
+     *                 .    _       /  |__________________| .
+     *                 .,`     `.  /                        .
+     *                /.          \                         .
+     *                !.   AND    !                         .
+     *                \.          /                         .
+     *                 .`.. _ ..`. . . . . . . . . . . . . ..
+     *
+     *  -   Diagonal line is an image with transparent background. It just has to 
+     *          start and end behind the things it's connecting, doesn't need to be exact.
+     *  -   Circle is Div with CSS3 rounded corners (maybe images for IE if i'm nice
+     *  -   Circle is contained in a Condition wrapper LI, Condition wrapper LI must scale 
+     *          to circle's size but exclude condition list
+     *  -   Condition container list is absolutely positioned.
+     *  -   Condition container list and diagonal line are contained by innardsContainer
+     *  -   .resize() will need to widen the container DIV
+     *
+     *  When user mouse over the circle, the entire conjunction element's 
+     *      z-index is set to something like 1000 to make sure all the conditions
+     *      are visible.
+     *      When user mouse out, z-index is restored.
+     */ 
+    LAGVECondition.newConjunction = function(targetNode) {
+        var conjunction = Y.Node.create('\
+            <div class="conjunction primary">AND</div>\
+        ');
+        conjunction._LAGVEName   = 'Conjunction';        
+        conjunction.getName      = function() {
+            return this._LAGVEName
+        };
+        
+        conjunction._resize = function() {}
+        
+        
+        conjunction.innardsContainer = Y.Node.create('\
+            <div class="conjunction innards-container"></div>\
+        ');
+        conjunction.diagonal = Y.Node.create('\
+            <div class="conjunction diagonal-container"></div>\
+        ');
+        
+        conjunction.conditionList = Y.Node.create('\
+            <ul class="conjunction condition-list selectable"></ul>\
+        ');
+        conjunction.conditionList.plug(
+            Y.Plugin.Drop,
+            {
+                groups:    ['condition'],
+            }
+        );        
+        conjunction.conditionList.resize        = function() {}
+        conjunction.conditionList.select        = LAGVE._genericSelect;
+        conjunction.conditionList.deSelect      = LAGVE._genericDeSelect;
+
+        conjunction.conditionList.LAGVEInsert   = function(child) {
+            if (child.hasClass('condition')) {
+                if (this.get('children').size() < 2) {            
+                    this.append(child);
+                    child.parentChanged();
+                    child.resize('conjunction.conditionList.LAGVEInsert');
+                }
+            }
+        }
+        
+        conjunction.innardsContainer.append(conjunction.diagonal);
+        conjunction.innardsContainer.append(conjunction.conditionList);
+        
+        conjunction.append(conjunction.innardsContainer);
+        
+        // Wrap conjunction in an LI as a generic Condition
+        var condition = LAGVECondition.wrapConditionInLI( conjunction );
+
+        if ( isset( targetNode )) {
+            targetNode.LAGVEInsert(condition);
+        }
+        
+        return condition;
     }
     
     LAGVECondition.tryInsertComparisonChild = function( target, child ) {

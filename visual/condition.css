@@ -31,3 +31,40 @@
 .comparator-select {
     font-size:  22px;            
 }
+.conjunction.primary {
+    border:                 1px solid black;
+    -moz-border-radius:     50%;
+    -webkit-border-radius:  50%;
+    height:                 40px;
+    width:                  40px;
+    line-height:            40px;
+    position:               relative;
+    margin:                 auto;
+}
+.conjunction.innards-container {
+    position:               absolute;
+    left:                   0px;
+    bottom:                 0px;
+    /*border:                 1px dashed #AAA;*/
+    min-width:              100px;
+    min-height:             100px;
+}
+.conjunction.diagonal-container{
+    position:               absolute;
+    bottom:                 33px;
+    left:                   33px;
+    width:                  32px;
+    height:                 100px;
+    background-image:       url("images/diagonal_up_75x100.png");
+}
+.conjunction.condition-list {
+    position:               absolute;
+    bottom:                 55px;
+    left:                   65px;
+    border:                 1px solid black;
+    min-height:             40px;
+    min-width:              100px;
+    list-style-type:        none;
+    padding:                 0px;
+    background-color:       white;
+}

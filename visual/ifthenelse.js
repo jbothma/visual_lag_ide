@@ -29,8 +29,13 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
                 Then block right side must be at least 100px to the right of the If block 
                 but its left side no less than 100px to the left of the right side of the If block.
             */
+            var ifHeight        = conditionHeight * 2.2;
             var ifWidth         = conditionWidth * 1.6;
-            var ifHeight        = conditionHeight * 2.6;
+            
+            if (ifWidth < ifHeight*2) {
+                ifWidth = ifHeight * 2;
+            }
+            
             var ifLeft          = thenWidth + thenHMargins - ifWidth/2;
             
             var conditionLeft   = (ifWidth - conditionWidth)/2;
