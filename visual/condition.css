@@ -44,23 +44,31 @@
     line-height:            40px;
     position:               relative;
     margin:                 auto;
+    background-color:       white;
 }
 .xjunction.diagonal-container{
     position:               absolute;
-    bottom:                 33px;
-    left:                   33px;
-    width:                  32px;
-    height:                 100px;
+    bottom:                 40px;
+    left:                   18px;
+    width:                  47px;
+    height:                 63px;
     background-image:       url("images/diagonal_up_75x100.png");
+    background-position:    left bottom;
 }
 .xjunction.condition-list {
     position:               absolute;
     bottom:                 55px;
     left:                   65px;
     border:                 1px solid black;
-    min-height:             40px;
+    min-height:             55px;
     min-width:              100px;
     list-style-type:        none;
     padding:                 0px;
     background-color:       white;
+}
+.xjunction.primary.enough {
+    width:                  130px;
+}
+.xjunction.enough.value-box {
+    width:                  30px;
 }

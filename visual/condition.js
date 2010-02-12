@@ -159,10 +159,28 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
         return condition;
     }
     
+    LAGVECondition._enoughThing = function() {
+        var enough = Y.Node.create('\
+            <div class="xjunction enough">ENOUGH = </div>\
+        ');
+        
+        enough.valueBox = Y.Node.create('\
+            <input type="text" class="xjunction enough value-box" value="1">\
+        ');
+        
+        enough.append(enough.valueBox);
+        
+        return enough;
+    }
+    
     /**
-     *   Logical Con/Disjunction visual item
+     *   Logical Con/Disjunction/Enough visual item
      *
-     *                 
+     *  LAGVECondition.newXjunction({
+     *      targetNode: LAGVE.selectedNode,
+     *      type:       'conjunction',
+     *  });
+     *
      *                                 __________________  
      *                                |  ______________  | 
      *                                | |              | | 
@@ -194,30 +212,49 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
         ');
         
         if ( isset( options ) && isset( options.type )) {
-            if (options.type === 'conjunction') {
-                xjunction._text         = 'AND';
-                xjunction._LAGVEName    = 'Conjunction';    
-            } else if (options.type === 'disjunction') {
-                xjunction._text         = 'OR';
-                xjunction._LAGVEName    = 'Disjunction';    
-            } else {
-                Y.log('options.type not specified correctly. conjunction and disjunction are allowed.','error');
-                return false;
+            switch (options.type) {
+                case 'conjunction' :
+                    xjunction._maxConds = 2;
+                    xjunction.set('innerHTML','AND');
+                    xjunction._LAGVEName    = 'Conjunction';
+                    break;
+                case 'disjunction' :
+                    xjunction._maxConds = 2;
+                    xjunction.set('innerHTML','OR');
+                    xjunction._LAGVEName    = 'Disjunction';
+                    break;
+                case 'enough' :
+                    xjunction._maxConds = null;
+                    xjunction.append( LAGVECondition._enoughThing() );
+                    xjunction.addClass('enough');
+                    xjunction._LAGVEName    = 'Enough';
+                    break;
+                default:
+                    Y.log('options.type not specified correctly. enough, conjunction and disjunction are allowed.','error');
+                    return false;
             }
         } else {
-            Y.log('options.type not specified. conjunction and disjunction are allowed.','error');
+            Y.log('options.type not specified. enough, conjunction and disjunction are allowed.','error');
             return false;
         }
         
-        xjunction.set('innerHTML',xjunction._text);
             
         xjunction.getName       = function() {
             return this._LAGVEName
         };
         
         xjunction._resize       = function() {}
-        xjunction.select        = function() { xjunction.conditionList.select() };
-        xjunction.deSelect      = function() { xjunction.conditionList.deSelect() };
+        
+        xjunction.select        = function() { 
+            this.addClass('selected');
+            xjunction.conditionList.select() 
+        };
+        
+        xjunction.deSelect      = function() { 
+            this.removeClass('selected');
+            xjunction.conditionList.deSelect() 
+        };
+        
         xjunction.LAGVEInsert   = function(child) {
             xjunction.conditionList.LAGVEInsert(child);
         }
@@ -241,7 +278,7 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
 
         xjunction.conditionList.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {
-                if (this.get('children').size() < 2) {            
+                if (xjunction._maxConds === null || this.get('children').size() < xjunction._maxConds) {            
                     this.append(child);
                     child.parentChanged();
                     child.resize('xjunction.conditionList.LAGVEInsert');
