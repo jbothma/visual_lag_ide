@@ -5,6 +5,7 @@
     border:                 1px solid black;
     -moz-border-radius:     14px;
     -webkit-border-radius:  14px;
+    border-radius:          14px;
     height:                 57px;
 }
 

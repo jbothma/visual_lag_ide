@@ -11,6 +11,7 @@
     background-color:       white;
     -moz-border-radius:     14px;
     -webkit-border-radius:  14px;
+    border-radius:          14px;
     padding:                7px;
     z-index:                11;                /* always be above the if-then-else arrow positioning DIV */
     /*float:                  left;*/
@@ -39,6 +40,7 @@
     border:                 1px solid black;
     -moz-border-radius:     50%;
     -webkit-border-radius:  50%;
+    border-radius:          50%;
     height:                 40px;
     width:                  40px;
     line-height:            40px;
