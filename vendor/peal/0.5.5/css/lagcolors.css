@@ -1,0 +1,90 @@
+.editbox {
+  margin: .4em;
+  padding: 0;
+  font-family: monospace;
+  font-size: 10pt;
+  color: black;
+}
+
+pre.code, .editbox {
+  color: #666666;
+}
+
+.editbox p {
+  margin: 0;
+}
+
+/* initImp */
+span.lag-keyword1 {
+  color: #ff0077;
+  font-weight: bold;
+}
+/* if, while */
+span.lag-keyword2 {
+  color: blue;
+  font-weight: bold;
+}
+/* do, then, else */
+span.lag-keyword3 {
+  color: blue;
+  font-weight: bold;
+}
+/* true, false */
+span.lag-keyword4 {
+  color: blue;
+  font-weight: bold;
+}
+/* genstat, specstat */
+span.lag-keyword5 {
+  color: teal;
+  font-weight: bold;
+}
+/* DM, GM, UM, PM, CM, Concept  */
+span.lag-keyword6 {
+  color: teal;
+  font-weight: bold;
+}
+/* for, enough, break */
+span.lag-keyword7 {
+  font-weight: bold;
+  color: blue;
+}
+
+span.lag-atom {
+  color: #FF9A00;	/* orange */
+}
+
+span.lag-variable {
+  color: black;
+  font-style: italic;
+}
+
+span.js-variabledef {
+  color: #0000FF;
+}
+
+span.js-localvariable {
+  color: #004499;
+}
+
+span.js-property {
+  color: black;
+}
+
+span.lag-comment {
+  color: darkgreen;
+}
+
+span.lag-string {
+  color: #AA2222;	/* redish */
+}
+
+span.lag-operator {
+	color: black;
+}
+span.lag-compare {
+	color: black;
+}
+span.lag-error {
+	color: red;
+}

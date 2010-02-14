@@ -1,0 +1,169 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: tahoma, arial, sans-serif;
+  color: black;
+}
+
+img {
+	padding: 2px;
+	margin-bottom: -5px;
+}
+img:hover {
+	border: 1px solid #808080;
+	background-color: #DDDDDD;
+	padding: 1px;
+	margin-bottom: -5px;
+}
+
+form {
+	color: #808080;
+	padding-bottom: 6px;
+}
+
+h1 {
+  font-size: 22pt;
+}
+
+h2 {
+  font-size: 14pt;
+}
+
+p.rel {
+  padding-left: 2em;
+  text-indent: -2em;
+}
+
+div.border {
+  border: 1px solid black;
+  padding: 3px;
+}
+
+code {
+  font-family: courier, monospace;
+  font-size: 90%;
+  color: #277;
+}
+
+pre.code {
+  margin: 1.1em 12px;
+  border: 1px solid #CCCCCC;
+  color: black;
+  padding: .4em;
+  font-family: courier, monospace;
+}
+
+#autocomplete {
+	left: -500px;
+	top: 0px;
+	background-color: white;
+	border: 1px solid black;
+	position: absolute;
+}
+#autowords {
+	background-color: white;
+	font-size: 8pt;
+	font-family: courier, monospace;
+}
+#filemanager {
+	/* position: absolute; 
+	visibility: hidden; */
+	left: -500px;
+	top: 0px;
+	background-color: #DDDDDD;
+	color: black;
+}
+#wizard {
+	/* position: absolute; 
+	visibility: hidden; */
+	left: -500px;
+	top: 0px;
+	background-color: #DDDDDD;
+	color: black;
+}
+.dragable {
+	position:absolute;
+	font-size: 10pt;
+	border: 1px solid black;
+	font-family: verdana;
+	/* padding: 3pt; */
+	width: 405px;
+}
+#filestitle {
+	width: 100%;
+	text-align: center;
+	/* border-bottom: 1px solid black; */
+	background-color: #0260F2;
+	color: white;
+	padding-top: 2pt;
+	padding-bottom: 2pt;
+}
+#frmfiles {
+	color: black;
+	padding-bottom: 0;
+}
+#wizardtitle {
+	width: 100%;
+	text-align: center;
+	/* border-bottom: 1px solid black; */
+	background-color: #0260F2;
+	color: white;
+	padding-top: 2pt;
+	padding-bottom: 2pt;
+}
+#frmwizard {
+	color: black;
+	padding-bottom: 0;
+}
+.dragable .handle {
+	cursor: move;
+	font-weight: bold;
+}
+#playground {
+    position: relative;
+    height: 200px;
+}
+#closebutton {
+	cursor: pointer;
+	float: right;
+	margin-top: -15pt;
+	height: 18px;
+	width: 18px;
+	background-image: url('../close.gif');
+}
+#fileclosebutton {
+	cursor: pointer;
+	float: right;
+	margin-top: -15pt;
+	height: 18px;
+	width: 18px;
+	background-image: url('../close.gif');
+}
+.CodeMirror-line-numbers {
+	width: 1.7em;
+	background-color: #eee;
+	text-align: right;
+	padding-right: .3em;
+	color: #aaa;
+	font-size: 70%;
+}
+
+.PEAL-fragments {
+	position: absolute;
+	height: 100%;
+	width: 15%;
+	top: 0px;
+	right: 0px;
+	border-left: 1px solid black;
+	margin-left: 5px;
+}
+
+.PEAL-frags {
+	border-bottom: 1px solid black;
+	padding-bottom: 5px;
+	text-align: right;
+}
+
+#fragmentViewer {
+	margin: 3px;
+}

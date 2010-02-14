@@ -1,0 +1,173 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	<meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
+
+    <script src="js/codemirror.js" type="text/javascript"></script>
+    <script src="js/mirrorframe.js" type="text/javascript"></script>
+	<script src="js/pealfunctions.js" type="text/javascript"></script>
+	<script src="js/pealconfig.js" type="text/javascript"></script>
+	<script src="js/pealajax.js" type="text/javascript"></script>
+	<script src="js/yahoo-dom-event.js" type="text/javascript"></script>
+	<script src="js/dragdrop-min.js" type="text/javascript"></script>
+	
+    <title>PEAL - version 0.5.5</title>
+    <link rel="stylesheet" type="text/css" href="css/docs.css" />
+  </head>
+<body>				 <!-- The createMenus() call is for the Strategy Creation Wizard -->
+  <div class="playground" style="padding-left: 10pt; padding-top: 10pt;">
+   <div style="border-bottom: 0px solid black;">
+		<div style="float: right; padding-right: 5pt;">
+			<a href="logout.php">Logout</a>
+		</div>
+		<div style="margin-top: -15pt;">
+			<p>PEAL v0.5.5<br/>
+			<small>Not fully compatible with Internet Explorer.</small>
+			</p>
+		</div>
+	</div>
+	<form id="savedetails" name="savedetails" style="font-size: 10pt;" action="">
+		<img src="png/page_white.png" onclick="newStrategy();" title="New Strategy" alt="New Strategy" /><img src="png/page_white_star.png" onclick="showWizard();" title="Show Wizard" alt="Show Wizard" />
+		|
+		<img src="png/folder_page.png" onclick="showFileManager();" title="Open" alt="Open" />
+		<!-- Strategy name: --> <input id="stratname" name="stratname" type="hidden" size="30" />
+		<img src="png/disk.png" title="Save" alt="Save" onclick="saveStrategy();" /><img src="png/disk_multiple.png" title="Save As" alt="Save As" onclick="saveStrategy('copy');" /><img src="png/page_text_save.png" title="Save Code Fragment" alt="Save Code Fragment" onclick="saveFragment();" />
+		|
+		<img src="png/page_white_put.png" title="Download" alt="Download" onclick="downloadStrategy();"/>
+		|
+		<span id="pubpriv" style="font-size: 10pt; padding-right:3px;">Private</span><img id="lockimg" src="png/lock.png" title="Make Strategy Public" alt="Make strategy public:" onclick="publicCheckBox(false);"/><input id="chkpublic" name="chkpublic" type="hidden" onclick="publicCheckBox(true);"/>
+		|
+		<img src="png/arrow_undo.png" title="Undo" alt="Undo" onclick="editor.mirror.editor.history.undo();" /><img src="png/arrow_redo.png" title="Redo" alt="Redo" onclick="editor.mirror.editor.history.redo();" />&nbsp;
+		<span id="isSaved" style="font-size: 10pt;"></span>
+	</form>
+	
+	<div class="border" id="peal">
+		<textarea id="code" cols="120" rows="40">
+// DESCRIPTION
+//
+//
+
+// VARS
+//
+//
+
+initialization (
+
+)
+
+implementation (
+
+)</textarea>
+	<div id="cc" style="font-size: 10pt; border-top: 1px solid black;">&nbsp;</div>
+	<!-- Haven't placed an empty OPTION in here because of lines 734-748 in editor.js which deal with UP and DOWN key presses -->
+	<div id="autocomplete"><select id="autowords" size="4" onclick="insertAutoComplete(); document.getElementById('autocomplete').style.left = -1000 + 'px'; document.getElementById('autocomplete').style.top = 0 + 'px';"></select></div>
+	</div>
+
+	<script type="text/javascript">
+	  var textarea = document.getElementById('code');
+	  var editor = new MirrorFrame(CodeMirror.replace(textarea), {
+		height: "350px",
+		width: "100%",
+		content: textarea.value,
+		parserfile: ["tokenizelag.js", "parselag.js"],
+		stylesheet: ["css/lagcolors.css"],
+		path: "js/",
+		lineNumbers: true,
+		autoMatchParens: true,
+		saveFunction: saveStrategy
+	  });
+	</script>
+
+	<div id="wizard" class="dragable">
+		<div id="wizardtitle" class="handle">New Strategy Creation Wizard</div>
+		<div id="closebutton" onclick="cancelWizard();">&nbsp;</div>
+		<div style="padding: 3pt;">
+		<form id="frmwizard" name="frmwizard" action="">
+			Description:<br>
+			<textarea id="description" cols="47" rows="5">
+			</textarea><br/><br/>
+			
+			New Variable Name:<br/>
+			<select id="var1" name="var1" onchange="newMenu(1);">
+				<option></option>
+			</select>
+			<select id="var2" name="var2" onchange="newMenu(2);">
+				<option></option>
+			</select>
+			<select id="var3" name="var3" onchange="newMenu(3);">
+				<option></option>
+			</select>
+			<select id="var4" name="var4">
+				<option></option>
+			</select>
+			<input type="text" size="15" id="var5" name="var5" /><br/>
+			
+			Initial Value/Expression:<br/>
+			<input type="text" size="61" id="init" />
+			<div style="text-align: right; width: 300pt;"><input type="button" name="add" value="+ Add Variable" onclick="addVariableToList();" /></div>
+			<select multiple="multiple" size="5" id="varcode" name="varcode" style="width: 100%;">
+				<option></option>
+			</select>
+			<div style="text-align: right; width: 300pt;">
+				<input type="button" name="remove" value="- Remove Variable" onclick="removeVariableFromList();" />
+			</div>
+			<div style="text-align: right; width: 300pt; padding-top: 5pt;">
+				<input type="button" value="OK" name="ok" onclick="okWizard();"/> <input type="button" value="Cancel" name="cancel" onclick="cancelWizard();"/>
+			</div>
+		</form>
+		</div>
+	</div>
+	
+	<div id="filemanager" class="dragable">
+		<div id="filestitle" class="handle">File Manager</div>
+		<div id="fileclosebutton" onClick="cancelFileManager();">&nbsp;</div>
+		<div style="padding: 3pt;">
+		<form id="frmfiles" name="frmfiles" action="">
+			<div style="float: right; width: 50%;">
+				Private:<br/>
+				<select size="10" id="privatefiles" name="privatefiles" style="width: 100%" onchange="selectedStrategy('false');">
+					<option></option>
+				</select>
+			</div>
+			<div style="width: 50%;">
+				Public:<br/>
+				<select size="10" id="publicfiles" name="publicfiles" style="width: 100%" onchange="selectedStrategy('true');">
+					<option></option>
+				</select>
+			</div>
+			
+			<!-- these two hidden inputs store a public/private flag and the filename for opening/deleting files -->
+			<input type="hidden" id="pstrat" name="pstrat" />
+			<input type="hidden" id="sname" name="sname" />
+			
+			<!-- public strategies should only be deletable by the original owner -->
+			<div style="text-align: right; width: 300pt;">
+				<input type="button" value="Open Strategy" name="open" onclick="openStrategy(); hideFileManager();"/>
+				<input type="button" name="delete" value="Delete Strategy" onclick="deleteStrategy();" />
+			</div>
+			<div style="text-align: right; width: 300pt; padding-top: 5pt;">
+				<input type="button" value="Cancel" name="cancel" onclick="cancelFileManager();"/>
+			</div>
+		</form>
+		</div>
+	</div>
+<script type="text/javascript">
+(function() {
+	YAHOO.util.Event.onDOMReady(function() {
+		var d1 = new YAHOO.util.DD("wizard");
+		// Configure one or more child element as a drag handle
+		d1.setHandleElId("wizardtitle");
+
+		var d2 = new YAHOO.util.DD("filemanager");
+		// Configure one or more child element as a drag handle
+		d2.setHandleElId("filestitle");
+	});
+})();
+</script>
+</div>
+<script type="text/javascript">
+	createMenus();
+	getFragments();
+</script>
+</body>
+</html>
