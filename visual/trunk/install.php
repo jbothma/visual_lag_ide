@@ -53,7 +53,8 @@
 			username VARCHAR(40) PRIMARY KEY,<br/>
 			password VARCHAR(32) NOT NULL,<br/>
 			s_id VARCHAR(32),<br/>
-			t_password VARCHAR(32))
+			t_password VARCHAR(32),<br/>
+			hash VARCHAR(32) NOT NULL)
 	</code>
 	<br/>
 	<p>Once you have created this table you need to insert your database details below so that the PEAL system can access the database.</p>

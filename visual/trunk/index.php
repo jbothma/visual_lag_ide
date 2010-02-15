@@ -1,3 +1,4 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
     <title>PEAL - version 0.5.5</title>
@@ -32,17 +33,31 @@
   ?>
 	<p>PEAL - version 0.5.5: Login</p>
 	<form id="login" action="php/login.php" method="post">
-		Username: <input type="text" name="username" maxlength="40" />
+		Email Address: <input type="text" name="username" id="lemail" maxlength="40" />
 		Password: <input type="password" name="password" /><br>
-		<input type="submit" value="Login" />
+		<input type="submit" value="Login" onclick="checkEmail('lemail');" />
 	</form>
 	<br/>
 	<p>PEAL - version 0.5.5: Signup</p>
 	<form id="signup" action="php/signup.php" method="post">
-		Username: <input type="text" name="username" maxlength="40" />
+		Email Address: <input type="text" name="username" id="semail" maxlength="40" />
 		Password: <input type="password" name="password" /><br>
-		<input type="submit" value="Signup" />
+		<input type="submit" value="Signup" onclick="checkEmail('semail');" />
 	</form>
-
+    
+    <small><a href="php/forget.php">Forget your password?</a></small>
+	
+	<script language="javascript">
+	function checkEmail(id) {
+		var email = document.getElementById(id);
+		var filter = /^([a-zA-Z0-9_\.\-])+\@(([a-zA-Z0-9\-])+\.)+([a-zA-Z0-9]{2,4})+$/;
+		if (!filter.test(email.value)) {
+			alert('Please provide a valid email address');
+			return false;
+		} else {
+			return true;
+		}
+	}
+	</script>
   </body>
 </html>

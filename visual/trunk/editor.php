@@ -43,7 +43,8 @@
 		|
 		<span id="pubpriv" style="font-size: 10pt; padding-right:3px;">Private</span><img id="lockimg" src="png/lock.png" title="Make Strategy Public" alt="Make strategy public:" onclick="publicCheckBox(false);"/><input id="chkpublic" name="chkpublic" type="hidden" onclick="publicCheckBox(true);"/>
 		|
-		<img src="png/arrow_undo.png" title="Undo" alt="Undo" onclick="editor.mirror.editor.history.undo();" /><img src="png/arrow_redo.png" title="Redo" alt="Redo" onclick="editor.mirror.editor.history.redo();" />&nbsp;
+		<img src="png/arrow_undo.png" title="Undo" alt="Undo" onclick="editor.mirror.editor.history.undo();" /><img src="png/arrow_redo.png" title="Redo" alt="Redo" onclick="editor.mirror.editor.history.redo();" />
+		|
 		<span id="isSaved" style="font-size: 10pt;"></span>
 	</form>
 	
@@ -166,6 +167,13 @@ implementation (
 	});
 })();
 </script>
+<div style="font-size: 8pt;">
+<br/>
+PEAL is licensed by <a href="http://ww.ukarumpa.co.uk">Jon Bevan</a> under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>.<br/>
+The icons are licensed by <a href="http://www.famfamfam.com/lab/icons/silk/">Mark James</a> under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>.<br/>
+CodeMirror is licensed by <a href="http://marijn.haverbeke.nl/codemirror/">Marijn Haverbeke</a> under a <a href="http://marijn.haverbeke.nl/codemirror/LICENSE">BSD-style license</a>.<br/>
+The Yahoo User Interface Library is licensed by <a href="http://developer.yahoo.com/yui/">Yahoo! Inc.</a> and its components are provided free of charge under a <a href="http://developer.yahoo.com/yui/license.html">liberal BSD license</a>.
+</div>
 </div>
 <script type="text/javascript">
 	 // The createMenus() call is for the Wizard
