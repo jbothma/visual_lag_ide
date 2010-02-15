@@ -41,7 +41,7 @@ function login($u, $p) {
 		}
 	} else {
 		// no user
-		header ("Location: index.php?nouser");
+		header ("Location: ../index.php?nouser");
 	}
 }
 
