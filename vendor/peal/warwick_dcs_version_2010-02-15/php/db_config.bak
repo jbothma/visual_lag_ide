@@ -1,0 +1,7 @@
+<?php
+$db_password = "motphppass";
+$db_username = "motphp";
+$db_name = "peal";
+$db_server = "prolearn.dcs.warwick.ac.uk";
+$db_port = 8023;
+?>
