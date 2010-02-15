@@ -99,12 +99,12 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         ifThenElse.ifDiamondIMG     = Y.Node.create(
             '<img    alt="if-then-else diamond shape" \
             class="ifthenelse-diamond-image" \
-            src="../visual/images/ifthenelse_diamond.png" ></img>\
+            src="images/ifthenelse_diamond.png" ></img>\
         ');    
         ifThenElse.ifDiamondIMGSelected = Y.Node.create(
             '<img    alt="if-then-else diamond shape selected" \
                     class="ifthenelse-diamond-image-selected" \
-                    src="../visual/images/ifthenelse_diamond_selected.png" >\
+                    src="images/ifthenelse_diamond_selected.png" >\
             </img>'
         );
         
