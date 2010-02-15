@@ -12,7 +12,7 @@ if(!checkUser($_SESSION['username'])) {
 }
 
 // Grab the necessary variables - the source code, the username, whether the code is public or not, any supplied filename and the current time of saving
-$code = $_POST['code'];
+$code = stripslashes($_POST['code']);
 $folder = encrypt($_SESSION['username']);
 $isPublic = $_POST['ispublic'];
 $fileName = $_POST['filename'];

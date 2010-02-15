@@ -20,7 +20,7 @@ if ($fname != "" && $ispublic != "") {
 	} else if ($ispublic == "false") {
 		openAndWrite("../users/$uname/$fname", $uname, $fname);
 	} else {
-		echo "No file...";
+		echo "No file isn't public or private...";
 	}
 } else {
 	echo "Uh-oh...";
@@ -38,7 +38,7 @@ function openAndWrite($path, $uname) {
 	$user = $users->item(0)->nodeValue;
 	
 	// check user/owner
-	if ($uname == encrypt($user)) {
+	//if ($uname == encrypt($user)) {
 		// place code into new file in tmp folder with ext of .lag
 		$ourFileName = substr($path, 0, -4) . ".lag";
 		$ourFileHandle = fopen($ourFileName, 'w') or die("Can't open file");
@@ -46,9 +46,9 @@ function openAndWrite($path, $uname) {
 		fclose($ourFileHandle);
 		// call download function on that
 		force_download(substr($path, 0, -4) . ".lag");
-	} else {
-		echo "No user match...<br>\n<br>\n$uname<br>\n<br>\n$user: " . encrypt($user);
-	}
+	//} else {
+		//echo "No user match...<br>\n<br>\n$uname<br>\n<br>\n$user: " . encrypt($user);
+	//}
   } else {
 		echo "No file...";
   }
@@ -56,14 +56,14 @@ function openAndWrite($path, $uname) {
 function force_download($file) 
 {
     $dir = "../";
-    if ((isset($file)) && (file_exists($dir.$file))) {
+    if ((isset($file)) && (file_exists($file))) {
        header("Content-type: application/force-download"); 
-       header('Content-Disposition: inline; filename="' . $dir.$file . '"'); 
+       header('Content-Disposition: inline; filename="' . $file . '"'); 
        header("Content-Transfer-Encoding: Binary"); 
-       header("Content-length: ".filesize($dir.$file)); 
+       header("Content-length: ".filesize($file)); 
        header('Content-Type: application/octet-stream'); 
        header('Content-Disposition: attachment; filename="' . substr($file, strripos($file, "/")+1) . '"'); 
-       readfile("$dir$file"); 
+       readfile("$file"); 
     } else {
        echo "No file selected"; 
     }

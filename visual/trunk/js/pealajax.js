@@ -35,7 +35,7 @@ function saveFile() {
 		var now = new Date();
 		var url = "php/save_file.php";
 		url = url + "?time=" + now + "&sid=" + Math.random();
-		var params = "filename=" + fileName + "&ispublic=" + isPublic + "&code=" + editor.mirror.getCode(); //get code from editor
+		var params = "filename=" + fileName + "&ispublic=" + isPublic + "&code=" + encodeURIComponent(editor.mirror.getCode()); //get code from editor
 		if (delFile) {
 			params = params + "&delete=" + delFile;
 			delFile = null;
@@ -384,7 +384,7 @@ function saveFragment() {
 			var now = new Date();
 			var url = "php/save_fragment.php";
 			url = url + "?time=" + now + "&sid=" + Math.random();
-			var params = "filename=" + fragFileName + ".frag&code=" + editor.mirror.editor.selectedText(); 	//get selected code from editor
+			var params = "filename=" + fragFileName + ".frag&code=" + encodeURIComponent(editor.mirror.editor.selectedText()); 	//get selected code from editor
 			xmlHttp6.onreadystatechange=fragSaved;
 			try {
 				xmlHttp6.open("POST", url, true);

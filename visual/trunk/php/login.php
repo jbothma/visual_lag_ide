@@ -25,15 +25,23 @@ if ($u != "" && $p != "") {
 function login($u, $p) {
 	if (checkUser($u)) {
 		$user_pass = getUserPassword($u);
-		if ($user_pass !== false) {
-			// Must supply the unencrypted password first, then the one from the database
-			if (compare($p, $user_pass)) {
-				include_once("session_functions.php");
-				createSession($u);
-				header ("Location: ../editor.php");
+		$user_hash = getUserHash($u);
+		$user_temp = getTempPassword($u);
+		if ($user_pass !== false && $user_hash !== false) {
+		
+			//Check against temporary passwords
+			if ($user_temp == "") {
+				// Must supply the unencrypted password first, then the one from the database
+				if (compare($p.$user_hash, $user_pass)) {
+					include_once("session_functions.php");
+					createSession($u);
+					header ("Location: ../editor.php");
+				} else {
+					// wrong password
+					header ("Location: ../index.php?wrongpassword");
+				}
 			} else {
-				// wrong password
-				header ("Location: ../index.php?wrongpassword");
+				header("Location: update_password.php?u=$u");
 			}
 		} else {
 			// no password for that user
@@ -42,22 +50,6 @@ function login($u, $p) {
 	} else {
 		// no user
 		header ("Location: ../index.php?nouser");
-	}
-}
-
-function getUserPassword($u) {
-	$db_conn = connectToDB();
-	
-	$query = "SELECT password FROM user WHERE username='$u'";
-	$result = mysql_query($query) or die(mysql_error());
-	$row = mysql_fetch_array($result);
-
-	disconnectFromDB($db_conn);
-
-	if (mysql_num_rows($result) <= 0) {	
-		return false;
-	} else {
-		return $row[0];
 	}
 }
 

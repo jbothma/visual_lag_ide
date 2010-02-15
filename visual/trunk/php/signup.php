@@ -6,7 +6,10 @@ $p = $_POST['password'];
 
 if ($u != "" && $p != "" && !stripos($u, "'") && !stripos($p, "'") && !stripos($p, "\\") && !stripos($u, "\\") && !stripos($p, ";") && !stripos($u, ";")) {
 	if (!checkUser($u)) {
-		if (createUser($u, encrypt($p))) {
+	
+		$hash = randomString();
+		$pp = $p . $hash;
+		if (createUser($u, pencrypt($pp), $hash)) {
 			// user created
 			//header ("Location: index.php?usercreated");
 			header("Location: login.php?username=$u&password=$p");

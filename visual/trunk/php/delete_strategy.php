@@ -1,7 +1,7 @@
 <?php
 // this can also be used for unchecking public files
-$ispublic = $_GET['ispublic'];
-$fname = $_GET['filename'];
+$ispublic = $_POST['ispublic'];
+$fname = $_POST['filename'];
 
 include_once("login_functions.php");
 session_start();

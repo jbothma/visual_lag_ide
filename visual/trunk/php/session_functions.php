@@ -14,8 +14,9 @@ function createSession($u) {
 		
 		$db_conn = connectToDB();
 
-		$query = "UPDATE user SET s_id='$rndStr' WHERE username='$u'";
-		$result = mysql_query($query) or die(mysql_error());
+		$query = $db_conn->prepare("UPDATE user SET s_id = ? WHERE username= ?");
+		$query->bind_param("ss",$rndStr,$u);
+		$query->execute() or die("Couldn't update session");
 
 		disconnectFromDB($db_conn);
 	//}
@@ -34,13 +35,14 @@ function checkSession() {
 		if (checkUser($uname)) {
 			$db_conn = connectToDB();
 
-			$query = "SELECT s_id FROM user WHERE username='$uname'";
-			$result = mysql_query($query) or die(mysql_error());
-			$row = mysql_fetch_array($result);
-	
+			$query = $db_conn->prepare("SELECT s_id FROM user WHERE username=?");
+			$query->bind_param("s", $uname);
+			$query->bind_result($sid);
+			$query->execute() or die("Couldn't get sessionid");
+			$query->fetch();	
 			disconnectFromDB($db_conn);
 
-			return ($row[0] == $_SESSION['s_id']);
+			return ($sid == $_SESSION['s_id']);
 		} else {
 			return false;
 		}

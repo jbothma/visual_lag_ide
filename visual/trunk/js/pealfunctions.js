@@ -127,7 +127,7 @@ function okWizard() {
 	// check for empty form
 	if (document.getElementById('description').value == "" && document.getElementById('varcode').innerHTML == "") {
 		cont = confirm("This will create a blank new strategy.\n\nContinue?");
-	} else if (document.getElementById('varcode').innerHTML == "") {
+	} else if (!document.getElementById('varcode').hasChildNodes()) {
 		cont = confirm("You have not provided any variables to initialise.\n\nContinue?");
 	}
 	if (cont) {
@@ -190,6 +190,8 @@ function okWizard() {
 		document.getElementById("pubpriv").innerHTML = "Private";
 		document.getElementById("isSaved").innerHTML = "";
 		stopSave();
+        
+		fileName = "";
 
 		hideWizard();
 	}
@@ -434,6 +436,7 @@ function newStrategy() {
 		var blank = "// DESCRIPTION\n//\n//\n\n// VARS\n//\n//\n\ninitialization (\n\n)\n\nimplementation (\n\n)";
 		editor.mirror.setCode(blank);
 		stopSave();
+		fileName = "";
 		document.getElementById("stratname").value = "";
 		document.getElementById("chkpublic").checked = false;
 		document.getElementById("lockimg").src = "png/lock.png";
