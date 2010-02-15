@@ -9,14 +9,6 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-        <script src="js/codemirror.js" type="text/javascript"></script>
-        <script src="js/mirrorframe.js" type="text/javascript"></script>
-        <script src="js/pealfunctions.js" type="text/javascript"></script>
-        <script src="js/pealconfig.js" type="text/javascript"></script>
-        <script src="js/pealajax.js" type="text/javascript"></script>
-        <script src="js/yahoo-dom-event.js" type="text/javascript"></script>
-        <script src="js/dragdrop-min.js" type="text/javascript"></script>
-
         <title>PEAL - version 0.5.5</title>
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
     </head>
@@ -27,9 +19,7 @@
                     <a href="php/logout.php">Logout</a>
                 </div>
                 <div style="margin-top: -15pt;">
-                    <p>PEAL v0.5.5<br/>
-                    <small>Not fully compatible with Internet Explorer.</small>
-                    </p>
+                    <p>PEAL v0.5.5</p>
                 </div>
             </div>
             <form id="savedetails" name="savedetails" style="font-size: 10pt;" action="">
@@ -116,6 +106,7 @@ initialization (
 implementation (
 
 )
+            
                 </textarea>
                 <div id="cc" style="font-size: 10pt; border-top: 1px solid black;">&nbsp;</div>
                 <!-- Haven't placed an empty OPTION in here because of lines 734-748 in editor.js which deal with UP and DOWN key presses -->
@@ -131,21 +122,6 @@ implementation (
                     </select>
                 </div>
             </div>
-
-            <script type="text/javascript">
-                var textarea = document.getElementById('code');
-                var editor = new MirrorFrame(CodeMirror.replace(textarea), {
-                    height: "350px",
-                    width: "85%",
-                    content: textarea.value,
-                    parserfile: ["tokenizelag.js", "parselag.js"],
-                    stylesheet: "css/lagcolors.css",
-                    path: "js/",
-                    lineNumbers: true,
-                    autoMatchParens: true,
-                    saveFunction: saveStrategy
-                });
-            </script>
             
             <div id="wizard" class="dragable">
                 <div id="wizardtitle" class="handle">New Strategy Creation Wizard</div>
@@ -238,27 +214,50 @@ implementation (
                 and its components are provided free of charge under a <a href="http://developer.yahoo.com/yui/license.html">liberal BSD license</a>.
             </div>
         </div>
-
+       
+        <script src="js/codemirror.js" type="text/javascript"></script>
+        <script src="js/mirrorframe.js" type="text/javascript"></script>
+        <script src="js/pealfunctions.js" type="text/javascript"></script>
+        <script src="js/pealconfig.js" type="text/javascript"></script>
+        <script src="js/pealajax.js" type="text/javascript"></script>
+        <script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
+        
         <script type="text/javascript">
-        (function() {
-            YAHOO.util.Event.onDOMReady(function() {
-                // Make wizard dragable.
-                var d1 = new YAHOO.util.DD("wizard");
-                // Make wizard title the wizard's drag handle.
-                d1.setHandleElId("wizardtitle");
-
-                // Make filemanager dragable.
-                var d2 = new YAHOO.util.DD("filemanager");
-                // Make filemanager title the filemanager's drag handle.
-                d2.setHandleElId("filestitle");
+            var textarea = document.getElementById('code');
+            var editor = new MirrorFrame(CodeMirror.replace(textarea), {
+                height: "350px",
+                width: "85%",
+                content: textarea.value,
+                parserfile: ["tokenizelag.js", "parselag.js"],
+                stylesheet: "css/lagcolors.css",
+                path: "js/",
+                lineNumbers: true,
+                autoMatchParens: true,
+                saveFunction: saveStrategy
             });
-        })();
-        </script>
-        <script type="text/javascript">
-             // The createMenus() call is for the Wizard
-             createMenus();
-             // Get the list of fragments available...
-             getFragments();
+          
+            var Y = new YUI().use('dd-drag', function(Y) {
+                // Make the wizard dragable.
+                var d1 = new Y.DD.Drag({
+                    node:       '#wizard',
+                    useShim:    false,      // I think, with shim off, it has less issues dragging over the CodeMirror iframe
+                });
+                // Make wizardtitle a drag handle for wizard
+                d1.addHandle('#wizardtitle');
+                
+                // Make the wizard dragable.
+                var d2 = new Y.DD.Drag({
+                    node:       '#filemanager',
+                    useShim:    false,      // I think, with shim off, it has less issues dragging over the CodeMirror iframe
+                });
+                // Make filestitle a drag handle for filemanager
+                d2.addHandle('#filestitle');
+            });
+        
+            // The createMenus() call is for the Wizard
+            createMenus();
+            // Get the list of fragments available...
+            getFragments();
         </script>
     </body>
 </html>
