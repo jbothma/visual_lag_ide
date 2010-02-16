@@ -1,7 +1,7 @@
 <?php
-	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-	header("Cache-Control: no-cache");
-	header("Pragma: no-cache");
+    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+    header("Cache-Control: no-cache");
+    header("Pragma: no-cache");
 
     include_once("php/session_functions.php");
     if (!checkSession()) {
@@ -15,6 +15,9 @@
 
         <title>PEAL - version 0.5.5</title>
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
+        <link rel="stylesheet" type="text/css" href="css/peal.css"/>
+        
+
     </head>
     <body>
         <div class="playground" style="padding-left: 10pt; padding-top: 10pt;">
@@ -93,30 +96,39 @@
                 <span id="isSaved" style="font-size: 10pt;"></span>
             </form>
         
-            <div class="border" id="peal">
-                <!-- CodeMirror will be given #code. It will turn it into an iframe and make it an interactive LAG editor. -->
-                <textarea id="code" cols="120" rows="40">
-
-            
-                </textarea>
-                <!-- #cc is going to sit below the LAG editor window, displaying parser messages -->
-                <div id="cc" style="font-size: 10pt; border-top: 1px solid black;">&nbsp;</div> 
-                <!-- #autocomplete is hidden until text is typed which prompts autocomplete to be displayed with suggestions. -->
-                <div id="autocomplete">
-                    <select id="autowords" 
-                        size="4" 
-                        onclick="
-                            insertAutoComplete(); 
-                            document.getElementById('autocomplete').style.left = -1000 + 'px'; 
-                            document.getElementById('autocomplete').style.top = 0 + 'px';
-                        "
-                    >
-                        <!--
-                            Instead of placing an empty <option> here, editor.js 
-                            deals with UP and DOWN key presses regarding autocomplete 
-                        -->
-                    </select>
-                </div>
+            <div class="border tabview" id="peal">
+                <ul class="tabview-tabs"> 
+                    <li><a id="visualeditor-tab" href="#visualeditor">Visual Editor</a></li> 
+                    <li><a id="texteditor-tab" href="#texteditor">Text Editor</a></li>
+                </ul> 
+                <div class="tabview-content"> 
+                    <div id="visualeditor">
+                    </div>
+                    <div id="texteditor">
+                        <!-- CodeMirror will be given #code. CodeMirror will turn #code into an iframe and make it an interactive LAG editor. -->
+                        <textarea id="code" cols="120" rows="40">
+                        </textarea>
+                        
+                        <!-- #cc is going to sit below the LAG editor window, displaying parser messages -->
+                        <div id="cc" style="font-size: 10pt; border-top: 1px solid black;">&nbsp;</div> 
+                        <!-- #autocomplete is hidden until text is typed which prompts autocomplete to be displayed with suggestions. -->
+                        <div id="autocomplete">
+                            <select id="autowords" 
+                                size="4" 
+                                onclick="
+                                    insertAutoComplete(); 
+                                    document.getElementById('autocomplete').style.left = -1000 + 'px'; 
+                                    document.getElementById('autocomplete').style.top = 0 + 'px';
+                                "
+                            >
+                                <!--
+                                    Instead of placing an empty <option> here, editor.js 
+                                    deals with UP and DOWN key presses regarding autocomplete 
+                                -->
+                            </select>
+                        </div>
+                    </div> <!-- end texteditor -->
+                </div> <!-- tabview-content -->
             </div>
             
             <div id="wizard" class="dragable">
@@ -211,17 +223,22 @@
             </div>
         </div>
        
+        <!-- CodeMirror -->
         <script src="js/codemirror.js" type="text/javascript"></script>
         <script src="js/mirrorframe.js" type="text/javascript"></script>
+        
+        <!-- YUI -->
+        <script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
+        
+        <!-- PEAL -->
         <script src="js/pealfunctions.js" type="text/javascript"></script>
         <script src="js/pealconfig.js" type="text/javascript"></script>
         <script src="js/pealajax.js" type="text/javascript"></script>
-        <script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
         
         <script type="text/javascript">
             var textarea = document.getElementById('code');
 
-			// Hack in the default blank strategy
+            // Hack in the default blank strategy
             textarea.innerHTML = '\
 // DESCRIPTION\r\n\
 //\r\n\
@@ -238,7 +255,7 @@ initialization (\r\n\
 implementation (\r\n\
 \r\n\
 )\r\n\
-			';
+            ';
             
             var editor = new MirrorFrame(CodeMirror.replace(textarea), {
                 height: "350px",
@@ -252,7 +269,7 @@ implementation (\r\n\
                 saveFunction: saveStrategy
             });
           
-            var Y = new YUI().use('dd-drag', function(Y) {
+            var Y = new YUI().use('dd-drag','node', 'node-event-simulate', function(Y) {
                 // Make the wizard dragable.
                 var d1 = new Y.DD.Drag({
                     node:       '#wizard',
@@ -268,12 +285,45 @@ implementation (\r\n\
                 });
                 // Make filestitle a drag handle for filemanager
                 d2.addHandle('#filestitle');
+                
+                
+                
+                /*
+                    Set up editor tabs
+                    http://925html.com/code/simple-tab-view-with-yui-3/
+                    Published on January 3, 2010
+                    Eric Ferraiuolo
+                    Accessed 16/02/2010
+                */
+                Y.all('.tabview').each(function(){ 
+                    this.delegate('click', toggleTabs, '.tabview-tabs a'); 
+                }); 
+             
+                function toggleTabs (e) {              
+                    var tabview = e.container, 
+                        tabs = tabview.all('.tabview-tabs li'), 
+                        contents = tabview.all('.tabview-content > *'), 
+                        tab = e.currentTarget.get('parentNode'); 
+             
+                    contents.addClass('tabview-hidden') 
+                        .item(tabs.removeClass('tabview-active').indexOf(tab.addClass('tabview-active'))) 
+                            .removeClass('tabview-hidden'); 
+             
+                    e.preventDefault(); 
+                }
+                
+                Y.on("domready", function() {
+                    // select text editor tab by default.
+                    var textTab = Y.one('#texteditor-tab');
+                    textTab.simulate('click');
+                });                
             });
         
             // The createMenus() call is for the Wizard
             createMenus();
             // Get the list of fragments available...
             getFragments();
+            
         </script>
     </body>
 </html>
