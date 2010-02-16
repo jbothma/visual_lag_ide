@@ -1,4 +1,8 @@
 <?php
+	header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+	header("Cache-Control: no-cache");
+	header("Pragma: no-cache");
+
     include_once("php/session_functions.php");
     if (!checkSession()) {
         header ("Location: index.php?wrongdetails");
@@ -90,26 +94,14 @@
             </form>
         
             <div class="border" id="peal">
+                <!-- CodeMirror will be given #code. It will turn it into an iframe and make it an interactive LAG editor. -->
                 <textarea id="code" cols="120" rows="40">
-// DESCRIPTION
-//
-//
 
-// VARS
-//
-//
-
-initialization (
-
-)
-
-implementation (
-
-)
             
                 </textarea>
-                <div id="cc" style="font-size: 10pt; border-top: 1px solid black;">&nbsp;</div>
-                <!-- Haven't placed an empty OPTION in here because of lines 734-748 in editor.js which deal with UP and DOWN key presses -->
+                <!-- #cc is going to sit below the LAG editor window, displaying parser messages -->
+                <div id="cc" style="font-size: 10pt; border-top: 1px solid black;">&nbsp;</div> 
+                <!-- #autocomplete is hidden until text is typed which prompts autocomplete to be displayed with suggestions. -->
                 <div id="autocomplete">
                     <select id="autowords" 
                         size="4" 
@@ -119,6 +111,10 @@ implementation (
                             document.getElementById('autocomplete').style.top = 0 + 'px';
                         "
                     >
+                        <!--
+                            Instead of placing an empty <option> here, editor.js 
+                            deals with UP and DOWN key presses regarding autocomplete 
+                        -->
                     </select>
                 </div>
             </div>
@@ -224,6 +220,26 @@ implementation (
         
         <script type="text/javascript">
             var textarea = document.getElementById('code');
+
+			// Hack in the default blank strategy
+            textarea.innerHTML = '\
+// DESCRIPTION\r\n\
+//\r\n\
+//\r\n\
+\r\n\
+// VARS\r\n\
+//\r\n\
+//\r\n\
+\r\n\
+initialization (\r\n\
+\r\n\
+)\r\n\
+\r\n\
+implementation (\r\n\
+\r\n\
+)\r\n\
+			';
+            
             var editor = new MirrorFrame(CodeMirror.replace(textarea), {
                 height: "350px",
                 width: "85%",
