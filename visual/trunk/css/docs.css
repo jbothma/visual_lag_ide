@@ -120,8 +120,26 @@ pre.code {
 	font-weight: bold;
 }
 #playground {
-    position: relative;
-    height: 200px;
+    position:       relative;
+    height:         200px;
+    padding-left:   10pt;
+    padding-top:    10pt;
+    padding-right:  10pt;
+}
+#header {border-bottom: 0px solid black;}
+div.logout {
+    float:          right; 
+    padding-right:  5pt;
+}
+#title {
+    margin-top:     -15pt;
+    margin-bottom:  -10pt;
+}
+#savedetails { /*menu form */
+    font-size: 10pt;
+}
+#licences {
+    font-size: 8pt;
 }
 #closebutton {
 	cursor: pointer;
@@ -149,13 +167,14 @@ pre.code {
 }
 
 .PEAL-fragments {
-	position: absolute;
-	height: 100%;
-	width: 15%;
-	top: 0px;
-	right: 0px;
-	border-left: 1px solid black;
-	margin-left: 5px;
+	position:       absolute;
+	height:         100%;
+	width:          15%;
+	top:            0px;
+	right:          0px;
+	border-left:    1px solid black;
+	margin-left:    5px;
+    min-width:      165px;
 }
 
 .PEAL-frags {

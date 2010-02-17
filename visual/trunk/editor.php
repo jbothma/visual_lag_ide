@@ -16,20 +16,25 @@
         <title>PEAL - version 0.5.5</title>
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
         <link rel="stylesheet" type="text/css" href="css/peal.css"/>
-        
+        <link rel="stylesheet" type="text/css" href="css/visual_editor.css"/>
 
     </head>
-    <body>
-        <div class="playground" style="padding-left: 10pt; padding-top: 10pt;">
-            <div style="border-bottom: 0px solid black;">
-                <div style="float: right; padding-right: 5pt;">
+    <body class="yui-skin-sam">
+        <!--
+            Start with #playground hidden. This means only the 'loading...' message is shown while 
+            the javascript setup stuff runs. Javascript finally hides the loding message and shows #playground.
+            Don't hide with display:none becasue CodeMirror requires computed styles.
+        -->
+        <div id="playground" style="visibility:hidden">
+            <div id="header">
+                <div class="logout">
                     <a href="php/logout.php">Logout</a>
                 </div>
-                <div style="margin-top: -15pt;">
+                <div id="title">
                     <p>PEAL v0.5.5</p>
                 </div>
             </div>
-            <form id="savedetails" name="savedetails" style="font-size: 10pt;" action="">
+            <form id="savedetails" name="savedetails" action="">
                 <img src="png/page_white.png" 
                     onclick="newStrategy();" 
                     title="New Strategy" 
@@ -96,13 +101,170 @@
                 <span id="isSaved" style="font-size: 10pt;"></span>
             </form>
         
-            <div class="border tabview" id="peal">
+            <div class="tabview" id="peal">
                 <ul class="tabview-tabs"> 
                     <li><a id="visualeditor-tab" href="#visualeditor">Visual Editor</a></li> 
                     <li><a id="texteditor-tab" href="#texteditor">Text Editor</a></li>
                 </ul> 
                 <div class="tabview-content"> 
-                    <div id="visualeditor">
+                    <div id="visualeditor">                        
+                        <div id="VE-window">
+                            <div id="VE-menu-container">
+                                <div id="VE-menu" class="yui-menu yui-menu-horizontal">
+                                    <div class="yui-menu-content">
+                                        <ul class="first-of-type"> 
+                                            <li class="yui-menuitem">
+                                                <a id="LAG-Attr-menulabel" class="yui-menu-label" href="#LAG-Attr-Menu" title="Insert a LAG Attribute or value">                                    
+                                                    Attribute
+                                                </a>
+                                                <div id="LAG-Attr-Menu" class="yui-menu">
+                                                    <div class="yui-menu-content">
+                                                        <ul> 
+                                                            <li>
+                                                                <a class="yui-menu-label" href="#GM" title="Goal Model"><em>GM</em></a>
+                                                                <div id="GM" class="yui-menu">
+                                                                    <div class="yui-menu-content">
+                                                                        <ul> 
+                                                                            <li>
+                                                                                <a class="yui-menu-label" href="#GM-Concept"><em>Concept</em></a>
+                                                                                <div id="GM-Concept" class="yui-menu">
+                                                                                    <div class="yui-menu-content">
+                                                                                        <ul> 
+                                                                                            <li class="yui-menuitem">
+                                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM','Concept','label'])">label</a>
+                                                                                            </li>
+                                                                                            <li class="yui-menuitem"><!-- Bounding box -->
+                                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM','Concept','weight'])">weight</a>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div> <!-- end GM.Concept -->
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div> <!-- end GM -->
+                                                            </li>
+
+                                                            <li>
+                                                                <a class="yui-menu-label" href="#PM" title="Presentation Model"><em>PM</em></a>
+                                                                <div id="PM" class="yui-menu">
+                                                                    <div class="yui-menu-content">
+                                                                        <ul> 
+                                                                            <li>
+                                                                                <a class="yui-menu-label" href="#PM-GM" title="Goal Model"><em>GM</em></a>
+                                                                                <div id="PM-GM" class="yui-menu">
+                                                                                    <div class="yui-menu-content">
+                                                                                        <ul> 
+                                                                                            <li>
+                                                                                                <a class="yui-menu-label" href="#PM-GM-Concept"><em>Concept</em></a>
+                                                                                                <div id="PM-GM-Concept" class="yui-menu">
+                                                                                                    <div class="yui-menu-content">
+                                                                                                        <ul>
+                                                                                                            <li class="yui-menuitem">
+                                                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM','GM','Concept','access'])">access</a>
+                                                                                                            </li>
+                                                                                                            <li class="yui-menuitem">
+                                                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM','GM','Concept','show'])">show</a>
+                                                                                                            </li>
+                                                                                                            <li class="yui-menuitem">
+                                                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM','GM','Concept','type'])">type</a>
+                                                                                                            </li>
+                                                                                                            <li class="yui-menuitem">
+                                                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM','GM','Concept','visible'])">visible</a>
+                                                                                                            </li>
+                                                                                                        </ul>
+                                                                                                    </div>
+                                                                                                </div> <!-- end PM.GM.Concept -->
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div> <!-- end PM.GM -->
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM','menu'])">menu</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM','next'])">next</a>
+                                                                            </li>
+                                                                            <li>
+                                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM','ToDo'])">ToDo</a>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div> <!-- end PM -->
+                                                            </li>
+
+                                                            <li>
+                                                                <a class="yui-menu-label" href="#UM" title="User Model"><em>UM</em></a>
+                                                                <div id="UM" class="yui-menu">
+                                                                    <div class="yui-menu-content">
+                                                                        <ul> 
+                                                                            <li>
+                                                                                <a class="yui-menu-label" href="#UM-Concept"><em>Concept</em></a>
+                                                                                <div id="UM-Concept" class="yui-menu">
+                                                                                    <div class="yui-menu-content">
+                                                                                        <ul> 
+                                                                                            <li class="yui-menuitem">
+                                                                                                <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM','Concept',document.getElementById('UM-Concept-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
+                                                                                                    <div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text"></div>
+                                                                                                </form>
+                                                                                            </li>
+                                                                                        </ul>
+                                                                                    </div>
+                                                                                </div> <!-- end UM.Concept -->
+                                                                            </li>
+                                                                            <li class="yui-menuitem">
+                                                                                <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM',document.getElementById('UM-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
+                                                                                    <div><input id="UM-custom" class="menu-form-input" value="custom" type="text"></div>
+                                                                                </form>
+                                                                            </li>
+                                                                        </ul>
+                                                                    </div>
+                                                                </div> <!-- end UM -->
+                                                            </li>
+                                                            <li>
+                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['true'])">true</a>
+                                                            </li>
+                                                            <li>
+                                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['false'])">false</a>
+                                                            </li>
+                                                            <li class="yui-menuitem">
+                                                                <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr([document.getElementById('custom').value]);return false"    title="Replace the text with out custom value and press Enter to finish">
+                                                                    <div><input id="custom" class="menu-form-input" value="value" type="text"></div>
+                                                                </form>
+                                                            </li>
+                                                        </ul> 
+                                                    </div> 
+                                                </div> <!-- end LAG-attr-menu -->
+                                            </li>
+                                            <li class="yui-menuitem">
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVEActn.newAction(LAGVE.selectedNode)">Action</a>
+                                            </li>
+                                            <li class="yui-menuitem">
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newComparison(LAGVE.selectedNode)">Comparison</a>
+                                            </li>
+                                            <li class="yui-menuitem">
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newXjunction({targetNode:LAGVE.selectedNode,type:'conjunction'})">Conjunction</a>
+                                            </li>
+                                            <li class="yui-menuitem">
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newXjunction({targetNode:LAGVE.selectedNode,type:'disjunction'})">Disjunction</a>
+                                            </li>
+                                            <li class="yui-menuitem">
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newXjunction({targetNode:LAGVE.selectedNode,type:'enough'})">Enough</a>
+                                            </li>
+                                            <li class="yui-menuitem">
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVE.selectedNode)">IfThenElse</a>
+                                            </li>
+                                            <li class="yui-menuitem">
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </div> <!-- end VE-menu -->
+                            </div> <!-- end VE-menu-container -->
+                            <div id="VE-workspace" class="select-propagation-stop">
+                            </div>
+                        </div> <!-- end VE-window -->
                     </div>
                     <div id="texteditor">
                         <!-- CodeMirror will be given #code. CodeMirror will turn #code into an iframe and make it an interactive LAG editor. -->
@@ -130,7 +292,6 @@
                     </div> <!-- end texteditor -->
                 </div> <!-- tabview-content -->
             </div>
-            
             <div id="wizard" class="dragable">
                 <div id="wizardtitle" class="handle">New Strategy Creation Wizard</div>
                 <div id="closebutton" onclick="cancelWizard();">&nbsp;</div>
@@ -207,7 +368,7 @@
                     </form>
                 </div>
             </div>
-            <div style="font-size: 8pt;">
+            <div id="licences" style="">
                 <br/>
                 PEAL is licensed by <a href="http://ww.ukarumpa.co.uk">Jon Bevan</a> 
                 under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>.<br/>
@@ -223,6 +384,21 @@
             </div>
         </div>
        
+        <div id="VE-help">
+            <div id="VE-help-titlebar">
+                Visual LAG Editor Help (<a href="help.htm" onclick="LAGVE.hideHelp()">Page link</a>)
+            </div>
+            <div id="VE-help-closeBtn" onclick="LAGVE.hideHelp()">X</div>
+            <div id="VE-help-container"></div>
+        </div>        
+        <div id="VE-loading-msg-centering">
+            <div id="VE-loading-msg">
+                <script type="text/javascript">document.write('<p>Please wait while PEAL loads...</p>');</script>
+                <noscript>This site relies heavily on javascript which must be enabled in your web browser.</noscript>
+            </div>
+        </div>
+        
+        
         <!-- CodeMirror -->
         <script src="js/codemirror.js" type="text/javascript"></script>
         <script src="js/mirrorframe.js" type="text/javascript"></script>
@@ -234,6 +410,7 @@
         <script src="js/pealfunctions.js" type="text/javascript"></script>
         <script src="js/pealconfig.js" type="text/javascript"></script>
         <script src="js/pealajax.js" type="text/javascript"></script>
+        <script src="js/visual_editor.js" type="text/javascript"></script>
         
         <script type="text/javascript">
             var textarea = document.getElementById('code');

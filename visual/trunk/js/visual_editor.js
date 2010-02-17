@@ -46,7 +46,6 @@ Array.prototype.peek = function(){
  */ 
 
 var LAGVEAttr = new Object();
-LAGVEAttr.scriptName = 'attribute.js';
 
 getMyY().use('dd-constrain','node','event', function (Y) {
 
@@ -149,7 +148,6 @@ getMyY().use('dd-constrain','node','event', function (Y) {
 
 /* ACTION */
 LAGVEActn = new Object();
-LAGVEActn.scriptName = 'action.js';
 
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         
@@ -294,7 +292,6 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 
 /* IF-THEN-ELSE */
 LAGVEIf = new Object();
-LAGVEIf.scriptName = 'ifthenelse.js';
 
 getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         
@@ -500,7 +497,6 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
 
 /* CONDITION */
 LAGVECondition = new Object();
-LAGVECondition.scriptName = 'condition.js';
 
 getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',function (Y) {
     /**
@@ -850,7 +846,6 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
 
 /* STATEMENT */
 LAGVEStmt = new Object();
-LAGVEStmt.scriptName = 'statement.js';
 LAGVEStmt.overHandledTimestamp = new Date().getTime();
 
 getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (Y) {
@@ -1059,7 +1054,6 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 
 /* CONTEXT MENU */
 LAGVEContext = new Object();
-LAGVEContext.scriptName = 'context_menu.js';
 
 getMyY().use('event', function(Y) {
 
@@ -1151,7 +1145,6 @@ getMyY().use('event', function(Y) {
  */
 
 LAGVECon = new Object();
-LAGVECon.scriptName = 'connector.js';
 
 getMyY().use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
     
@@ -1448,7 +1441,6 @@ getMyY().use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
 
 /* VISUAL EDITOR */
 LAGVE = new Object();
-LAGVE.scriptName = 'visual_editor.js';
 LAGVE.dropStack = new Array;
 
 getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
@@ -1468,8 +1460,8 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
     }    
     
     LAGVE._editorReady = function() {
-        Y.one('#VE-loading-msg').setStyle('visibility','hidden');
-        LAGVE.window.setStyle('visibility','');
+        Y.one('#VE-loading-msg').setStyle('display','none');
+        Y.one('#playground').setStyle('visibility','');
         LAGVE.sizeWindow(Y.one('window').get('innerHeight'));
     }
     
@@ -1643,9 +1635,9 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
     };
     
     LAGVE.sizeWindow = function(newHeight) {        
-        LAGVE.window.setStyle('height', (newHeight-30) + 'px');
-        LAGVE.workspace.setStyle('height', (newHeight-64) + 'px');
-        //Y.log('LAGVE Window height set to ' + newHeight);
+        LAGVE.window.setStyle('height', (newHeight-200) + 'px');
+        LAGVE.workspace.setStyle('height', (newHeight-234) + 'px');
+        Y.log('LAGVE Window height set to ' + newHeight);
     }
     
     // Subscribe to event "io:complete", and pass an array
