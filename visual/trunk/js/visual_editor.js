@@ -34,6 +34,10 @@ Array.prototype.peek = function(){
     }
 }
 
+function indentOne(code) {
+    //code = LAGVE.oneIndentation + code;
+    return code//code.replace(/\r\n/g,'\r\n'+LAGVE.oneIndentation);
+}
 
 
 
@@ -138,6 +142,10 @@ getMyY().use('dd-constrain','node','event', function (Y) {
             targetNode.LAGVEInsert(newAttribute);
         } 
         
+        newAttribute.toLAG = function() {
+            return levels.join('.');
+        }
+        
         return newAttribute;
     }
 });
@@ -239,6 +247,30 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         action.append(action.attributeContainer);
         action.append(action.operatorContainer);
         action.append(action.valueContainer);
+        
+        action.attributeContainer.toLAG = function() {
+            if (this.hasChildNodes()) {
+                return this.get('firstChild').toLAG();
+            }
+            return '';
+        }
+        action.operatorContainer.toLAG = function() {
+            return this.get('firstChild').get('value');
+        }
+        action.valueContainer.toLAG = function() {
+            if (this.hasChildNodes()) {
+                return this.get('firstChild').toLAG();
+            }
+            return '';
+        }
+        action.toLAG = function() {
+            var LAG = 
+                this.attributeContainer.toLAG() + ' ' +
+                this.operatorContainer.toLAG() + ' ' +
+                this.valueContainer.toLAG();
+            
+            return LAG;
+        }
                 
         if (isset(targetNode)) {
             targetNode.LAGVEInsert(action);
@@ -476,25 +508,28 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         ifThenElse.elseBlock.append(            ifThenElse.elseBlockTitle       );
 
         ifThenElse.toLAG = function() {
-            var LAG = '<IF-THEN-ELSE>';
-            
-            return LAG;
-        }        
-        ifThenElse.conditionContainer.toLAG = function() {
-            var LAG = 'IF ( ' + ifThenElse.conditionContainer.toLAG() + 
-                ' ) then ( ' + ifThenElse.thenBlock.conditionContainer.toLAG() +
-                ' ) else ( ' + ifThenElse.ELSEBlock.conditionContainer.toLAG() +
-                ' )';
+            var LAG = 
+                'if ( ' + ifThenElse.conditionContainer.toLAG() + ' ) then (\r\n' + 
+                indentOne(ifThenElse.thenBlock.toLAG()) +
+                ') else (\r\n' + 
+                indentOne(ifThenElse.elseBlock.toLAG()) +
+                ')';
             
             return LAG;
         }
+        ifThenElse.conditionContainer.toLAG = function() {
+            if (this.hasChildNodes()) {
+                return this.get('firstChild').toLAG();
+            }
+            return '';
+        }
         ifThenElse.thenBlock.toLAG = function() {
-            var LAG = '<ifThenElse.conditionContainer>';
+            var LAG = this.get('firstChild').toLAG();
             
             return LAG;
         }
         ifThenElse.elseBlock.toLAG = function() {
-            var LAG = '<ifThenElse.conditionContainer>';
+            var LAG = this.get('firstChild').toLAG();
             
             return LAG;
         }
@@ -563,6 +598,9 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
         
         conditionLI.getName = function() {
             return child.getName();
+        }
+        conditionLI.toLAG = function() {
+            return this.get('firstChild').toLAG();
         }
 
         conditionLI.append(child);
@@ -669,6 +707,30 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
         comparison.comparatorContainer.append( comparison.comparatorSelect );
         comparison.append( comparison.comparatorContainer );
         comparison.append( comparison.valueContainer );
+        
+        comparison.attributeContainer.toLAG = function() {
+            if (this.hasChildNodes()) {
+                return this.get('firstChild').toLAG();
+            }
+            return '';
+        }
+        comparison.comparatorSelect.toLAG = function() {
+            return this.get('value');
+        }
+        comparison.valueContainer.toLAG = function() {
+            if (this.hasChildNodes()) {
+                return this.get('firstChild').toLAG();
+            }
+            return '';
+        }
+        comparison.toLAG = function() {
+            var LAG = 
+                this.attributeContainer.toLAG() + ' ' +
+                this.comparatorSelect.toLAG() + ' ' +
+                this.valueContainer.toLAG();
+            
+            return LAG;
+        }
         
         // Wrap comparison in an LI as a generic Condition
         var condition = LAGVECondition.wrapConditionInLI( comparison );
@@ -937,14 +999,14 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
         );
         statement.append(statement.LAGVEUL);
         
-        statement.toLAG         = function() {
-            var LAG = '( ';
+        statement.toLAG = function() {
+            var LAG = '';
             
             statement.LAGVEUL.get('children').each(function() {
-                LAG += this.toLAG();
+                LAG += this.toLAG() + '\r\n';
             });
             
-            LAG += ' )';
+            LAG += '';
             
             return LAG;
         }
@@ -990,7 +1052,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
         }
         
         childContainer.toLAG = function() {
-            var LAG = '<childContainer>';
+            var LAG = this.get('firstChild').toLAG();
             
             return LAG;
         }
@@ -1484,6 +1546,7 @@ getMyY().use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
 /* VISUAL EDITOR */
 LAGVE = new Object();
 LAGVE.dropStack = new Array;
+LAGVE.oneIndentation = '  ';
 
 getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
     //new Y.Console().render();
@@ -1497,12 +1560,6 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
         LAGVE._setupMainMenu();
         LAGVE._setupWorkspace();
         //LAGVE.getHelp();
-                    
-        Y.one('#texteditor-tab').on('click', function() {
-            var LAG = LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
-            
-            alert(LAG);
-        }); 
         
         LAGVE._editorReady();   
     }    
@@ -1562,7 +1619,7 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
         LAGVE.initialization.select     = LAGVE._genericSelect;
         LAGVE.initialization.deSelect   = LAGVE._genericDeSelect;
         LAGVE.initialization.toLAG      = function () {
-            var LAG = 'initialization (' + this.statementBox.toLAG() + ')';
+            var LAG = 'initialization (\r\n' + this.statementBox.toLAG() + ')\r\n\r\n';
             
             return LAG;
         }
@@ -1600,7 +1657,7 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
         LAGVE.implementation.select     = LAGVE._genericSelect;
         LAGVE.implementation.deSelect   = LAGVE._genericDeSelect;
         LAGVE.implementation.toLAG      = function () {
-            var LAG = 'implementation (' + this.statementBox.toLAG() + ')';
+            var LAG = 'implementation (\r\n' + this.statementBox.toLAG() + ')\r\n';
             
             return LAG;
         }

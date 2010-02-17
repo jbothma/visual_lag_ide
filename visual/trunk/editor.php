@@ -409,7 +409,8 @@
         <script src="js/mirrorframe.js" type="text/javascript"></script>
         
         <!-- YUI -->
-        <script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
+        <!--<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>-->
+        <script src="/lib/yui/yui/yui-min.js"></script>
         
         <!-- PEAL -->
         <script src="js/pealfunctions.js" type="text/javascript"></script>
@@ -502,6 +503,17 @@ implementation (\r\n\
                         var textTab = Y.one('#texteditor-tab');
                         textTab.simulate('click');
                     });
+                    
+                    
+                    
+                    Y.one('#texteditor-tab').on('click', function() {
+                        if (LAGVE.initialization && LAGVE.implementation) {
+                            var LAG = LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
+                            
+                            //editor.mirror.setCode(LAG);
+                            alert(LAG);
+                        }
+                    }); 
                 }, 'body');
             });
         
