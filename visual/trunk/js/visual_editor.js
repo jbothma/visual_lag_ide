@@ -473,7 +473,31 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         ifThenElse.thenAndElse.append(          ifThenElse.thenBlock            );
         ifThenElse.thenBlock.append(            ifThenElse.thenBlockTitle       );
         ifThenElse.thenAndElse.append(          ifThenElse.elseBlock            );
-        ifThenElse.elseBlock.append(            ifThenElse.elseBlockTitle       );    
+        ifThenElse.elseBlock.append(            ifThenElse.elseBlockTitle       );
+
+        ifThenElse.toLAG = function() {
+            var LAG = '<IF-THEN-ELSE>';
+            
+            return LAG;
+        }        
+        ifThenElse.conditionContainer.toLAG = function() {
+            var LAG = 'IF ( ' + ifThenElse.conditionContainer.toLAG() + 
+                ' ) then ( ' + ifThenElse.thenBlock.conditionContainer.toLAG() +
+                ' ) else ( ' + ifThenElse.ELSEBlock.conditionContainer.toLAG() +
+                ' )';
+            
+            return LAG;
+        }
+        ifThenElse.thenBlock.toLAG = function() {
+            var LAG = '<ifThenElse.conditionContainer>';
+            
+            return LAG;
+        }
+        ifThenElse.elseBlock.toLAG = function() {
+            var LAG = '<ifThenElse.conditionContainer>';
+            
+            return LAG;
+        }
         
         if (isset(targetNode)) {
             targetNode.LAGVEInsert(ifThenElse);
@@ -910,9 +934,21 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
                 node:   statement.LAGVEUL,
                 groups: ['statement-list'],
             }
-        );        
-        
+        );
         statement.append(statement.LAGVEUL);
+        
+        statement.toLAG         = function() {
+            var LAG = '( ';
+            
+            statement.LAGVEUL.get('children').each(function() {
+                LAG += this.toLAG();
+            });
+            
+            LAG += ' )';
+            
+            return LAG;
+        }
+        
         
         
         //////    INSERT/RETURN   ///////
@@ -951,6 +987,12 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
         
         childContainer.getName = function() {
             return child.getName();
+        }
+        
+        childContainer.toLAG = function() {
+            var LAG = '<childContainer>';
+            
+            return LAG;
         }
 
         childContainer.append(child);
@@ -1454,9 +1496,15 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
         
         LAGVE._setupMainMenu();
         LAGVE._setupWorkspace();
-        LAGVE.getHelp();
+        //LAGVE.getHelp();
+                    
+        Y.one('#texteditor-tab').on('click', function() {
+            var LAG = LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
+            
+            alert(LAG);
+        }); 
         
-        LAGVE._editorReady();        
+        LAGVE._editorReady();   
     }    
     
     LAGVE._editorReady = function() {
@@ -1513,27 +1561,32 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
         }
         LAGVE.initialization.select     = LAGVE._genericSelect;
         LAGVE.initialization.deSelect   = LAGVE._genericDeSelect;
+        LAGVE.initialization.toLAG      = function () {
+            var LAG = 'initialization (' + this.statementBox.toLAG() + ')';
+            
+            return LAG;
+        }
         
         var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
         
-        var statementBox = LAGVEStmt.newStatement();
-        statementBox.removeClass('deletable');
+        LAGVE.initialization.statementBox = LAGVEStmt.newStatement();
+        LAGVE.initialization.statementBox.removeClass('deletable');
         // It'd be ambiguious if Initialization statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness
         // is passed through to the statement block anyway.
-        statementBox.removeClass('selectable');
-        statementBox.setStyle('minWidth','400px');
-        statementBox.setStyle('minHeight','150px');
+        LAGVE.initialization.statementBox.removeClass('selectable');
+        LAGVE.initialization.statementBox.setStyle('minWidth','400px');
+        LAGVE.initialization.statementBox.setStyle('minHeight','150px');
         
         LAGVE.initialization.append(title);
-        LAGVE.initialization.append(statementBox);
+        LAGVE.initialization.append(LAGVE.initialization.statementBox);
         
         /**
          *    Pass Initialization's LAGVEInsert to statementBox's
          */
         LAGVE.initialization.LAGVEInsert = function(node) {
-            statementBox.LAGVEInsert(node);
+            LAGVE.initialization.statementBox.LAGVEInsert(node);
         }
         
         return LAGVE.initialization;
@@ -1546,27 +1599,32 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
         };
         LAGVE.implementation.select     = LAGVE._genericSelect;
         LAGVE.implementation.deSelect   = LAGVE._genericDeSelect;
+        LAGVE.implementation.toLAG      = function () {
+            var LAG = 'implementation (' + this.statementBox.toLAG() + ')';
+            
+            return LAG;
+        }
         
         var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
         
-        var statementBox = LAGVEStmt.newStatement();
-        statementBox.removeClass('deletable');
+        LAGVE.implementation.statementBox = LAGVEStmt.newStatement();
+        LAGVE.implementation.statementBox.removeClass('deletable');
         // It'd be ambiguious if implementation statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness
         // is passed through to the statement block anyway.
-        statementBox.removeClass('selectable');
-        statementBox.setStyle('minWidth','400px');
-        statementBox.setStyle('minHeight','150px');
+        LAGVE.implementation.statementBox.removeClass('selectable');
+        LAGVE.implementation.statementBox.setStyle('minWidth','400px');
+        LAGVE.implementation.statementBox.setStyle('minHeight','150px');
         
         LAGVE.implementation.append(title);
-        LAGVE.implementation.append(statementBox);
+        LAGVE.implementation.append(LAGVE.implementation.statementBox);
         
         /**
          *    Pass Initialization's LAGVEInsert to statementBox's
          */
         LAGVE.implementation.LAGVEInsert = function(node) {
-            statementBox.LAGVEInsert(node);
+            LAGVE.implementation.statementBox.LAGVEInsert(node);
         }
         
         return LAGVE.implementation;

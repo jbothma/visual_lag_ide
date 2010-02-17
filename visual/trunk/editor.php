@@ -397,7 +397,12 @@
                 <noscript>This site relies heavily on javascript which must be enabled in your web browser.</noscript>
             </div>
         </div>
-        
+        <div id="preloading-images" style="display:none">
+            <img src="images/ifthenelse_diamond.png" alt="">
+            <img src="images/ifthenelse_diamond_selected.png" alt="">
+            <!--<img src="images/diagonal_up_75x100.png" alt="">-->
+            <img src="images/arrowhead_down.png" alt="">
+        </div>
         
         <!-- CodeMirror -->
         <script src="js/codemirror.js" type="text/javascript"></script>
@@ -446,61 +451,64 @@ implementation (\r\n\
                 saveFunction: saveStrategy
             });
           
-            var Y = new YUI().use('dd-drag','node', 'node-event-simulate', function(Y) {
-                // Make the wizard dragable.
-                var d1 = new Y.DD.Drag({
-                    node:       '#wizard',
-                    useShim:    false,      // I think, with shim off, it has less issues dragging over the CodeMirror iframe
-                });
-                // Make wizardtitle a drag handle for wizard
-                d1.addHandle('#wizardtitle');
+            var Y = new YUI().use('dd-drag','node', 'node-event-simulate', 'event', function(Y) {
                 
-                // Make the wizard dragable.
-                var d2 = new Y.DD.Drag({
-                    node:       '#filemanager',
-                    useShim:    false,      // I think, with shim off, it has less issues dragging over the CodeMirror iframe
-                });
-                // Make filestitle a drag handle for filemanager
-                d2.addHandle('#filestitle');
-                
-                
-                
-                /*
-                    Set up editor tabs
-                    http://925html.com/code/simple-tab-view-with-yui-3/
-                    Published on January 3, 2010
-                    Eric Ferraiuolo
-                    Accessed 16/02/2010
-                */
-                Y.all('.tabview').each(function(){ 
-                    this.delegate('click', toggleTabs, '.tabview-tabs a'); 
-                }); 
-             
-                function toggleTabs (e) {              
-                    var tabview = e.container, 
-                        tabs = tabview.all('.tabview-tabs li'), 
-                        contents = tabview.all('.tabview-content > *'), 
-                        tab = e.currentTarget.get('parentNode'); 
-             
-                    contents.addClass('tabview-hidden') 
-                        .item(tabs.removeClass('tabview-active').indexOf(tab.addClass('tabview-active'))) 
-                            .removeClass('tabview-hidden'); 
-             
-                    e.preventDefault(); 
-                }
-                
-                Y.on("domready", function() {
-                    // select text editor tab by default.
-                    var textTab = Y.one('#texteditor-tab');
-                    textTab.simulate('click');
-                });                
+                Y.on('contentready', function(){
+                    
+                    // Make the wizard dragable.
+                    var d1 = new Y.DD.Drag({
+                        node:       '#wizard',
+                        useShim:    false,      // I think, with shim off, it has less issues dragging over the CodeMirror iframe
+                    });
+                    // Make wizardtitle a drag handle for wizard
+                    d1.addHandle('#wizardtitle');
+                    
+                    // Make the wizard dragable.
+                    var d2 = new Y.DD.Drag({
+                        node:       '#filemanager',
+                        useShim:    false,      // I think, with shim off, it has less issues dragging over the CodeMirror iframe
+                    });
+                    // Make filestitle a drag handle for filemanager
+                    d2.addHandle('#filestitle');
+                    
+                    
+                    
+                    /*
+                        Set up editor tabs
+                        http://925html.com/code/simple-tab-view-with-yui-3/
+                        Published on January 3, 2010
+                        Eric Ferraiuolo
+                        Accessed 16/02/2010
+                    */
+                    Y.all('.tabview').each(function(){ 
+                        this.delegate('click', toggleTabs, '.tabview-tabs a'); 
+                    }); 
+                 
+                    function toggleTabs (e) {              
+                        var tabview = e.container, 
+                            tabs = tabview.all('.tabview-tabs li'), 
+                            contents = tabview.all('.tabview-content > *'), 
+                            tab = e.currentTarget.get('parentNode'); 
+                 
+                        contents.addClass('tabview-hidden') 
+                            .item(tabs.removeClass('tabview-active').indexOf(tab.addClass('tabview-active'))) 
+                                .removeClass('tabview-hidden'); 
+                 
+                        e.preventDefault(); 
+                    }
+                    
+                    Y.on("domready", function() {
+                        // select text editor tab by default.
+                        var textTab = Y.one('#texteditor-tab');
+                        textTab.simulate('click');
+                    });
+                }, 'body');
             });
         
             // The createMenus() call is for the Wizard
             createMenus();
             // Get the list of fragments available...
             getFragments();
-            
         </script>
     </body>
 </html>
