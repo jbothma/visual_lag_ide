@@ -1,0 +1,470 @@
+/** ATTRIBUTE **/
+.attr_box {
+    background-color:       white;
+    /*position:                absolute;*/
+    border:                 1px solid black;
+    -moz-border-radius:     14px;
+    -webkit-border-radius:  14px;
+    border-radius:          14px;
+    height:                 57px;
+}
+
+.sub_level_container {
+    float:                  right;
+}
+
+.attr_box_value {
+    font-size:  22px;
+    margin:     14px;
+    float:      left;
+}
+
+
+
+
+
+
+/* VISUAL EDITOR */
+.sub_level {
+    position:   relative;
+    top:        -1px;
+    right:      -1px;
+}
+
+body {
+    overflow:    hidden;
+}
+.menu-button-img {
+    vertical-align: middle;
+    border-width:   0px;
+}
+.menu-form-input {
+    border: 1px solid black;
+}
+#VE-window {
+    /*min-height:    400px;*/
+    /*border: 1px solid black;
+    margin: 1px;*/
+    /*float:        left;*/
+}
+#VE-workspace {
+    position:   relative;
+    /*min-height:    368px;*/
+    /*border:     1px solid black;*/
+    /*padding:    5px;*/
+    /*float:        left;*/
+    overflow:   auto;
+}
+#VE-help {
+    position:           absolute;
+    top:                0px;
+    left:               20px;
+    width:              70%;
+    /*height:        400px;*/
+    border:             1px solid black;
+    background-color:   white;
+    visibility:         hidden;
+    z-index:            10000;
+}
+#VE-help-container {
+    /*position:    absolute;*/
+    top:            23px;
+    width:          100%;
+    /*height:        377px;*/
+    border-width:   0px;
+    clear:          both;
+    left:           0px;
+}
+#VE-help-titlebar {
+    height:        21px;
+    border:        1px solid black;
+    background-color:    #AAA;
+    float:        left;
+}
+#VE-help-closeBtn {
+    width:      21px;
+    height:     21px;
+    position:   absolute;
+    top:        0px;
+    right:      0px;
+    border:     1px solid black;
+    text-align: center
+}
+#VE-loading-msg {
+    position:   relative;
+    left:       -50%;
+    float:      left;
+    background-color:   #ffff88;
+    border:     2px solid #99ccff;
+    min-height: 3em;
+    padding:    8px;
+}
+#VE-loading-msg-centering {
+    position:   fixed;
+    left:       50%;
+    top:        30px;
+    float:      left;
+}
+#initialization {
+    position:       relative;
+    border:         1px solid black;
+    float:          left;
+    clear:          both;
+    margin:         22px;
+    padding-top:    1em;
+}
+#implementation {
+    position:       relative;
+    border:         1px solid black;
+    float:          left;
+    clear:          both;
+    margin:         22px;
+    padding-top:    1em;
+}
+#initialization-title {
+    background-color:   white;
+    position:           absolute;
+    top:                -0.5em;
+    font-size:          1em;
+    line-height:        1em;
+    left:               5px;
+}
+#implementation-title {
+    background-color:   white;
+    position:           absolute;
+    top:                -0.5em;
+    font-size:          1em;
+    line-height:        1em;
+    left:               5px;
+}
+.selected {
+    border :    3px solid #00F !important;
+    z-index:    2000;
+}
+
+
+
+
+/* CONNECTOR */
+.topHandle,.botHandle{
+    border:     1px solid black;
+    width:      5px;
+    height:     5px;
+    position:   absolute;
+    z-index:    1;
+}
+.horiz {
+    background: #ff0000;
+    height:     3px;
+    position:   absolute;
+}
+.topVert,.botVert{
+    background: #ff0000;
+    width:      3px;
+    position:   absolute;
+}
+.connectable {
+    border:     2px solid #2222FF;
+    min-width:  60px;
+    min-height: 40px;
+    position:   absolute;
+    top:        50px;
+    left:       50px;
+}
+.connPoint {
+    border:     2px solid #22AA22;
+    position:   absolute;
+    width:      9px;
+    height:     9px;
+}
+.topConnPoint {
+    top:    -12px;
+    left:   50%;
+}
+.botConnPoint {
+    bottom: -12px;
+    left:   50%;
+}
+.can-connect {
+    border-width:   4px
+}
+
+
+
+
+
+/* ACTION */
+.action {
+    position:           relative;
+    top:                0px;
+    left:               0px;
+    border:             1px solid black;
+    height:             65px;
+    background-color:   white;
+}
+/*.action-child {
+    position:    relative;
+    top:        0px;
+    left:        0px;
+}*/
+.action-child-container {
+    min-width:  20px;
+    border:     1px solid black;
+    padding:    1px;
+    margin:     1px;
+    float:      left;
+}
+.action-attribute-container {
+    min-width:  50px;
+    min-height: 50px;
+    height:     59px;
+}
+.action-operator-container {
+    position:   relative;
+    top:        16px;    /* we know the height of of attributes so we know what height to expect an action block to be.*/
+}
+.operator-select {
+    font-size:  22px;            
+}
+
+
+
+
+/* IF-THEN-ELSE */
+.ifthenelse {
+    min-width:  200px;
+    position:   relative;
+    float:      left;
+    clear:      both;
+    text-align: center;
+}
+.ifthenelse-condition-positioning {
+    position:   relative;
+    float:      left;
+    z-index:    9;
+}
+.ifthenelse-arrows {
+    position:       absolute;
+    top:            50%;
+    left:           -2px;
+    height:         50%;
+    width:          100%;
+    border-left:    2px solid black;
+    border-right:   2px solid black;
+    z-index:        1;
+}
+.ifthenelse-arrowhead-left {
+    position:           absolute;
+    left:               -9px;
+    bottom:             0px;
+    width:              16px;
+    height:             16px;
+    background-image:   url('images/arrowhead_down.png');
+}
+.ifthenelse-arrowhead-right {
+    position:           absolute;
+    right:              -9px;
+    bottom:             0px;
+    width:              16px;
+    height:             16px;
+    background-image:   url('images/arrowhead_down.png');
+}
+.ifthenelse-condition-container {
+    position:           relative;
+    min-height:         50px;
+    min-width:          100px;
+    list-style-type:    none;
+    padding:            0px;
+    float:              left;
+    clear:              both;
+    z-index:            2;
+}
+.ifthenelse-diamond-image {
+    position:   absolute;
+    left:       0px;
+    top:        0px;
+    width:      100%;
+    height:     100%;
+}
+.ifthenelse-diamond-image-selected {
+    position:   absolute;
+    left:       0px;
+    top:        0px;
+    width:      100%;
+    height:     100%;
+    visibility: hidden;
+}
+.ifthenelse-thenelse {
+    clear:  both;
+    float:  left;
+}
+.ifthenelse-then {
+    border:             1px solid black;
+    margin:             2px;
+    position:           relative;
+    float:              left;
+    min-width:          150px;
+    min-height:         50px;
+    background-color:   white;
+    padding-top:        0.5em;
+    margin-right:       10px;
+}
+.ifthenelse-else {
+    border:             1px solid black;
+    margin:             2px;
+    position:           relative;
+    float:              right;
+    min-width:          150px;
+    min-height:         50px;
+    background-color:   white;
+    padding-top:        0.5em;
+    margin-left:        10px;
+}
+.ifthenelse-then-title {
+    background-color:   white;
+    position:           absolute;
+    top:                -0.5em;
+    font-size:          1em;
+    line-height:        1em;
+    left:               5px;
+}
+.ifthenelse-else-title {
+    background-color:   white;
+    position:           absolute;
+    top:                -0.5em;
+    font-size:          1em;
+    line-height:        1em;
+    right:              5px;
+}
+
+
+
+
+/* CONDITION */
+.condition {
+    z-index:    12;
+    /*float:      left;*/
+}
+.comparison {
+    position:               relative;
+    top:                    0px;
+    /*left:                   0px;*/
+    border:                 1px solid black;
+    height:                 65px;
+    background-color:       white;
+    -moz-border-radius:     14px;
+    -webkit-border-radius:  14px;
+    border-radius:          14px;
+    padding:                7px;
+    z-index:                11;                /* always be above the if-then-else arrow positioning DIV */
+    /*float:                  left;*/
+    clear:                  both;
+}
+.comparison-child-container {
+    min-width:  20px;
+    border:     1px solid black;
+    padding:    1px;
+    margin:     1px;
+    float:      left;
+}
+.comparison-attribute-container {
+    min-width:  50px;
+    min-height: 50px;
+    height:     59px;
+}
+.comparison-comparator-container {
+    position:   relative;
+    top:        16px;
+}
+.comparator-select {
+    font-size:  22px;            
+}
+.xjunction.primary {
+    border:                 1px solid black;
+    -moz-border-radius:     50%;
+    -webkit-border-radius:  50%;
+    border-radius:          50%;
+    height:                 40px;
+    width:                  40px;
+    line-height:            40px;
+    position:               relative;
+    margin:                 auto;
+    background-color:       white;
+}
+.xjunction.diagonal-container{
+    position:               absolute;
+    bottom:                 40px;
+    left:                   18px;
+    width:                  47px;
+    height:                 63px;
+    background-image:       url("images/diagonal_up_75x100.png");
+    background-position:    left bottom;
+}
+.xjunction.condition-list {
+    position:               absolute;
+    bottom:                 55px;
+    left:                   65px;
+    border:                 1px solid black;
+    min-height:             55px;
+    min-width:              100px;
+    list-style-type:        none;
+    padding:                 0px;
+    background-color:       white;
+}
+.xjunction.primary.enough {
+    width:                  130px;
+}
+.xjunction.enough.value-box {
+    width:                  30px;
+}
+
+
+
+
+/* STATEMENT */
+.statement {
+    min-width:          200px;
+    min-height:         30px;
+    position:           relative;
+    background-color:   white;
+    float:              left;
+    clear:              both;
+}
+.statement-child-container {
+    min-height:         20px;
+    position:           relative;
+    background-color:   white;
+    float:              left;
+    clear:              both;
+    margin:             3px;
+}
+.statement-list {
+    min-height:         inherit;
+    list-style-type:    none;
+    margin:             0px;
+    padding:            3px;
+    width:              98%;
+    float:              left;
+}
+
+
+
+
+/* CONTEXT MENU */
+#context-menu {
+    position:           fixed;
+    border:             1px solid black;
+    background-color:   white;
+    visibility:         hidden;
+    z-index:            1000;
+}
+.context-menu-item {
+    margin:             1px;
+    border:             1px solid black;
+    background-color:   white;
+    padding:            2px;
+}
+.context-menu-item:hover {
+    background-color:   #CCCCFF;
+    cursor:             default
+}
