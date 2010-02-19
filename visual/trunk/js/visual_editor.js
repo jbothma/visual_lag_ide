@@ -35,8 +35,8 @@ Array.prototype.peek = function(){
 }
 
 function indentOne(code) {
-    //code = LAGVE.oneIndentation + code;
-    return code//code.replace(/\r\n/g,'\r\n'+LAGVE.oneIndentation);
+    code = LAGVE.oneIndentation + code;
+    return code.replace(/\r\n/g,'\r\n' + LAGVE.oneIndentation);
 }
 
 
@@ -510,9 +510,9 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         ifThenElse.toLAG = function() {
             var LAG = 
                 'if ( ' + ifThenElse.conditionContainer.toLAG() + ' ) then (\r\n' + 
-                indentOne(ifThenElse.thenBlock.toLAG()) +
+                ifThenElse.thenBlock.toLAG() +
                 ') else (\r\n' + 
-                indentOne(ifThenElse.elseBlock.toLAG()) +
+                ifThenElse.elseBlock.toLAG() +
                 ')';
             
             return LAG;
@@ -1003,7 +1003,7 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
             var LAG = '';
             
             statement.LAGVEUL.get('children').each(function() {
-                LAG += this.toLAG() + '\r\n';
+                LAG += indentOne(this.toLAG()) + '\r\n';
             });
             
             LAG += '';
@@ -1546,7 +1546,7 @@ getMyY().use('dd-constrain','dd-drop','dd-proxy','node','event', function (Y) {
 /* VISUAL EDITOR */
 LAGVE = new Object();
 LAGVE.dropStack = new Array;
-LAGVE.oneIndentation = '  ';
+LAGVE.oneIndentation = '    ';
 
 getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
     //new Y.Console().render();

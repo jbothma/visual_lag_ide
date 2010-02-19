@@ -9,12 +9,12 @@ img {
 	padding: 2px;
 	margin-bottom: -5px;
 }
-img:hover {
+/*img:hover {
 	border: 1px solid #808080;
 	background-color: #DDDDDD;
 	padding: 1px;
 	margin-bottom: -5px;
-}
+}*/
 
 form {
 	color: #808080;

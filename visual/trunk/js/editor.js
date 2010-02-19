@@ -761,13 +761,18 @@ var Editor = (function(){
 					ne.innerHTML = results[i];
 					autoWords.appendChild(ne);
 				}
+                
 				//Positioning...
-				var a = this.parent.document.getElementById("peal").childNodes[1].offsetTop + 20;	//each character is 16pixels high, so 20px is probs alright
+                // #peal
+                var debuggerOutputDiv = this.parent.document.getElementById("cc")
+                
+                // 
+				var a = debuggerOutputDiv.offsetTop + 20;	//each character is 16pixels high, so 20px is probs alright
 				var b = cursorPos.line.offsetTop;
-				var e = this.parent.document.getElementById("peal").childNodes[1].childNodes[0].childNodes[1].nextSibling.scrollTop;
+				var e = debuggerOutputDiv.childNodes[0].childNodes[1].nextSibling.scrollTop;
 				var c = ((event.keyCode == 8) ? ((cursorPos.character-1) * 8) : (cursorPos.character * 8));		// each character is 8 pixels across - a backspace will obv need the autocomplete moving left a bit more
-				var d = this.parent.document.getElementById("peal").childNodes[1].firstChild.offsetLeft + 8;
-				var f = this.parent.document.getElementById("peal").childNodes[1].childNodes[0].childNodes[1].nextSibling.scrollLeft;
+				var d = debuggerOutputDiv.firstChild.offsetLeft + 8;
+				var f = debuggerOutputDiv.childNodes[0].childNodes[1].nextSibling.scrollLeft;
 				autoComplete.style.top = (a + b - e) + "px";
 				autoComplete.style.left = (d + c - f) + "px";
 			}

@@ -511,7 +511,11 @@ implementation (\r\n\
                             var LAG = LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
                             
                             //editor.mirror.setCode(LAG);
-                            alert(LAG);
+                            var message = 'Inserting the visual program into the text editor sometimes fails but it will basically look like this:\r\n\r\n';
+                            var tryanyway = '\r\n\r\nTry anyway?';
+                            if (confirm(message + LAG + tryanyway)) {
+                                editor.mirror.setCode(LAG);
+                            }
                         }
                     }); 
                 }, 'body');
