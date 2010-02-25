@@ -103,10 +103,14 @@
         
             <div class="tabview" id="peal">
                 <ul class="tabview-tabs"> 
+                    <li><a id="description-tab" href="#description">Description</a></li>
                     <li><a id="visualeditor-tab" href="#visualeditor">Visual Editor</a></li> 
                     <li><a id="texteditor-tab" href="#texteditor">Text Editor</a></li>
                 </ul> 
                 <div class="tabview-content"> 
+                    <div id="description">
+                        <textarea id="description-editor" rows="20" cols="120"></textarea>
+                    </div>
                     <div id="visualeditor">                        
                         <div id="VE-window">
                             <div id="VE-menu-container">
@@ -268,8 +272,7 @@
                     </div>
                     <div id="texteditor">
                         <!-- CodeMirror will be given #code. CodeMirror will turn #code into an iframe and make it an interactive LAG editor. -->
-                        <textarea id="code" cols="120" rows="40">
-                        </textarea>
+                        <textarea id="code" cols="120" rows="40"></textarea>
                         
                         <!-- #cc is going to sit below the LAG editor window, displaying parser messages -->
                         <div id="cc" style="font-size: 10pt; border-top: 1px solid black;">&nbsp;</div> 
@@ -422,7 +425,7 @@
             var textarea = document.getElementById('code');
 
             // Hack in the default blank strategy
-            textarea.innerHTML = '\
+            /*textarea.innerHTML = '\
 // DESCRIPTION\r\n\
 //\r\n\
 //\r\n\
@@ -438,7 +441,7 @@ initialization (\r\n\
 implementation (\r\n\
 \r\n\
 )\r\n\
-            ';
+            ';*/
             
             var editor = new MirrorFrame(CodeMirror.replace(textarea), {
                 height: "350px",
@@ -508,7 +511,7 @@ implementation (\r\n\
                     
                     Y.one('#texteditor-tab').on('click', function() {
                         if (LAGVE.initialization && LAGVE.implementation) {
-                            var LAG = LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
+                            var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
                             
                             //editor.mirror.setCode(LAG);
                             var message = 'Inserting the visual program into the text editor sometimes fails but it will basically look like this:\r\n\r\n';
@@ -518,6 +521,14 @@ implementation (\r\n\
                             }
                         }
                     }); 
+                    
+                    function getDescriptionFromTab() {
+                        var descriptionNode = Y.one('#description-editor')
+                        var description = 'DESCRIPTION\n\n' + descriptionNode.get('value');
+                        description = description.replace( /^/gm, '// ' ) + '\n\n';
+                        return description;
+                    }
+                    
                 }, 'body');
             });
         
