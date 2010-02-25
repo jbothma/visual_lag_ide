@@ -23,7 +23,9 @@
 
 
 
-
+.yui-menu {
+    z-index:    1000 !important;
+}
 /* VISUAL EDITOR */
 .sub_level {
     position:   relative;
@@ -139,7 +141,7 @@ body {
 }
 .selected {
     border :    3px solid #00F !important;
-    z-index:    2000;
+    z-index:    30;
 }
 
 
