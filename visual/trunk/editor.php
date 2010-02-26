@@ -103,13 +103,13 @@
         
             <div class="tabview" id="peal">
                 <ul class="tabview-tabs"> 
-                    <li><a id="description-tab" href="#description">Description</a></li>
+                    <li class="description-indicator" ><a id="description-tab" href="#description">Description</a></li>
                     <li><a id="visualeditor-tab" href="#visualeditor">Visual Editor</a></li> 
                     <li><a id="texteditor-tab" href="#texteditor">Text Editor</a></li>
                 </ul> 
                 <div class="tabview-content"> 
                     <div id="description">
-                        <textarea id="description-editor" rows="20" cols="120"></textarea>
+                        <textarea id="description-editor" class="description-indicator" rows="10" cols="80"></textarea>
                     </div>
                     <div id="visualeditor">                        
                         <div id="VE-window">
@@ -482,23 +482,28 @@ implementation (\r\n\
                         http://925html.com/code/simple-tab-view-with-yui-3/
                         Published on January 3, 2010
                         Eric Ferraiuolo
-                        Accessed 16/02/2010
+                        Accessed 16 Feb 2010
                     */
                     Y.all('.tabview').each(function(){ 
                         this.delegate('click', toggleTabs, '.tabview-tabs a'); 
                     }); 
                  
-                    function toggleTabs (e) {              
-                        var tabview = e.container, 
-                            tabs = tabview.all('.tabview-tabs li'), 
-                            contents = tabview.all('.tabview-content > *'), 
-                            tab = e.currentTarget.get('parentNode'); 
+                    /**
+                     * Handle tab change
+                     */
+                    function toggleTabs (e) {
+                        var tabview     = e.container, 
+                            tabs        = tabview.all('.tabview-tabs li'), 
+                            contents    = tabview.all('.tabview-content > *'), 
+                            tab         = e.currentTarget.get('parentNode'); 
                  
-                        contents.addClass('tabview-hidden') 
-                            .item(tabs.removeClass('tabview-active').indexOf(tab.addClass('tabview-active'))) 
-                                .removeClass('tabview-hidden'); 
+                        contents.addClass('tabview-hidden')
+                            .item(tabs.removeClass('tabview-active').indexOf(tab.addClass('tabview-active')))
+                                .removeClass('tabview-hidden');
                  
-                        e.preventDefault(); 
+                        e.preventDefault();
+                        
+                        evaluateDescription();
                     }
                     
                     Y.on("domready", function() {
@@ -506,7 +511,6 @@ implementation (\r\n\
                         var textTab = Y.one('#texteditor-tab');
                         textTab.simulate('click');
                     });
-                    
                     
                     
                     Y.one('#texteditor-tab').on('click', function() {
@@ -528,6 +532,26 @@ implementation (\r\n\
                         description = description.replace( /^/gm, '// ' ) + '\n\n';
                         return description;
                     }
+                    
+                    function evaluateDescription() {
+                        var description = Y.one('#description-editor').get('value');
+                        
+                        // http://stackoverflow.com/questions/1072765/count-number-of-matches-of-a-regex-in-javascript
+                        var matches = description.match(/\s+/gm);
+                        var wordCount = matches ? matches.length : 0;
+                        
+                        if ( wordCount > 20 ) {
+                            Y.all('.description-indicator').each(function (node) {
+                                node.addClass('description-ok')
+                            });
+                        } else {
+                            Y.all('.description-indicator').each(function (node) {
+                                node.removeClass('description-ok')
+                            });
+                        }
+                    }
+                    
+                     
                     
                 }, 'body');
             });

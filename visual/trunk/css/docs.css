@@ -198,11 +198,11 @@ div.logout {
     /*border:                             1px solid black;*/
     border:                             1px solid white;
     border-bottom:                      0px;
-    -moz-border-radius-topleft:         3px;
-    -moz-border-radius-topright:        3px;
-    -webkit-border-top-left-radius:     3px;
-    -webkit-border-top-right-radius:    3px;
-    border-radius:                      3px 3px 0 0;
+    -moz-border-radius-topleft:         4px;
+    -moz-border-radius-topright:        4px;
+    -webkit-border-top-left-radius:     4px;
+    -webkit-border-top-right-radius:    4px;
+    border-radius:                      4px 4px 0 0;
     background-color:                    #CCCCCC;
 }
 .tabview-tabs li a {
@@ -235,4 +235,23 @@ div.logout {
 }
 #visualeditor {
     background-color:       white;
+}
+li.description-indicator {
+    background-color:   red     !important;
+    color:              green   !important;
+}
+
+li.description-ok {
+    background-color:   green   !important;
+    color:              red     !important;
+}
+textarea.description-indicator {
+    border:     2px solid red;
+}
+textarea.description-ok {
+    border:     2px solid green;
+}
+#description-editor {
+    width:  100%;
+    height: 100%;
 }

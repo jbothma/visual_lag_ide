@@ -21,12 +21,10 @@
 
 
 
-
-
+/* VISUAL EDITOR */
 .yui-menu {
     z-index:    1000 !important;
 }
-/* VISUAL EDITOR */
 .sub_level {
     position:   relative;
     top:        -1px;
