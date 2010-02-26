@@ -236,22 +236,22 @@ div.logout {
 #visualeditor {
     background-color:       white;
 }
-li.description-indicator {
+li.strategy-description-indicator {
     background-color:   red     !important;
     color:              green   !important;
 }
 
-li.description-ok {
+li.strategy-description-ok {
     background-color:   green   !important;
     color:              red     !important;
 }
-textarea.description-indicator {
+textarea.strategy-description-indicator {
     border:     2px solid red;
 }
-textarea.description-ok {
+textarea.strategy-description-ok {
     border:     2px solid green;
 }
-#description-editor {
+#strategy-description-editor {
     width:  100%;
     height: 100%;
 }

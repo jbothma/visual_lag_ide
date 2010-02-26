@@ -1,14 +1,18 @@
 <?php
-    header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
-    header("Cache-Control: no-cache");
-    header("Pragma: no-cache");
 
     include_once("php/session_functions.php");
     if (!checkSession()) {
         header ("Location: index.php?wrongdetails");
+    } else {
+        header("Expires: Mon, 26 Jul 1997 05:00:00 GMT");
+        header("Cache-Control: no-cache");
+        header("Pragma: no-cache");
+        header("Content-Type: text/html;charset=utf-8");
     }
 ?>
-<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<?php echo("<?xml version=\"1.0\" encoding=\"UTF-8\"?>\n"); //Because PHP short open tag parses like xml declaration. ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+          "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
@@ -17,9 +21,25 @@
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
         <link rel="stylesheet" type="text/css" href="css/peal.css"/>
         <link rel="stylesheet" type="text/css" href="css/visual_editor.css"/>
-
+        
+        <!-- This is javascript we actually want available before the page finishes loading. -->
+        <script type="text/javascript">
+        </script>
     </head>
     <body class="yui-skin-sam">
+        <div id="VE-loading-msg-centering">
+            <div id="VE-loading-msg">
+                <script type="text/javascript">
+                //<![CDATA[
+                    // By writing this with JavaScript we can see that JavaScript is working and the
+                    // loading message is only displayed if we actually have JS enabled to load the JS libraries.
+                    document.getElementById('VE-loading-msg').
+                        appendChild(document.createTextNode('Please wait while PEAL loads...'));
+                //]]>
+                </script>
+                <noscript>This site relies heavily on javascript which must be enabled in your web browser.</noscript>
+            </div>
+        </div>
         <!--
             Start with #playground hidden. This means only the 'loading...' message is shown while 
             the javascript setup stuff runs. Javascript finally hides the loding message and shows #playground.
@@ -103,13 +123,13 @@
         
             <div class="tabview" id="peal">
                 <ul class="tabview-tabs"> 
-                    <li class="description-indicator" ><a id="description-tab" href="#description">Description</a></li>
+                    <li class="strategy-description-indicator" ><a id="strategy-description-tab" href="#strategy-description">Description</a></li>
                     <li><a id="visualeditor-tab" href="#visualeditor">Visual Editor</a></li> 
                     <li><a id="texteditor-tab" href="#texteditor">Text Editor</a></li>
                 </ul> 
                 <div class="tabview-content"> 
-                    <div id="description">
-                        <textarea id="description-editor" class="description-indicator" rows="10" cols="80"></textarea>
+                    <div id="strategy-description">
+                        <textarea id="strategy-description-editor" class="strategy-description-indicator" rows="10" cols="80"></textarea>
                     </div>
                     <div id="visualeditor">                        
                         <div id="VE-window">
@@ -210,7 +230,7 @@
                                                                                         <ul> 
                                                                                             <li class="yui-menuitem">
                                                                                                 <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM','Concept',document.getElementById('UM-Concept-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
-                                                                                                    <div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text"></div>
+                                                                                                    <div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text" /></div>
                                                                                                 </form>
                                                                                             </li>
                                                                                         </ul>
@@ -219,7 +239,7 @@
                                                                             </li>
                                                                             <li class="yui-menuitem">
                                                                                 <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM',document.getElementById('UM-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
-                                                                                    <div><input id="UM-custom" class="menu-form-input" value="custom" type="text"></div>
+                                                                                    <div><input id="UM-custom" class="menu-form-input" value="custom" type="text" /></div>
                                                                                 </form>
                                                                             </li>
                                                                         </ul>
@@ -234,7 +254,7 @@
                                                             </li>
                                                             <li class="yui-menuitem">
                                                                 <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr([document.getElementById('custom').value]);return false"    title="Replace the text with out custom value and press Enter to finish">
-                                                                    <div><input id="custom" class="menu-form-input" value="value" type="text"></div>
+                                                                    <div><input id="custom" class="menu-form-input" value="value" type="text" /></div>
                                                                 </form>
                                                             </li>
                                                         </ul> 
@@ -287,9 +307,12 @@
                                 "
                             >
                                 <!--
+                                    SELECT requires at least one OPTION or OPTGROUP
+                                    but this SELECt is populated dynamically.
                                     Instead of placing an empty <option> here, editor.js 
                                     deals with UP and DOWN key presses regarding autocomplete 
                                 -->
+                                <option></option><!-- But I'm putting one in anyway to make it validate for the moment. -->
                             </select>
                         </div>
                     </div> <!-- end texteditor -->
@@ -299,7 +322,7 @@
                 <div id="wizardtitle" class="handle">New Strategy Creation Wizard</div>
                 <div id="closebutton" onclick="cancelWizard();">&nbsp;</div>
                 <div style="padding: 3pt;">
-                    <form id="frmwizard" name="frmwizard" action="">
+                    <form id="frmwizard" name="frmwizard" action="#">
                         Description:<br/>
                         <textarea id="description" cols="47" rows="5">
                         </textarea><br/><br/>
@@ -332,7 +355,7 @@
                         </div>
                         <div style="text-align: right; width: 300pt; padding-top: 5pt;">
                             <input type="button" value="OK" name="ok" onclick="okWizard();"/> 
-                            <input type="button" value="Cancel" name="cancel" onClick="cancelWizard();"/>
+                            <input type="button" value="Cancel" name="cancel" onclick="cancelWizard();"/>
                         </div>
                     </form>
                 </div>
@@ -342,7 +365,7 @@
                 <div id="filestitle" class="handle">File Manager</div>
                 <div id="fileclosebutton" onclick="cancelFileManager();">&nbsp;</div>
                 <div style="padding: 3pt;">
-                    <form id="frmfiles" name="frmfiles">
+                    <form id="frmfiles" name="frmfiles" action="#">
                         <div style="float: right; width: 49%;">
                             Private:<br/>
                             <select size="10" id="privatefiles" name="privatefiles" style="width: 100%" onchange="selectedStrategy('false');">
@@ -393,56 +416,34 @@
             </div>
             <div id="VE-help-closeBtn" onclick="LAGVE.hideHelp()">X</div>
             <div id="VE-help-container"></div>
-        </div>        
-        <div id="VE-loading-msg-centering">
-            <div id="VE-loading-msg">
-                <script type="text/javascript">document.write('<p>Please wait while PEAL loads...</p>');</script>
-                <noscript>This site relies heavily on javascript which must be enabled in your web browser.</noscript>
-            </div>
         </div>
-        <div id="preloading-images" style="display:none">
+        <!--<div id="preloading-images" style="display:none">
             <img src="images/ifthenelse_diamond.png" alt="">
             <img src="images/ifthenelse_diamond_selected.png" alt="">
-            <!--<img src="images/diagonal_up_75x100.png" alt="">-->
+            <img src="images/diagonal_up_75x100.png" alt="">
             <img src="images/arrowhead_down.png" alt="">
-        </div>
+        </div>-->
         
         <!-- CodeMirror -->
-        <script src="js/codemirror.js" type="text/javascript"></script>
+        <script src="js/codemirror.js"  type="text/javascript"></script>
         <script src="js/mirrorframe.js" type="text/javascript"></script>
         
         <!-- YUI -->
-        <!--<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>-->
-        <script src="/lib/yui/yui/yui-min.js"></script>
+        <!--<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js" type="text/javascript"></script>-->
+        <script src="/lib/yui/yui/yui-min.js" type="text/javascript"></script>
         
         <!-- PEAL -->
-        <script src="js/pealfunctions.js" type="text/javascript"></script>
-        <script src="js/pealconfig.js" type="text/javascript"></script>
-        <script src="js/pealajax.js" type="text/javascript"></script>
-        <script src="js/visual_editor.js" type="text/javascript"></script>
+        <script src="js/pealfunctions.js"   type="text/javascript"></script>
+        <script src="js/pealconfig.js"      type="text/javascript"></script>
+        <script src="js/pealajax.js"        type="text/javascript"></script>
+        <script src="js/visual_editor.js"   type="text/javascript"></script>
         
         <script type="text/javascript">
+        //<![CDATA[
+            // CDATA line is commented because IE can only use xhmtl pages by acting like it's HTML.
+            
             var textarea = document.getElementById('code');
 
-            // Hack in the default blank strategy
-            /*textarea.innerHTML = '\
-// DESCRIPTION\r\n\
-//\r\n\
-//\r\n\
-\r\n\
-// VARS\r\n\
-//\r\n\
-//\r\n\
-\r\n\
-initialization (\r\n\
-\r\n\
-)\r\n\
-\r\n\
-implementation (\r\n\
-\r\n\
-)\r\n\
-            ';*/
-            
             var editor = new MirrorFrame(CodeMirror.replace(textarea), {
                 height: "350px",
                 width: "85%",
@@ -527,26 +528,26 @@ implementation (\r\n\
                     }); 
                     
                     function getDescriptionFromTab() {
-                        var descriptionNode = Y.one('#description-editor')
+                        var descriptionNode = Y.one('#strategy-description-editor')
                         var description = 'DESCRIPTION\n\n' + descriptionNode.get('value');
                         description = description.replace( /^/gm, '// ' ) + '\n\n';
                         return description;
                     }
                     
                     function evaluateDescription() {
-                        var description = Y.one('#description-editor').get('value');
+                        var description = Y.one('#strategy-description-editor').get('value');
                         
                         // http://stackoverflow.com/questions/1072765/count-number-of-matches-of-a-regex-in-javascript
                         var matches = description.match(/\w+/gm);
                         var wordCount = matches ? matches.length : 0;
                         
                         if ( wordCount > 20 ) {
-                            Y.all('.description-indicator').each(function (node) {
-                                node.addClass('description-ok')
+                            Y.all('.strategy-description-indicator').each(function (node) {
+                                node.addClass('strategy-description-ok')
                             });
                         } else {
-                            Y.all('.description-indicator').each(function (node) {
-                                node.removeClass('description-ok')
+                            Y.all('.strategy-description-indicator').each(function (node) {
+                                node.removeClass('strategy-description-ok')
                             });
                         }
                     }
@@ -560,6 +561,8 @@ implementation (\r\n\
             createMenus();
             // Get the list of fragments available...
             getFragments();
+        
+        //]]>
         </script>
     </body>
 </html>
