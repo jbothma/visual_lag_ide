@@ -537,7 +537,7 @@ implementation (\r\n\
                         var description = Y.one('#description-editor').get('value');
                         
                         // http://stackoverflow.com/questions/1072765/count-number-of-matches-of-a-regex-in-javascript
-                        var matches = description.match(/\s+/gm);
+                        var matches = description.match(/\w+/gm);
                         var wordCount = matches ? matches.length : 0;
                         
                         if ( wordCount > 20 ) {
