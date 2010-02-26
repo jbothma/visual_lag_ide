@@ -259,7 +259,7 @@ body {
     bottom:             0px;
     width:              16px;
     height:             16px;
-    background-image:   url('images/arrowhead_down.png');
+    background-image:   url('../images/arrowhead_down.png');
 }
 .ifthenelse-arrowhead-right {
     position:           absolute;
@@ -267,7 +267,7 @@ body {
     bottom:             0px;
     width:              16px;
     height:             16px;
-    background-image:   url('images/arrowhead_down.png');
+    background-image:   url('../images/arrowhead_down.png');
 }
 .ifthenelse-condition-container {
     position:           relative;
@@ -397,7 +397,7 @@ body {
     left:                   18px;
     width:                  47px;
     height:                 63px;
-    background-image:       url("images/diagonal_up_75x100.png");
+    background-image:       url("../images/diagonal_up_75x100.png");
     background-position:    left bottom;
 }
 .xjunction.condition-list {

@@ -21,18 +21,15 @@
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
         <link rel="stylesheet" type="text/css" href="css/peal.css"/>
         <link rel="stylesheet" type="text/css" href="css/visual_editor.css"/>
-        
-        <!-- This is javascript we actually want available before the page finishes loading. -->
-        <script type="text/javascript">
-        </script>
+
     </head>
     <body class="yui-skin-sam">
         <div id="VE-loading-msg-centering">
             <div id="VE-loading-msg">
                 <script type="text/javascript">
                 //<![CDATA[
-                    // By writing this with JavaScript we can see that JavaScript is working and the
-                    // loading message is only displayed if we actually have JS enabled to load the JS libraries.
+                    // By writing the loading message using JavaScript, the loading message 
+                    // is only displayed if we actually have JS enabled to load the JS libraries.
                     document.getElementById('VE-loading-msg').
                         appendChild(document.createTextNode('Please wait while PEAL loads...'));
                 //]]>
