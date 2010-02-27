@@ -41,13 +41,7 @@ body {
 .menu-form-input {
     border: 1px solid black;
 }
-#VE-window {
-    /*min-height:    400px;*/
-    /*border: 1px solid black;
-    margin: 1px;*/
-    /*float:        left;*/
-}
-#VE-workspace {
+.VE-workspace {
     position:   relative;
     /*min-height:    368px;*/
     /*border:     1px solid black;*/

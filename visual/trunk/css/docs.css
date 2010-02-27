@@ -121,7 +121,6 @@ pre.code {
 }
 #playground {
     position:       relative;
-    height:         200px;
     padding-left:   10pt;
     padding-top:    10pt;
     padding-right:  10pt;
@@ -223,35 +222,42 @@ div.logout {
 }
 .tabview-content {
     color:                  black;
-    background:             #AAAAAA;
-    padding:                14px 10px;
+    background:             white;
+    /*padding:                14px 10px;*/
     /*border:                 1px solid black;*/
 }
 .tabview-content .tabview-hidden {
     display:                none;
 }
+#texteditor-tab {
+    background-color:   #AAAAEE;
+}
 #texteditor {
-    background-color:       white;
+    background-color:   white;
+    border:             14px solid #AAAAEE;
 }
-#visualeditor {
-    background-color:       white;
+.visualeditor-tab{
+    background-color:   #99CCFF;
 }
-li.strategy-description-indicator {
-    background-color:   red     !important;
-    color:              green   !important;
+.visualeditor-tab.tabview-active{
+    background-color:   #CCCCFF;
 }
-
-li.strategy-description-ok {
-    background-color:   green   !important;
-    color:              red     !important;
+.visualeditor {
+    background-color:   white;
+    border:             14px solid #CCCCFF;
 }
-textarea.strategy-description-indicator {
-    border:     2px solid red;
+#strategy-description-tab {
+    background-color:   red;
 }
-textarea.strategy-description-ok {
-    border:     2px solid green;
+#strategy-description-tab.strategy-description-ok {
+    background-color:   green;
+}
+#strategy-description {
+    border:             14px solid red;
+}
+#strategy-description.strategy-description-ok {
+    border-color:       green;
 }
 #strategy-description-editor {
-    width:  100%;
-    height: 100%;
+    width:              100%
 }
