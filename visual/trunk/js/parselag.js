@@ -86,8 +86,7 @@ var LAGParser = Editor.Parser = (function() {
       // with the wrong lexical state.
 	  
 	  // JB - in effect this loop just removes things off the stack which are: pushlex() and poplex()      
-	  // slight hack here... added "cc.length > 0 &&" to prevent the error which said: cc[cc.length - 1].lex is undefined
-	  while(cc.length > 0 && cc[cc.length - 1].lex) {
+	  while(cc[cc.length - 1].lex) {
         cc.pop()();
 	  }
 	
@@ -266,13 +265,13 @@ var LAGParser = Editor.Parser = (function() {
 	// element in the stack...
 	function init(type) {
 	  if (type == "init") {
-		cont(pushlex("init"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
+		cont(pushlex("init"), expect("("), multistatements, expect(")"), poplex);
 	  }
 	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>initialization</b>"); cont(arguments.callee); }
 	}
 	function impl(type) {
 	  if (type == "impl") {
-		cont(pushlex("impl"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
+		cont(pushlex("impl"), expect("("), multistatements, expect(")"), poplex);
 	  }
 	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>implementation</b>"); cont(arguments.callee); }
 	}
@@ -292,8 +291,9 @@ var LAGParser = Editor.Parser = (function() {
     // the given type.
     function expect(wanted) {
       return function(type){
-        if (type == wanted) cont();
-        else {
+        if (type == wanted) {
+            cont();
+        } else {
 			error("Found: <b style=\"color: red;\">" + type + "</b>: Expected <b>" + wanted + "</b>");
 			cont(arguments.callee);
 		}
@@ -305,11 +305,12 @@ var LAGParser = Editor.Parser = (function() {
     function statement(type) {
       if (type == "if") cont(pushlex("form"), condition, then, poplex);
 	  else if (type == "while") cont(pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
-	  else if (type == "for") cont(pushlex("form"), range, dostat, poplex);
+	  else if (type == "for")   cont(pushlex("form"), range, dostat, poplex);
 	  else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
-	  else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
+	  else if (type == "stat")  cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
 	  else if (type == "model") cont(pushlex("form"), expect("."), dotsep(model), optionalop/*op, value*/, poplex);
-	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>if, while, for, break, generalise, specialise, GM, DM, PM, UM</b> or <b>operator</b>"); cont(); }
+      else if (type == ")")     pass(); // end of init or impl?
+	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>), if, while, for, break, generalise, specialise, GM, DM, PM, UM</b> or <b>operator</b>"); cont(); }
 	}
 	
 	// Need to allow for (condition)* -- DONE!
