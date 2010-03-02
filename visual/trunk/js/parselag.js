@@ -20,8 +20,6 @@ var LAGParser = Editor.Parser = (function () {
     var vars = new Array();
 
     // Constructor for the lexical context objects.
-
-
     function LAGLexical(indented, column, type, align, prev) {
         // indentation at start of this line
         this.indented = indented;
@@ -36,9 +34,8 @@ var LAGParser = Editor.Parser = (function () {
         // Parent scope, if any.
         this.prev = prev;
     }
-    // My favourite JavaScript indentation rules.
-
-
+    
+    // indentation rules.
     function indentLAG(lexical) {
         return function (firstChars) {
             var firstChar = firstChars && firstChars.charAt(0);
@@ -53,11 +50,10 @@ var LAGParser = Editor.Parser = (function () {
     }
 
     // The parser-iterator-producing function itself.
-
-
     function parseLAG(input, basecolumn) {
         // Wrap the input in a token stream
         var tokens = tokenizeLAG(input);
+        
         // The parser state. cc is a stack of actions that have to be
         // performed to finish the current statement. For example we might
         // know that we still need to find a closing parenthesis and a
@@ -65,11 +61,14 @@ var LAGParser = Editor.Parser = (function () {
         // initialized with an infinitely looping action that consumes
         // whole statements. NB - update, now it just looks for init and then impl
         var cc = [prog];
+        
         // Context contains information about the current local scope, the
         // variables defined in that, and the scopes above it.
         var context = null;
+        
         // The lexical scope, used mostly for indentation.
         var lexical = new LAGLexical((basecolumn || 0) - 2, 0, "block", false);
+        
         // Current column, and the indentation at the start of the current
         // line. Used to create lexical scope objects.
         var column = 0;
@@ -113,10 +112,6 @@ var LAGParser = Editor.Parser = (function () {
             }
             // No more processing for meaningless tokens.
             if (token.type == "whitespace" || token.type == "comment") {
-                //if (currentVar != "") {
-                //	vars.push(currentVar);
-                //	currentVar = "";
-                //}
                 return token;
             }
             // When a meaningful token is found and the lexical scope's
@@ -133,32 +128,7 @@ var LAGParser = Editor.Parser = (function () {
                     // Marked is used to change the style of the current token.
                     if (marked) {
                         token.style = marked;
-                        // Here we differentiate between local and global variables.
-                    } //else if (token.type == "variable" && inScope(token.content)) {
-                    //token.style = "lag-localvariable";
-                    //}
-                    // DOESNT WORK...
-                    // Create list of variables used in the strategy... currently keep duplicates and doesn't
-                    // delete any... doesn't stop recording a variable name at whitespace either???
-                    /*
-		  if (token.type == "model") {
-			if (currentVar == "") {
-				currentVar = token.content;
-			} else {
-				currentVar = currentVar + "." + token.content;
-			}
-		  }
-		  if (token.type == "variable") {
-			currentVar = currentVar + "." + token.content;
-		  }
-		  if (token.type == "operator" || token.type == "compare") {
-			var insert = true;
-			if (currentVar != "" && token.content != ".") {
-				vars.push(currentVar);
-				currentVar = "";
-			}
-		  }
-		  */
+                    } 
                     return token;
                 }
             }
@@ -171,8 +141,6 @@ var LAGParser = Editor.Parser = (function () {
         // being modified. Lexical objects are not mutated, and context
         // objects are not mutated in a harmful way, so they can be shared
         // between runs of the parser.
-
-
         function copy() {
             var _context = context,
                 _lexical = lexical,
@@ -191,18 +159,15 @@ var LAGParser = Editor.Parser = (function () {
 
         // Helper function for pushing a number of actions onto the cc
         // stack in reverse order.
-
-
         function push(fs) {
             for (var i = fs.length - 1; i >= 0; i--) {
                 cc.push(fs[i]);
             }
         }
+        
         // cont and pass are used by the action functions to add other
         // actions to the stack. cont will cause the current token to be
         // consumed, pass will leave it for the next action.
-
-
         function cont() {
             push(arguments);
             consume = true;
@@ -216,56 +181,13 @@ var LAGParser = Editor.Parser = (function () {
         function error(f) {
             debugDisplay(f);
         }
+        
         // Used to change the style of the current token.
-
-
         function mark(style) {
             marked = style;
         }
 
-        // Push a new scope. Will automatically link the the current
-        // scope.
-
-
-        function pushcontext() {
-            context = {
-                prev: context,
-                vars: {
-                    "this": true,
-                    "arguments": true
-                }
-            };
-        }
-        // Pop off the current scope.
-
-
-        function popcontext() {
-            context = context.prev;
-        }
-        // Register a variable in the current scope.
-
-
-        function register(varname) {
-            if (context) {
-                mark("lag-variabledef");
-                context.vars[varname] = true;
-            }
-        }
-        // Check whether a variable is defined in the current scope.
-
-
-        function inScope(varname) {
-            var cursor = context;
-            while (cursor) {
-                if (cursor.vars[varname]) return true;
-                cursor = cursor.prev;
-            }
-            return false;
-        }
-
         // Push a new lexical context of the given type.
-
-
         function pushlex(type) {
             var result = function () {
                 lexical = new LAGLexical(indented, column, type, null, lexical)
@@ -273,9 +195,8 @@ var LAGParser = Editor.Parser = (function () {
             result.lex = true;
             return result;
         }
+        
         // Pop off the current lexical context.
-
-
         function poplex() {
             lexical = lexical.prev;
         }
@@ -296,8 +217,6 @@ var LAGParser = Editor.Parser = (function () {
         // If it is either "initialisation" or "implementation" then OK, otherwise turn it red...
         // Expect an (, then a multistatements (which returns: statement followed by multistatement OR carries the token onto the next
         // element in the stack...
-
-
         function init(type) {
             if (type == "init") {
                 cont(pushlex("init"), expect("("), multistatements, expect(")"), poplex);
@@ -322,8 +241,6 @@ var LAGParser = Editor.Parser = (function () {
 
         // If the token passed to multistatements is a ) then it is passed onto the next element,
         // otherwise, it is passed onto statement and multistatement is expected afterwards...
-
-
         function multistatements(type) {
             if (type == ")") {
                 return pass(); // So that the ) isn't consumed, since multistatements is always followed by an expect(")")
@@ -335,8 +252,6 @@ var LAGParser = Editor.Parser = (function () {
 
         // Creates an action that discards tokens until it finds one of
         // the given type.
-
-
         function expect(wanted) {
             return function (type) {
                 if (type == wanted) {
@@ -350,8 +265,6 @@ var LAGParser = Editor.Parser = (function () {
 
         // Dispatches various types of statements based on the type of the
         // current token.
-
-
         function statement(type) {
             if (type == "if") cont(pushlex("form"), condition, then, poplex);
             else if (type == "while") cont(pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
@@ -370,8 +283,6 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         // Need to allow for (condition)* -- DONE!
-
-
         function condition(type) {
             if (type == "model") cont(pushlex("stat"), expect("."), dotsep(model)
             /*attribute*/
@@ -389,8 +300,6 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         // still need to allow for no parenthesis after the "then"
-
-
         function then(type) {
             if (type == "then") cont(pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, posselse, poplex);
             else {
@@ -441,15 +350,14 @@ var LAGParser = Editor.Parser = (function () {
                 cont();
             }
         }
+        
         /*
-	function attribute(type) {
-	  if (type=="model") cont();
-	}
-	*/
+        function attribute(type) {
+          if (type=="model") cont();
+        }
+        */
 
         // Look for conditions until a closing brace is found.
-
-
         function setOfCondition(type) {
             if (type == ",") {
                 return cont();
@@ -461,8 +369,6 @@ var LAGParser = Editor.Parser = (function () {
         // Parses a dot-separated list of the things that are recognized
         // by the 'what' argument.
         // Currently only handles: UM, GM, PM, DM, Concept
-
-
         function dotsep(what) {
             function proceed(type) {
                 if (type == ".") cont(what, proceed);
@@ -474,8 +380,6 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         // If it is a comparer carry on, otherwise colour it red
-
-
         function compare(type) {
             if (type == "compare") cont();
             else {
@@ -493,9 +397,8 @@ var LAGParser = Editor.Parser = (function () {
                 cont();
             }
         }
+        
         // If it is text (variable) or numeric (number) then carry on, else mark it red
-
-
         function value(type) {
             if (type == "variable") cont();
             else if (type == "model") cont(expect("."), dotsep(model));
