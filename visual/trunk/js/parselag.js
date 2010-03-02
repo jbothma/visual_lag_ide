@@ -268,13 +268,13 @@ var LAGParser = Editor.Parser = (function() {
 	  if (type == "init") {
 		cont(pushlex("init"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
 	  }
-	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>initialization</b>"); cont(); }
+	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>initialization</b>"); cont(arguments.callee); }
 	}
 	function impl(type) {
 	  if (type == "impl") {
 		cont(pushlex("impl"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
 	  }
-	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>implementation</b>"); cont(); }
+	  else { mark("lag-error"); error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>implementation</b>"); cont(arguments.callee); }
 	}
 
 	// If the token passed to multistatements is a ) then it is passed onto the next element,
