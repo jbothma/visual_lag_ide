@@ -123,6 +123,7 @@ var LAGParser = Editor.Parser = (function () {
                 // Take and execute the topmost action.
                 cc.pop()(token.type, token.content);
                 if (consume) {
+                    if ( marked !== "lag-error" ) console.log("consuming " + token.type + " : " + token.value);
                     // Marked is used to change the style of the current token.
                     if (marked) {
                         token.style = marked;

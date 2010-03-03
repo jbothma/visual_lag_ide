@@ -17,7 +17,7 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-        <title>PEAL - version 0.5.5</title>
+        <title>PEAL 2 Alpha 0.1</title>
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
         <link rel="stylesheet" type="text/css" href="css/peal.css"/>
         <link rel="stylesheet" type="text/css" href="css/visual_editor.css"/>
@@ -266,6 +266,9 @@
                             <li class="yui-menuitem">
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
                             </li>
+                            <li class="yui-menuitem">
+                                <a class="yui-menuitem-content" href="#" onclick="console.log('!reparse');var code=editor.mirror.getCode();editor.mirror.setCode(code)">Reparse</a>
+                            </li>
                         </ul>
                     </div>
                 </div> <!-- end VE-menu -->
@@ -443,7 +446,7 @@
             var textarea = document.getElementById('code');
 
             var editor = new MirrorFrame(CodeMirror.replace(textarea), {
-                height: "350px",
+                height: "200px",
                 width: "85%",
                 content: textarea.value,
                 parserfile: ["tokenizelag.js", "parselag.js"],

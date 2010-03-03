@@ -647,7 +647,17 @@ var Editor = (function(){
     // Check for characters that should re-indent the current line,
     // and prevent Opera from handling enter and tab anyway.
     keyPress: function(event) {
-	  var electric = Editor.Parser.electricChars;
+        var electric = Editor.Parser.electricChars;
+        // Hack for Opera, and Firefox on OS X, in which stopping a
+        // keydown event does not prevent the associated keypress event
+        // from happening, so we have to cancel enter and tab again
+        // here.
+        if (event.code == 13 || event.code == 9) event.stop();
+        else if ((event.character == "[" || event.character == "]") && event.ctrlKey) event.stop(),
+        this.blinkParens();
+        else if (electric && electric.indexOf(event.character) != -1) this.parent.setTimeout(method(this, "indentAtCursor"), 0);
+            
+	  /*var electric = Editor.Parser.electricChars;
       // Hack for Opera, and Firefox on OS X, in which stopping a
       // keydown event does not prevent the associated keypress event
       // from happening, so we have to cancel enter and tab again
@@ -662,7 +672,7 @@ var Editor = (function(){
         this.parent.setTimeout(method(this, "indentAtCursor"), 0);
 		
 	 
-	  //* Autocomplete start... *//
+	  // Autocomplete start...
 	  
 	  var autoWords = (this.parent.document.getElementById("autowords") || document.getElementById("autowords"));
 	  var autoComplete = (this.parent.document.getElementById("autocomplete") || document.getElementById("autocomplete"));
@@ -681,8 +691,8 @@ var Editor = (function(){
 			//	removeAllChildren(autoWords);
 			//}
 			autoComplete.style.left = -1000 + "px";
-			autoComplete.style.top = 0 + "px";			
-			clearDebugDisplay();
+			autoComplete.style.top = 0 + "px";	*/		
+			clearDebugDisplay(); /*
 		}
 	  }
 	  
@@ -704,7 +714,8 @@ var Editor = (function(){
 		clearDebugDisplay();
 		
 		// get current cursor position and the text from its current token
-		var curWord2, cursorPos = this.parent.editor.mirror.cursorPosition(), tmpToken;
+		//var curWord2 = tmpToken
+        var cursorPos = this.parent.editor.mirror.cursorPosition();
 		// if there is currently no word in storage - then check the preceding token to the cursor
 		if (this.curWord == "") {
 		  var offset = cursorPos.character;
@@ -754,7 +765,7 @@ var Editor = (function(){
 			}
 			*/
 			// Sort array
-			results.sort();
+			/*results.sort();
 			if (results.length > 0) {
 				for (var i=0; i<results.length; i++) {
 					var ne = document.createElement("option");
@@ -817,7 +828,7 @@ var Editor = (function(){
 		autoComplete.style.left = -1000 + "px";
 		autoComplete.style.top = 0 + "px";
 	 }
-	  
+	*/  
 	},
 
     // Mark the node at the cursor dirty when a non-safe key is
