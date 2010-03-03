@@ -17,8 +17,6 @@ var LAGParser = Editor.Parser = (function () {
         "regexp": true
     };
 
-    var vars = new Array();
-
     // Constructor for the lexical context objects.
     function LAGLexical(indented, column, type, align, prev) {
         // indentation at start of this line
@@ -91,7 +89,7 @@ var LAGParser = Editor.Parser = (function () {
             // lexical variable), or the operations below will be working
             // with the wrong lexical state.
             // JB - in effect this loop just removes things off the stack which are: pushlex() and poplex()      
-            while (cc[cc.length - 1].lex) {
+            while (cc.length && cc[cc.length - 1].lex) {
                 cc.pop()();
             }
 
@@ -207,6 +205,24 @@ var LAGParser = Editor.Parser = (function () {
         // Looks for an init, followed by an impl
         // Using pass() means that prog() doesn't consumed yet, but
         // passes the token onto init()
+        
+        /**
+         *  argument: type e.g. "init"
+         *  
+         *  searches down lex scope stack until end (returning false)
+         *  or lex scope of type type is found (returning true)
+         */
+        function withinLexType(type) {
+            var lex = lexical;
+            while (lex) {
+                if (lex.type === type) {
+                    return true;
+                } else {
+                    lex = lex.prev;
+                }
+            }
+            return false;
+        }
 
 
         function prog(type) {
@@ -219,7 +235,7 @@ var LAGParser = Editor.Parser = (function () {
         // element in the stack...
         function init(type) {
             if (type == "init") {
-                cont(pushlex("init"), expect("("), multistatements, expect(")"), poplex);
+                cont(pushlex("init"), expect("("), pushlex(")"), multistatements, poplex, expect(")"), poplex);
             }
             else {
                 mark("lag-error");
@@ -230,7 +246,7 @@ var LAGParser = Editor.Parser = (function () {
 
         function impl(type) {
             if (type == "impl") {
-                cont(pushlex("impl"), expect("("), multistatements, expect(")"), poplex);
+                cont(pushlex("impl"), expect("("), pushlex(")"), multistatements, poplex, expect(")"), poplex);
             }
             else {
                 mark("lag-error");
@@ -244,7 +260,7 @@ var LAGParser = Editor.Parser = (function () {
         function multistatements(type) {
             if (type == ")") {
                 return pass(); // So that the ) isn't consumed, since multistatements is always followed by an expect(")")
-                // Do we need to get rid of any remaining multistatements that are on the stack expecting atm...?
+                // Jon Bevan: Do we need to get rid of any remaining multistatements that are on the stack expecting atm...?
             } else {
                 return pass(statement, multistatements);
             }
@@ -267,7 +283,7 @@ var LAGParser = Editor.Parser = (function () {
         // current token.
         function statement(type) {
             if (type == "if") cont(pushlex("form"), condition, then, poplex);
-            else if (type == "while") cont(pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
+            else if (type == "while" && withinLexType("init")) cont(pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
             else if (type == "for") cont(pushlex("form"), range, dostat, poplex);
             else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
             else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
@@ -277,18 +293,19 @@ var LAGParser = Editor.Parser = (function () {
             else if (type == ")") pass(); // end of init or impl?
             else {
                 mark("lag-error");
-                error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>), if, while, for, break, generalise, specialise, GM, DM, PM, UM</b> or <b>operator</b>");
+                error(
+                    "Found <b style=\"color:red;\">" + 
+                    type + 
+                    "</b>: Expected <b>), if, " +
+                    (withinLexType("init") ? "while, " : "") +
+                    "for, break, generalise, specialise, GM, DM, PM, UM</b> or <b>operator</b>");
                 cont();
             }
         }
 
         // Need to allow for (condition)* -- DONE!
         function condition(type) {
-            if (type == "model") cont(pushlex("stat"), expect("."), dotsep(model)
-            /*attribute*/
-            , optionalcompare
-            /*compare, value*/
-            , poplex);
+            if (type == "model") cont( pushlex("stat"), expect("."), dotsep(model), optionalcompare, poplex );
             else if (type == "enough") cont(pushlex("stat"), expect("("), pushlex(")"), setOfCondition, value, expect(")"), poplex, poplex);
             else if (type == "trueFalse") cont();
             else if (type == "(") cont(pushlex("stat"), condition, expect(")"), poplex); // allows braces around conditions
@@ -299,7 +316,7 @@ var LAGParser = Editor.Parser = (function () {
             }
         }
 
-        // still need to allow for no parenthesis after the "then"
+       
         function then(type) {
             if (type == "then") cont(pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, posselse, poplex);
             else {
@@ -435,6 +452,5 @@ var LAGParser = Editor.Parser = (function () {
     return {
         make: parseLAG,
         electricChars: "()",
-        vars: vars
     };
 })();
