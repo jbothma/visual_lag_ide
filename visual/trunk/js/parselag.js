@@ -128,7 +128,10 @@ var LAGParser = Editor.Parser = (function () {
                     if (marked) {
                         token.style = marked;
                     } 
-                    return token;
+                    if (token.type === "EOF")
+                        throw StopIteration;
+                    else
+                        return token;
                 }
             }
         }
@@ -267,7 +270,7 @@ var LAGParser = Editor.Parser = (function () {
 
         function impl(type) {
             if (type == "impl") { 
-                cont(pushlex("impl"), logAction('make impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), logAction('finish impl'), poplex);
+                cont(pushlex("impl"), logAction('make impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), logAction('finish impl'), poplex, expect("EOF"));
             }
             else {
                 markError();

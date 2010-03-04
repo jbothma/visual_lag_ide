@@ -38,7 +38,8 @@ function tokenizer(source, state) {
     next: function () {
       if (!source.more()) {
         console.log("!no more tokens");
-        throw StopIteration;
+        //throw StopIteration;
+        return this.take("EOF");
       }
 
       var type;
