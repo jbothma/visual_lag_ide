@@ -60,33 +60,3 @@ var autoKeywords = ["initialization", "implementation", "while", "then", "else",
 // And a few general others: compare, operator, variable, number, whitespace, comment
 //
 
-// This object returns the type of keyword and the CSS styling
-function typeOfKeyword(type, style){
-  return {type: type, style: style};
-}
-
-var trueFalse = typeOfKeyword("trueFalse", "lag-keyword4");		// true, false
-var stat = typeOfKeyword("stat", "lag-keyword5");				// generalize, specialize, generalise, specialise
-var model = typeOfKeyword("model", "lag-keyword6");				// DM, GM, UM, PM, CM, Concept
-
-var LAGkeywords = {
-	"initialization": typeOfKeyword("init", "lag-keyword1"),
-	"implementation": typeOfKeyword("impl","lag-keyword1"),
-	"if": typeOfKeyword("if", "lag-keyword2"),
-	"while": typeOfKeyword("while", "lag-keyword2"),
-	"then": typeOfKeyword("then", "lag-keyword3"),
-	"else": typeOfKeyword("else", "lag-keyword3"),
-	"do": typeOfKeyword("do", "lag-keyword3"),
-	"for": typeOfKeyword("for", "lag-keyword7"),
-	"enough": typeOfKeyword("enough", "lag-keyword7"),
-	"break": typeOfKeyword("break", "lag-keyword7"),
-	"true": trueFalse,										// see above
-	"false": trueFalse,
-	"generalize": stat, "specialize": stat,					// see above
-	"DM": model,											// see above
-	"GM": model,
-	"UM": model,
-	"PM": model,
-	"CM": model,
-	"Concept": model
-};

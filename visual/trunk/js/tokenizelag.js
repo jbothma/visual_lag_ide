@@ -31,15 +31,47 @@ var tokenizeLAG = (function() {
 	//var keywordC = typeOfKeyword("keyword c", "lag-keyword7");	// for, enough, break
 	*/
 	/*
-	var trueFalse = typeOfKeyword("trueFalse", "lag-keyword4");	// true, false
+	var boolean = typeOfKeyword("boolean", "lag-keyword4");	// true, false
 	var stat = typeOfKeyword("stat", "lag-keyword5");			// genstat, specstat
 	var model = typeOfKeyword("model", "lag-keyword6");		// DM, GM, UM, PM, CM
 	*/
+    
+    // This object returns the type of keyword and the CSS styling
+    function typeOfKeyword(type, style){
+        return {type: type, style: style};
+    }
+
+    var boolean = typeOfKeyword("boolean", "lag-keyword4");		// true, false
+    var stat = typeOfKeyword("stat", "lag-keyword5");				// generalize, specialize, generalise, specialise
+    var model = typeOfKeyword("model", "lag-keyword6");				// DM, GM, UM, PM, CM, Concept
+
+    var LAGkeywords = {
+        "initialization": typeOfKeyword("init", "lag-keyword1"),
+        "implementation": typeOfKeyword("impl","lag-keyword1"),
+        "if": typeOfKeyword("if", "lag-keyword2"),
+        "while": typeOfKeyword("while", "lag-keyword2"),
+        "then": typeOfKeyword("then", "lag-keyword3"),
+        "else": typeOfKeyword("else", "lag-keyword3"),
+        "do": typeOfKeyword("do", "lag-keyword3"),
+        "for": typeOfKeyword("for", "lag-keyword7"),
+        "enough": typeOfKeyword("enough", "lag-keyword7"),
+        "break": typeOfKeyword("break", "lag-keyword7"),
+        "true": boolean,										// see above
+        "false": boolean,
+        "generalize": stat, "specialize": stat,					// see above
+        "DM": model,											// see above
+        "GM": model,
+        "UM": model,
+        "PM": model,
+        "CM": model,
+        "Concept": model
+    };
+
 	return LAGkeywords; /*{
 		"initialization": typeOfKeyword("init", "lag-keyword1"), "implementation": typeOfKeyword("impl","lag-keyword1"),
 		"if": typeOfKeyword("if", "lag-keyword2"), "while": typeOfKeyword("while", "lag-keyword2"),
 		"then": typeOfKeyword("then", "lag-keyword3"), "else": typeOfKeyword("else", "lag-keyword3"), "do": typeOfKeyword("do", "lag-keyword3"),
-		"true": trueFalse, "false": trueFalse,
+		"true": boolean, "false": boolean,
 		"for": typeOfKeyword("for", "lag-keyword7"),
 		"enough": typeOfKeyword("enough", "lag-keyword7"),
 		"break": typeOfKeyword("break", "lag-keyword7"),

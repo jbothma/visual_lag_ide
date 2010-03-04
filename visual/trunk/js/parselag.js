@@ -123,7 +123,7 @@ var LAGParser = Editor.Parser = (function () {
                 // Take and execute the topmost action.
                 cc.pop()(token.type, token.content);
                 if (consume) {
-                    if ( marked !== "lag-error" ) console.log("consuming " + token.type + " : " + token.value);
+                    //if ( marked !== "lag-error" ) console.log("consuming " + token.type + " : " + token.value);
                     // Marked is used to change the style of the current token.
                     if (marked) {
                         token.style = marked;
@@ -185,6 +185,18 @@ var LAGParser = Editor.Parser = (function () {
         function mark(style) {
             marked = style;
         }
+        
+        // http://marijn.haverbeke.nl/codemirror/contrib/php/index.html
+        // http://marijn.haverbeke.nl/codemirror/contrib/php/LICENSE
+        // Add a lyer of style to the current token, for example syntax-error
+        function markAdd(style){
+            if (!marked) marked = style;
+            else marked = marked + ' ' + style;
+        }
+        
+        function markError() {
+            markAdd("lag-syntax-error");
+        }
 
         // Push a new lexical context of the given type.
         function pushlex(type) {
@@ -226,6 +238,14 @@ var LAGParser = Editor.Parser = (function () {
         }
 
 
+        function logAction(logmsg) {
+            return function() {
+                if (console) {
+                    console.log(logmsg);
+                }
+            }
+        }
+        
         function prog(type) {
             //return pass(initImpl, statements);
             return pass(init, impl);
@@ -236,21 +256,21 @@ var LAGParser = Editor.Parser = (function () {
         // element in the stack...
         function init(type) {
             if (type == "init") {
-                cont(pushlex("init"), expect("("), pushlex(")"), multistatements, poplex, expect(")"), poplex);
+                cont(pushlex("init"), logAction('make init'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), logAction('finish init'), poplex);
             }
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>initialization</b>");
                 cont(arguments.callee);
             }
         }
 
         function impl(type) {
-            if (type == "impl") {
-                cont(pushlex("impl"), expect("("), pushlex(")"), multistatements, poplex, expect(")"), poplex);
+            if (type == "impl") { 
+                cont(pushlex("impl"), logAction('make impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), logAction('finish impl'), poplex);
             }
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>implementation</b>");
                 cont(arguments.callee);
             }
@@ -272,8 +292,10 @@ var LAGParser = Editor.Parser = (function () {
         function expect(wanted) {
             return function (type) {
                 if (type == wanted) {
+                    logAction('make and finish ' + type);
                     cont();
                 } else {
+                    markError();
                     error("Found: <b style=\"color: red;\">" + type + "</b>: Expected <b>" + wanted + "</b>");
                     cont(arguments.callee);
                 }
@@ -283,17 +305,15 @@ var LAGParser = Editor.Parser = (function () {
         // Dispatches various types of statements based on the type of the
         // current token.
         function statement(type) {
-            if (type == "if") cont(pushlex("form"), condition, then, poplex);
-            else if (type == "while" && withinLexType("init")) cont(pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
-            else if (type == "for") cont(pushlex("form"), range, dostat, poplex);
+            if (type == "if") cont(logAction('make if'), condition, pushlex("form"), then, /*poplex,*/ logAction('finish if'));
+            else if (type == "while" && withinLexType("init")) cont(logAction('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, logAction('finish while'));
+            else if (type == "for") cont(logAction('make for'), pushlex("form"), range, dostat, poplex, logAction('finish for'));
             else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
-            else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
-            else if (type == "model") cont(pushlex("form"), expect("."), dotsep(model), optionalop
-            /*op, value*/
-            , poplex);
+            //else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
+            else if (type == "model") cont(pushlex("form"), expect("."), dotsep(model), optionalop /*op, value*/ , poplex);
             else if (type == ")") pass(); // end of init or impl?
             else {
-                mark("lag-error");
+                markError();
                 error(
                     "Found <b style=\"color:red;\">" + 
                     type + 
@@ -308,10 +328,10 @@ var LAGParser = Editor.Parser = (function () {
         function condition(type) {
             if (type == "model") cont( pushlex("stat"), expect("."), dotsep(model), optionalcompare, poplex );
             else if (type == "enough") cont(pushlex("stat"), expect("("), pushlex(")"), setOfCondition, value, expect(")"), poplex, poplex);
-            else if (type == "trueFalse") cont();
+            else if (type == "boolean") cont( logAction('make and finish boolean') );
             else if (type == "(") cont(pushlex("stat"), condition, expect(")"), poplex); // allows braces around conditions
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>GM, UM, PM, DM, Concept, enough, true, false</b>");
                 cont();
             }
@@ -319,23 +339,23 @@ var LAGParser = Editor.Parser = (function () {
 
        
         function then(type) {
-            if (type == "then") cont(pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, posselse, poplex);
+            if (type == "then") cont(logAction('make then'), /*pushlex("form"), */expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, logAction('finish then'), posselse);
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>then</b>");
                 cont();
             }
         }
 
         function posselse(type) {
-            if (type == "else") cont(pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
+            if (type == "else") cont(logAction('make else'), pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, logAction('finish else'));
             else pass(); // because it's optional, you need to NOT consume the token if it isnt an "else"
         }
 
         function dostat(type) {
             if (type == "do") cont(pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>do</b>");
                 cont();
             }
@@ -344,7 +364,7 @@ var LAGParser = Editor.Parser = (function () {
         function range(type) {
             if (type == "number") cont();
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>number</b>");
                 cont();
             }
@@ -353,7 +373,7 @@ var LAGParser = Editor.Parser = (function () {
         function sourcelabel(type) {
             if (type == "variable") cont();
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>variable</b>");
                 cont();
             }
@@ -363,7 +383,7 @@ var LAGParser = Editor.Parser = (function () {
             if (type == "model") cont();
             else if (type == "variable") cont();
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM, Concept, variable</b>");
                 cont();
             }
@@ -401,7 +421,7 @@ var LAGParser = Editor.Parser = (function () {
         function compare(type) {
             if (type == "compare") cont();
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>&lt;, &gt;, ==, !=, in</b>");
                 cont();
             }
@@ -410,7 +430,7 @@ var LAGParser = Editor.Parser = (function () {
         function op(type) {
             if (type == "operator") cont();
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>=, .=, +=, -=</b>");
                 cont();
             }
@@ -421,9 +441,9 @@ var LAGParser = Editor.Parser = (function () {
             if (type == "variable") cont();
             else if (type == "model") cont(expect("."), dotsep(model));
             else if (type == "number") cont();
-            else if (type == "trueFalse") cont();
+            else if (type == "boolean") cont();
             else {
-                mark("lag-error");
+                markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>variable, true, false, number, DM, UM, GM, PM, Concept</b>");
                 cont();
             }

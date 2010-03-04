@@ -85,6 +85,6 @@ span.lag-operator {
 span.lag-compare {
 	color: black;
 }
-span.lag-error {
-	color: red;
+span.lag-syntax-error {
+	background-color: red;
 }
