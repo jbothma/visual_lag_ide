@@ -120,7 +120,7 @@
                 <span id="isSaved" style="font-size: 10pt;"></span>
             </form>
             <div id="VE-menu-container">
-                <div id="VE-menu" class="yui-menu yui-menu-horizontal">
+                <div id="VE-menu" class="yui-menu yui-menu-horizontal" style="display:none">
                     <div class="yui-menu-content">
                         <ul class="first-of-type"> 
                             <li class="yui-menuitem">
@@ -534,6 +534,10 @@
                     
                     Y.all('.visualeditor-tab').on('click', function() {
                         showVEMenu();
+                    });
+                    
+                    Y.one('#strategy-description-tab').on('click', function() {
+                        hideVEMenu();
                     });
                     
                     function hideVEMenu() {
