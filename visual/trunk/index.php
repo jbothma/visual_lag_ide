@@ -1,7 +1,10 @@
+<?php
+    include_once("php/peal_config.php");
+?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>PEAL - version 0.5.5</title>
+    <title><?php echo $peal_version_string;?></title>
     <link rel="stylesheet" type="text/css" href="css/docs.css"/>
   </head>
   <body style="padding: 20px;">
@@ -31,14 +34,14 @@
 		echo "<b>Sorry, your login session has timed-out for security reasons. Please login again.</b>\n<br>\n";
 	}
   ?>
-	<p>PEAL - version 0.5.5: Login</p>
+	<p><?php echo $peal_version_string;?>: Login</p>
 	<form id="login" action="php/login.php" method="post">
 		Email Address: <input type="text" name="username" id="lemail" maxlength="40" />
 		Password: <input type="password" name="password" /><br>
 		<input type="submit" value="Login" onclick="checkEmail('lemail');" />
 	</form>
 	<br/>
-	<p>PEAL - version 0.5.5: Signup</p>
+	<p>P<?php echo $peal_version_string;?>: Signup</p>
 	<form id="signup" action="php/signup.php" method="post">
 		Email Address: <input type="text" name="username" id="semail" maxlength="40" />
 		Password: <input type="password" name="password" /><br>

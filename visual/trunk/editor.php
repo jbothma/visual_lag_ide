@@ -1,5 +1,5 @@
 <?php
-
+    include_once("php/peal_config.php");
     include_once("php/session_functions.php");
     if (!checkSession()) {
         header ("Location: index.php?wrongdetails");
@@ -17,7 +17,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html;charset=utf-8" />
 
-        <title>PEAL 2 Alpha 0.1</title>
+        <title><?php echo $peal_version_string;?></title>
+        
+        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.0.0/build/widget/assets/skins/sam/widget.css&3.0.0/build/console/assets/skins/sam/console.css&3.0.0/build/node-menunav/assets/skins/sam/node-menunav.css">
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
         <link rel="stylesheet" type="text/css" href="css/peal.css"/>
         <link rel="stylesheet" type="text/css" href="css/visual_editor.css"/>
@@ -48,7 +50,7 @@
                     <a href="php/logout.php">Logout</a>
                 </div>
                 <div id="title">
-                    <p>PEAL v0.5.5</p>
+                    <p><?php echo $peal_version_string;?></p>
                 </div>
             </div>
             <form id="savedetails" name="savedetails" action="">
@@ -279,7 +281,7 @@
                     <li class="visualeditor-tab"><a href="#init-editor">Initialization</a></li> 
                     <li class="visualeditor-tab"><a href="#impl-editor">Implementation</a></li> 
                     <li id="texteditor-tab"><a href="#texteditor">Text Editor</a></li>
-                </ul> 
+                </ul>
                 <div class="tabview-content"> 
                     <div id="strategy-description" class="tabview-hidden strategy-description-indicator">
                         <p>Description of strategy for the lay person</p>
@@ -308,8 +310,8 @@
                                 "
                             >
                                 <!--
-                                    SELECT requires at least one OPTION or OPTGROUP
-                                    but this SELECt is populated dynamically.
+                                    <select> requires at least one <option> or <optgroup>
+                                    but this <select> is populated dynamically.
                                     Instead of placing an empty <option> here, editor.js 
                                     deals with UP and DOWN key presses regarding autocomplete 
                                 -->
@@ -418,20 +420,17 @@
             <div id="VE-help-closeBtn" onclick="LAGVE.hideHelp()">X</div>
             <div id="VE-help-container"></div>
         </div>
-        <!--<div id="preloading-images" style="display:none">
-            <img src="images/ifthenelse_diamond.png" alt="">
-            <img src="images/ifthenelse_diamond_selected.png" alt="">
-            <img src="images/diagonal_up_75x100.png" alt="">
-            <img src="images/arrowhead_down.png" alt="">
-        </div>-->
         
         <!-- CodeMirror -->
         <script src="js/codemirror.js"  type="text/javascript"></script>
         <script src="js/mirrorframe.js" type="text/javascript"></script>
         
         <!-- YUI -->
+        <!-- YUI base can be used with the loader (YUI.get()) to get any needed modules dynamically -->
         <!--<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js" type="text/javascript"></script>-->
-        <script src="/lib/yui/yui/yui-min.js" type="text/javascript"></script>
+        <!--<script src="/lib/yui/yui/yui-min.js" type="text/javascript"></script>-->
+        <!-- a single minimised combination of all the yui javascript library modules used is the quickest way to load them locally -->
+        <script src="js/yuistatic.js" type="text/javascript"></script>
         
         <!-- PEAL -->
         <script src="js/pealfunctions.js"   type="text/javascript"></script>
@@ -478,7 +477,6 @@
                     d2.addHandle('#filestitle');
                     
                     
-                    
                     /*
                         Set up editor tabs
                         http://925html.com/code/simple-tab-view-with-yui-3/
@@ -522,17 +520,29 @@
                     
                     
                     Y.one('#texteditor-tab').on('click', function() {
+                        hideVEMenu();
                         if (LAGVE.initialization && LAGVE.implementation) {
                             var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
                             
                             //editor.mirror.setCode(LAG);
                             var message = 'Inserting the visual program into the text editor sometimes fails but it will basically look like this:\r\n\r\n';
                             var tryanyway = '\r\n\r\nTry anyway?';
-                            if (confirm(message + LAG + tryanyway)) {
-                                editor.mirror.setCode(LAG);
-                            }
+                            
+                            editor.mirror.setCode(LAG);
                         }
-                    }); 
+                    });
+                    
+                    Y.all('.visualeditor-tab').on('click', function() {
+                        showVEMenu();
+                    });
+                    
+                    function hideVEMenu() {
+                        if (LAGVE.mainMenu) LAGVE.mainMenu.setStyle('display','none');
+                    }
+                    
+                    function showVEMenu() {
+                        if (LAGVE.mainMenu) LAGVE.mainMenu.setStyle('display','');
+                    }
                     
                     function getDescriptionFromTab() {
                         var descriptionNode = Y.one('#strategy-description-editor')

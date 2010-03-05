@@ -1,4 +1,6 @@
 <?php
+    include_once("php/peal_config.php");
+    
 	// get db_config details
 	// set up a connection, request details from the server of the table
 	// print error if fail, otherwise store details in db_config.php and print A-OK
@@ -42,11 +44,11 @@
 ?>
 <html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <title>PEAL - version 0.5.5</title>
+    <title><?php echo $peal_version_string;?></title>
     <link rel="stylesheet" type="text/css" href="css/docs.css"/>
   </head>
   <body style="padding: 20px;">
-  	<h3>PEAL - version 0.5.5: Installation</h3>
+  	<h3><?php echo $peal_version_string;?>: Installation</h3>
 	<p>In order for PEAL to work on your server you need to set up a simple database.</p>
 	<p>You can use the following SQL to create your database or do it manually following the same structure.</p>
 	<code>CREATE TABLE user (<br/>

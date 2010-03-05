@@ -1,23 +1,12 @@
+
+LAGVE = new Object();
+
 /* UTILITY */
 function isset(variable)
 {
     return ( typeof(variable) == "undefined" || variable == null )?  false: true;
 }
 
-/**
- * Make function to allow each use of YUI3 to use the same YUI instance.
- */
-function getMyY() {
-    if (typeof(myY) != "undefined" && myY != null) {
-        //alert('myY was set, returning.');
-        return myY;
-    } else {
-        //alert('no myY, creating and returning.');
-        // Create global YUI3 instance
-        myY = YUI({ filter:'raw' });
-        return myY;
-    }
-}
 
 /**
  * Add peek() to the Javascript Array prototype
@@ -51,7 +40,21 @@ function indentOne(code) {
 
 var LAGVEAttr = new Object();
 
-getMyY().use('dd-constrain','node','event', function (Y) {
+YUI({ filter:'raw' }).
+    use(
+        'console',
+        'dd-constrain',
+        'dd-ddm-drop',
+        'dd-drag',
+        'dd-drag-plugin',
+        'dd-drop',
+        'dd-drop-plugin',
+        'dd-proxy',
+        'event',
+        'io',
+        'node',
+        'node-menunav',
+        function (Y) {
 
     /**
      *
@@ -148,16 +151,11 @@ getMyY().use('dd-constrain','node','event', function (Y) {
         
         return newAttribute;
     }
-});
-
-
-
 
 
 /* ACTION */
 LAGVEActn = new Object();
 
-getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         
     LAGVEActn.newAction = function(targetNode) {
         //////    ACTION    //////
@@ -317,15 +315,11 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
             LAGVEActn._positionChild(e.target.get('node'));
         }
     });
-});
-
-
 
 
 /* IF-THEN-ELSE */
 LAGVEIf = new Object();
 
-getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
         
     LAGVEIf.newIf = function(targetNode) {
         ////////     IF-THEN-ELSE     /////////
@@ -549,15 +543,12 @@ getMyY().use('dd-drag','dd-proxy','dd-drop','node','event', function (Y) {
             dropNode.LAGVEInsert(e.drag.get('node'));
         }
     });
-});
 
-
-
-
+    
 /* CONDITION */
 LAGVECondition = new Object();
 
-getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',function (Y) {
+
     /**
      *    Dragable, reorderable HTML LI
      *    To be called by the function creating a new condition, e.g. a new Comparison
@@ -925,8 +916,6 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
     Y.DD.DDM.on('drag:dropmiss',function(e) {
         LAGVECondition._positionChild(e.target.get('node'));
     });
-});
-
 
 
 
@@ -934,7 +923,6 @@ getMyY().use('dd-drag-plugin','dd-proxy','dd-drop-plugin','node','event',functio
 LAGVEStmt = new Object();
 LAGVEStmt.overHandledTimestamp = new Date().getTime();
 
-getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (Y) {
     //new Y.Console().render();
     
     /**
@@ -1150,7 +1138,6 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
             filter: 'alpha(opacity = 100)'
         });
     });
-});
 
 
 
@@ -1159,7 +1146,6 @@ getMyY().use('dd-drag','dd-drop','dd-proxy','node','event','console', function (
 /* CONTEXT MENU */
 LAGVEContext = new Object();
 
-getMyY().use('event', function(Y) {
 
     /*
     switch (context.name) {
@@ -1236,18 +1222,12 @@ getMyY().use('event', function(Y) {
     });
     
     Y.on("contentready", LAGVEContext._init,"body");
-});
 
-
-
-
+    
 /* VISUAL EDITOR */
-LAGVE = new Object();
 LAGVE.dropStack = new Array;
-LAGVE.oneIndentation = '    ';
+LAGVE.oneIndentation = '  ';
 
-getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
-    //new Y.Console().render();
 
     LAGVE._init = function() {
         LAGVE._findMainMenu();
@@ -1279,7 +1259,8 @@ getMyY().use('node-menunav','console', 'io', 'dd-ddm-drop', function(Y) {
     LAGVE._setupMainMenu    = function() {
         LAGVE.mainMenu.plug(
             Y.Plugin.NodeMenuNav, 
-            {    autoSubmenuDisplay:    false,
+            {
+                autoSubmenuDisplay:    false,
                 mouseOutHideDelay:    999999,
                 submenuShowDelay:    0,
                 submenuHideDelay:    999999
