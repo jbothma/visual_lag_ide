@@ -133,7 +133,8 @@ var CodeMirror = (function(){
       scroller.style.paddingTop = nodeTop(test) + "px";
       var computedHeight = computedStyle(test).lineHeight;
       scroller.style.lineHeight = /px$/.test(computedHeight) ? computedHeight : test.offsetHeight + "px";
-      doc.body.removeChild(test);
+      
+      if (doc.body === test.parentNode) doc.body.removeChild(test);
 
       nums.appendChild(scroller);
       var nextNum = 1;
