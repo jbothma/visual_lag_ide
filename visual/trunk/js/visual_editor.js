@@ -40,21 +40,23 @@ function indentOne(code) {
 
 var LAGVEAttr = new Object();
 
-YUI({ filter:'raw' }).
-    use(
-        'console',
-        'dd-constrain',
-        'dd-ddm-drop',
-        'dd-drag',
-        'dd-drag-plugin',
-        'dd-drop',
-        'dd-drop-plugin',
-        'dd-proxy',
-        'event',
-        'io',
-        'node',
-        'node-menunav',
-        function (Y) {
+YUI({
+    filter:     'raw',
+    combine:    true,
+}).use(
+    'console',
+    'dd-constrain',
+    'dd-ddm-drop',
+    'dd-drag',
+    'dd-drag-plugin',
+    'dd-drop',
+    'dd-drop-plugin',
+    'dd-proxy',
+    'event',
+    'io',
+    'node',
+    'node-menunav',
+    function (Y) {
 
     /**
      *

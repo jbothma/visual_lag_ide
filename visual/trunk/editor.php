@@ -428,9 +428,9 @@
         <!-- YUI -->
         <!-- YUI base can be used with the loader (YUI.get()) to get any needed modules dynamically -->
         <!--<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js" type="text/javascript"></script>-->
-        <!--<script src="/lib/yui/yui/yui-min.js" type="text/javascript"></script>-->
+        <script src="/lib/yui/yui/yui-min.js" type="text/javascript"></script>
         <!-- a single minimised combination of all the yui javascript library modules used is the quickest way to load them locally -->
-        <script src="js/yuistatic.js" type="text/javascript"></script>
+        <!--<script src="js/yuistatic.js" type="text/javascript"></script>-->
         
         <!-- PEAL -->
         <script src="js/pealfunctions.js"   type="text/javascript"></script>
@@ -456,7 +456,7 @@
                 saveFunction: saveStrategy
             });
           
-            var Y = new YUI().use('dd-drag','node', 'node-event-simulate', 'event', function(Y) {
+            var Y = new YUI({combine: true}).use('dd-drag','node', 'node-event-simulate', 'event', function(Y) {
                 
                 Y.on('contentready', function(){
                     
