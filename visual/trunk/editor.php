@@ -269,7 +269,7 @@
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
                             </li>
                             <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="console.log('!reparse');var code=editor.mirror.getCode();editor.mirror.setCode(code)">Reparse</a>
+                                <a class="yui-menuitem-content" href="#" onclick="convertToVisual()">To Visual</a>
                             </li>
                         </ul>
                     </div>
@@ -568,12 +568,18 @@
                             Y.all('.strategy-description-indicator').removeClass('strategy-description-ok');
                         }
                     }
-                    
-                     
-                    
                 }, 'body');
             });
-        
+            
+            function convertToVisual() {
+                convertingToVisual = true;
+                
+                var code = editor.mirror.getCode();
+                editor.mirror.setCode(code);
+                
+                //convertingToVisual = false;
+            }
+            
             // The createMenus() call is for the Wizard
             createMenus();
             // Get the list of fragments available...

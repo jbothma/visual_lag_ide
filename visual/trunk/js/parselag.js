@@ -123,7 +123,6 @@ var LAGParser = Editor.Parser = (function () {
                 // Take and execute the topmost action.
                 cc.pop()(token.type, token.content);
                 if (consume) {
-                    //if ( marked !== "lag-error" ) console.log("consuming " + token.type + " : " + token.value);
                     // Marked is used to change the style of the current token.
                     if (marked) {
                         token.style = marked;
@@ -240,14 +239,51 @@ var LAGParser = Editor.Parser = (function () {
             return false;
         }
 
-
+        /**
+         *  Creates an action that will log to the FireBug console, if it exists
+         */
         function logAction(logmsg) {
             return function() {
-                if (console) {
+                if (typeof(console) !== 'undefined' && typeof(console.log) === 'function') {
                     console.log(logmsg);
                 }
             }
         }
+        
+        visualStack = new Array();
+        
+        function buildVisual(command) {
+            if (typeof(window.parent.convertingToVisual) !== 'undefined' && window.parent.convertingToVisual) {
+                return function() {
+                    switch (command) {
+                        case 'start init':
+                            visualStack.push(window.parent.LAGVE.initialization);
+                            break;
+                        case 'make if':
+                            var newIf = window.parent.LAGVEIf.newIf();
+                            visualStack.peek().LAGVEInsert(newIf);
+                            visualStack.push(newIf);
+                            break;
+                        case 'finish if':
+                            visualStack.pop();
+                            break;
+                        case 'finish init':
+                            visualStack.pop();
+                            window.parent.convertingToVisual = false;
+                            break;
+                        default:
+                            console.log('default: ' + command);
+                            break;
+                    }
+                }
+            } else { // dont know why but this function has to return
+                return nop
+            }
+        }
+        
+        // my 'no operation' function.
+        // could do with being placed in a safer namespace.
+        function nop() {}
         
         function prog(type) {
             //return pass(initImpl, statements);
@@ -259,7 +295,7 @@ var LAGParser = Editor.Parser = (function () {
         // element in the stack...
         function init(type) {
             if (type == "init") {
-                cont(pushlex("init"), logAction('make init'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), logAction('finish init'), poplex);
+                cont(pushlex("init"), buildVisual('start init'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), buildVisual('finish init'), poplex);
             }
             else {
                 markError();
@@ -308,7 +344,7 @@ var LAGParser = Editor.Parser = (function () {
         // Dispatches various types of statements based on the type of the
         // current token.
         function statement(type) {
-            if (type == "if") cont(logAction('make if'), condition, pushlex("form"), then, /*poplex,*/ logAction('finish if'));
+            if (type == "if") cont(buildVisual('make if'), condition, pushlex("form"), then, /*poplex,*/ buildVisual('finish if'));
             else if (type == "while" && withinLexType("init")) cont(logAction('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, logAction('finish while'));
             else if (type == "for") cont(logAction('make for'), pushlex("form"), range, dostat, poplex, logAction('finish for'));
             else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
