@@ -258,6 +258,7 @@ var LAGParser = Editor.Parser = (function () {
                     switch (command) {
                         case 'start init':
                             visualStack.push(window.parent.LAGVE.initialization);
+                            visualStack.peek().empty();
                             break;
                         case 'make if':
                             var newIf = window.parent.LAGVEIf.newIf();
@@ -306,7 +307,7 @@ var LAGParser = Editor.Parser = (function () {
 
         function impl(type) {
             if (type == "impl") { 
-                cont(pushlex("impl"), logAction('make impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), logAction('finish impl'), poplex, expect("EOF"));
+                cont(pushlex("impl"), buildVisual('make impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), buildVisual('finish impl'), poplex, expect("EOF"));
             }
             else {
                 markError();
@@ -345,8 +346,8 @@ var LAGParser = Editor.Parser = (function () {
         // current token.
         function statement(type) {
             if (type == "if") cont(buildVisual('make if'), condition, pushlex("form"), then, /*poplex,*/ buildVisual('finish if'));
-            else if (type == "while" && withinLexType("init")) cont(logAction('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, logAction('finish while'));
-            else if (type == "for") cont(logAction('make for'), pushlex("form"), range, dostat, poplex, logAction('finish for'));
+            else if (type == "while" && withinLexType("init")) cont(buildVisual('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, buildVisual('finish while'));
+            else if (type == "for") cont(buildVisual('make for'), pushlex("form"), range, dostat, poplex, buildVisual('finish for'));
             else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
             //else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
             else if (type == "model") cont(pushlex("form"), expect("."), dotsep(model), optionalop /*op, value*/ , poplex);
@@ -428,11 +429,16 @@ var LAGParser = Editor.Parser = (function () {
             }
         }
         
-        /*
+        // "model" expect("."), dotsep(model)
+        // "model" expect("."), dotsep(model)
+        // "model" expect("."), dotsep(model)
+        // pass(attribute(
         function attribute(type) {
-          if (type=="model") cont();
+            return function() {
+                if (type=="model") cont();
+            }
         }
-        */
+        
 
         // Look for conditions until a closing brace is found.
         function setOfCondition(type) {

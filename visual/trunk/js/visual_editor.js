@@ -1002,8 +1002,8 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         }
         
         statement.empty = function() {
-            while ( this.hasChildNodes() ) {
-                this.removeChild(node.firstChild);
+            while ( this.LAGVEUL.hasChildNodes() ) {
+                this.LAGVEUL.removeChild(this.LAGVEUL.get('firstChild'));
             }
         }
 
@@ -1321,7 +1321,7 @@ LAGVE.oneIndentation = '  ';
         
         
         LAGVE.initialization.empty      = function() {            
-            LAGVE.initialization.statementBox.empty();
+            this.statementBox.empty();
         }
         
         return LAGVE.initialization;
