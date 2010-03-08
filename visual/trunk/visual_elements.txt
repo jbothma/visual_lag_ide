@@ -3,38 +3,55 @@
     =================
     
 Value
+    can be dragged into ValueContainer
+    context menu can delete
+
+ValueContainer
+    context menu can insert a Value
 
 Integer
     is a Value
     
 String
     is a Value
-
-Attribute
-    is a Value
-    (Model.)*(Concept.)?Value
     
 Model
     UM | GM | DM | PM | CM 
     
 Concept
     Concept
+
+Attribute
+    is a Value
+    (Model.)*(Concept.)?Value
+    Concept
     
 Condition
+    can be dragged into any ConditionContainer and ConditionList
+    context menu can delete
 
 ConditionContainer
     Condition
+    event when Condition is dragged into it, it resizes to accommodate (by inserting the Condition)
+    context menu can insert Condition
 
 ConditionList
+    Condition+
+    context menu can insert Condition
     
 Statement
+    can be dragged into StatementList
+    context menu can delete
 
 StatementList
-    list of Statements
+    Statement+
+    event when Statement is dragged into it, it resizes to accommodate (by inserting the Statement)
+    context menu can insert Condition
 
 Boolean
     is a Value
     is a Condition
+    true|false
     
 Assignment
     is a Statement
@@ -58,7 +75,7 @@ Enough
 
 If-Then-Else
     is a Statement
-    Condition StatementList (StatementList)?
+    Condition StatementList StatementList?
 
 While
     is a Statement
