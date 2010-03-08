@@ -2,9 +2,16 @@
      Visual Elements
     =================
     
+ContextDeletable
+    context menu can delete
+    yui Base
+
 Value
     can be dragged into ValueContainer
-    context menu can delete
+    is ContextDeletable
+    yui Widget
+    Value = Y.Base.build(Value.NAME, Value, [ContextDeletable], {dynamic:false});
+
 
 ValueContainer
     context menu can insert a Value
@@ -26,9 +33,12 @@ Attribute
     (Model.)*(Concept.)?Value
     Concept
     
+AttributeContainer
+    context menu can insert an Attribute
+    
 Condition
     can be dragged into any ConditionContainer and ConditionList
-    context menu can delete
+    is ContextDeletable
 
 ConditionContainer
     Condition
@@ -41,7 +51,7 @@ ConditionList
     
 Statement
     can be dragged into StatementList
-    context menu can delete
+    is ContextDeletable
 
 StatementList
     Statement+
