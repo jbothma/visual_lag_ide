@@ -7,7 +7,8 @@
  * See manual.html for more info about the parser interface.
  */
 
-var LAGParser = Editor.Parser = (function () {
+ 
+var LAGParser = Editor.Parser = (function () {    
     // Token types that can be considered to be atoms.
     var atomicTypes = {
         "atom": true,
@@ -48,7 +49,10 @@ var LAGParser = Editor.Parser = (function () {
     }
 
     // The parser-iterator-producing function itself.
-    function parseLAG(input, basecolumn) {
+    function parseLAG(input, basecolumn) {    
+        // easy local reference
+        var ToVisual = window.parent.LAGVE.ToVisual;
+        
         // Wrap the input in a token stream
         var tokens = tokenizeLAG(input);
         
@@ -249,42 +253,11 @@ var LAGParser = Editor.Parser = (function () {
                 }
             }
         }
-        
-        visualStack = new Array();
-        
-        function buildVisual(command) {
-            if (typeof(window.parent.convertingToVisual) !== 'undefined' && window.parent.convertingToVisual) {
-                return function() {
-                    switch (command) {
-                        case 'start init':
-                            visualStack.push(window.parent.LAGVE.initialization);
-                            visualStack.peek().empty();
-                            break;
-                        case 'make if':
-                            var newIf = window.parent.LAGVEIf.newIf();
-                            visualStack.peek().LAGVEInsert(newIf);
-                            visualStack.push(newIf);
-                            break;
-                        case 'finish if':
-                            visualStack.pop();
-                            break;
-                        case 'finish init':
-                            visualStack.pop();
-                            window.parent.convertingToVisual = false;
-                            break;
-                        default:
-                            console.log('default: ' + command);
-                            break;
-                    }
-                }
-            } else { // dont know why but this function has to return
-                return nop
+        function log(logmsg) {
+            if (typeof(console) !== 'undefined' && typeof(console.log) === 'function') {
+                console.log(logmsg);
             }
         }
-        
-        // my 'no operation' function.
-        // could do with being placed in a safer namespace.
-        function nop() {}
         
         function prog(type) {
             //return pass(initImpl, statements);
@@ -296,7 +269,7 @@ var LAGParser = Editor.Parser = (function () {
         // element in the stack...
         function init(type) {
             if (type == "init") {
-                cont(pushlex("init"), buildVisual('start init'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), buildVisual('finish init'), poplex);
+                cont(pushlex("init"), ToVisual.action('start init'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), ToVisual.action('finish init'), poplex);
             }
             else {
                 markError();
@@ -307,7 +280,7 @@ var LAGParser = Editor.Parser = (function () {
 
         function impl(type) {
             if (type == "impl") { 
-                cont(pushlex("impl"), buildVisual('make impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), buildVisual('finish impl'), poplex, expect("EOF"));
+                cont(pushlex("impl"), ToVisual.action('start impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), ToVisual.action('finish impl'), poplex, expect("EOF"));
             }
             else {
                 markError();
@@ -345,9 +318,9 @@ var LAGParser = Editor.Parser = (function () {
         // Dispatches various types of statements based on the type of the
         // current token.
         function statement(type) {
-            if (type == "if") cont(buildVisual('make if'), condition, pushlex("form"), then, /*poplex,*/ buildVisual('finish if'));
-            else if (type == "while" && withinLexType("init")) cont(buildVisual('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, buildVisual('finish while'));
-            else if (type == "for") cont(buildVisual('make for'), pushlex("form"), range, dostat, poplex, buildVisual('finish for'));
+            if (type == "if") cont(ToVisual.action('start if'), condition, pushlex("form"), then, /*poplex,*/ ToVisual.action('finish if'));
+            else if (type == "while" && withinLexType("init")) cont(ToVisual.action('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, ToVisual.action('finish while'));
+            else if (type == "for") cont(ToVisual.action('make for'), pushlex("form"), range, dostat, poplex, ToVisual.action('finish for'));
             else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
             //else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
             else if (type == "model") cont(pushlex("form"), expect("."), dotsep(model), optionalop /*op, value*/ , poplex);
@@ -366,10 +339,10 @@ var LAGParser = Editor.Parser = (function () {
 
         // Need to allow for (condition)* -- DONE!
         function condition(type) {
-            if (type == "model") cont( pushlex("stat"), expect("."), dotsep(model), optionalcompare, poplex );
-            else if (type == "enough") cont(pushlex("stat"), expect("("), pushlex(")"), setOfCondition, value, expect(")"), poplex, poplex);
-            else if (type == "boolean") cont( logAction('make and finish boolean') );
-            else if (type == "(") cont(pushlex("stat"), condition, expect(")"), poplex); // allows braces around conditions
+            if (type == "model") cont( ToVisual.action('start condition'), pushlex("stat"), expect("."), dotsep(model), optionalcompare, poplex, ToVisual.action('finish condition') );
+            else if (type == "enough") cont( ToVisual.action('start condition'), pushlex("stat"), expect("("), pushlex(")"), setOfCondition, value, expect(")"), poplex, poplex, ToVisual.action('finish condition') );
+            else if (type == "boolean") cont( ToVisual.action('start condition'), logAction('make and finish boolean'), ToVisual.action('finish condition') );
+            else if (type == "(") cont( pushlex("stat"), condition, expect(")"), poplex ); // allows braces around conditions
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>GM, UM, PM, DM, Concept, enough, true, false</b>");
@@ -379,7 +352,7 @@ var LAGParser = Editor.Parser = (function () {
 
        
         function then(type) {
-            if (type == "then") cont(logAction('make then'), /*pushlex("form"), */expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, logAction('finish then'), posselse);
+            if (type == "then") cont( ToVisual.action('start then') , /*pushlex("form"), */expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, ToVisual.action('finish then') , posselse);
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>then</b>");
@@ -388,7 +361,7 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         function posselse(type) {
-            if (type == "else") cont(logAction('make else'), pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, logAction('finish else'));
+            if (type == "else") cont(ToVisual.action('start else') , pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, ToVisual.action('finish else') );
             else pass(); // because it's optional, you need to NOT consume the token if it isnt an "else"
         }
 

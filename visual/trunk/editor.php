@@ -269,7 +269,7 @@
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
                             </li>
                             <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="convertToVisual()">To Visual</a>
+                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.ToVisual.convert()">To Visual</a>
                             </li>
                         </ul>
                     </div>
@@ -570,15 +570,6 @@
                     }
                 }, 'body');
             });
-            
-            function convertToVisual() {
-                convertingToVisual = true;
-                
-                var code = editor.mirror.getCode();
-                editor.mirror.setCode(code);
-                
-                //convertingToVisual = false;
-            }
             
             // The createMenus() call is for the Wizard
             createMenus();

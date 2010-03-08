@@ -387,6 +387,7 @@ LAGVEIf = new Object();
         
         ///////    IF    ////////
         ifThenElse.conditionPositioning         = Y.Node.create('<div class="ifthenelse-condition-positioning selectable"></div>');
+        ifThenElse.condition = ifThenElse.conditionPositioning;
         ifThenElse.conditionPositioning.select  = function() {
             ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','hidden');
             ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','visible');
@@ -1287,7 +1288,7 @@ LAGVE.oneIndentation = '  ';
     LAGVE._createInitialization = function() {
         LAGVE.initialization            = Y.Node.create( '<div id="initialization" class="selectable"></div>' );
         LAGVE.initialization.resize     = function( reason ) {
-            Y.log('resize reached Initialization | ' + reason);
+            //Y.log('resize reached Initialization | ' + reason);
         }
         LAGVE.initialization.select     = LAGVE._genericSelect;
         LAGVE.initialization.deSelect   = LAGVE._genericDeSelect;
@@ -1330,7 +1331,7 @@ LAGVE.oneIndentation = '  ';
     LAGVE._createImplementation = function() {
         LAGVE.implementation            = Y.Node.create( '<div id="implementation" class="selectable"></div>' );
         LAGVE.implementation.resize     = function( reason ) {
-            Y.log('resize reached Implementation | ' + reason);
+            //Y.log('resize reached Implementation | ' + reason);
         };
         LAGVE.implementation.select     = LAGVE._genericSelect;
         LAGVE.implementation.deSelect   = LAGVE._genericDeSelect;
@@ -1360,6 +1361,11 @@ LAGVE.oneIndentation = '  ';
          */
         LAGVE.implementation.LAGVEInsert = function(node) {
             LAGVE.implementation.statementBox.LAGVEInsert(node);
+        }
+        
+        
+        LAGVE.implementation.empty      = function() {            
+            this.statementBox.empty();
         }
         
         return LAGVE.implementation;
@@ -1432,6 +1438,118 @@ LAGVE.oneIndentation = '  ';
         //Y.log('LAGVE Window height set to ' + newHeight);
     }
     
+    
+    
+    
+    // namespace for things relating to conversion from LAG to visual representation
+    LAGVE.ToVisual = new Object();
+    
+    // as tokens are parsed, the visual elements representing them
+    // are placed onto this stack so that their children can be inserted
+    LAGVE.ToVisual.stack = new Array();
+    
+    
+    // default to false
+    // when true, the code parsed by the LAG parser in CodeMirror will
+    // be converted to the visual representation
+    LAGVE.ToVisual.converting = false;
+    
+    LAGVE.ToVisual.convert = function() {
+        LAGVE.ToVisual.converting = true;
+        
+        // hackedly force full parse by copying
+        // and replacing all the code in the editor.
+        var code = editor.mirror.getCode();
+        editor.mirror.setCode(code);
+    }
+        
+    // this is called to create an action function that goes on the action 
+    // stack. It is always called so we have to check the global (in the 
+    // browser window, not the CodeMirror iframe) variable 'convertingToVisual'
+    //
+    // this can be separated out into individual functions, but it's
+    // easier to edit as a switch with all the actions together.
+    LAGVE.ToVisual.action = function(command) {
+        if (LAGVE.ToVisual.converting) {
+            return function() {
+                switch (command) {
+                    case 'start init':
+                        // initialization always exists so don't create it. 
+                        // Just find it and put it on the stack so we can 
+                        // insert its contents
+                        LAGVE.ToVisual.stack.push(LAGVE.initialization);
+                        // init should now be at top of stack. We're ready 
+                        // to insert its contents so empty it.
+                        LAGVE.ToVisual.stack.peek().empty();
+                        break;
+                    case 'finish init':
+                        LAGVE.ToVisual.stack.pop();
+                        break;
+                    case 'start impl':
+                        // implementation always exists so don't create it. 
+                        // Just find it and put it on the stack so we can 
+                        // insert its contents
+                        LAGVE.ToVisual.stack.push(LAGVE.implementation);
+                        // init should now be at top of stack. We're ready 
+                        // to insert its contents so empty it.
+                        LAGVE.ToVisual.stack.peek().empty();
+                        break;
+                    case 'finish impl':
+                        LAGVE.ToVisual.stack.pop();
+                        // We're not adding anything after implementation so
+                        // stop trying to convert things to visual until 
+                        // told otherwise
+                        LAGVE.ToVisual.converting = false;
+                        break;
+                    case 'start if':
+                        // create new if-then-else
+                        var newIf = LAGVEIf.newIf();
+                        // insert to top of stack
+                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newIf);
+                        // put it at top of stack so we can insert to it
+                        LAGVE.ToVisual.stack.push(newIf);
+                        break;
+                    case 'start condition':
+                        // push the condition of the thing at top of stack
+                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().condition);
+                        break;
+                    case 'finish condition':
+                        LAGVE.ToVisual.stack.pop();
+                        break;
+                    case 'start then':
+                        // push the Then block of the thing at top of stack
+                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().thenStatementBlock);
+                        break;
+                    case 'finish then':
+                        LAGVE.ToVisual.stack.pop();
+                        break;
+                    case 'start else':
+                        // push the Else block of the thing at top of stack
+                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().elseStatementBlock);
+                        break;
+                    case 'finish else':
+                        LAGVE.ToVisual.stack.pop();
+                        break;
+                    case 'finish if':
+                        LAGVE.ToVisual.stack.pop();
+                        break;
+                    default:
+                        if (console) console.log('nothing to do for \'' + command + '\'');
+                        break;
+                }
+            }
+        } else { 
+            // this has to return some function as an action, even noop.
+            // the alternative is to make Parser's push() ignore non-functions.
+            // can't decide which is more correct right now.
+            return noop
+        }
+    }
+     
+    // my 'no operation' function.
+    // could do with being placed in a safer namespace.
+    function noop() {}
+    
     // Subscribe to event "io:complete", and pass an array
     // as an argument to the event handler "complete", since
     // "complete" is global.   At this point in the transaction
@@ -1475,3 +1593,4 @@ LAGVE.oneIndentation = '  ';
 LAGVE.showHelp = function() {document.getElementById('VE-help').style.visibility = 'visible';}
 
 LAGVE.hideHelp = function() {document.getElementById('VE-help').style.visibility = 'hidden';}
+
