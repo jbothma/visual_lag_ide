@@ -1,0 +1,65 @@
+    =================
+     Visual Elements
+    =================
+    
+Value
+
+Integer
+    is a Value
+    
+String
+    is a Value
+
+Attribute
+    is a Value
+    (Model.)*(Concept.)?Value
+    
+Model
+    UM | GM | DM | PM | CM 
+    
+Concept
+    Concept
+    
+Condition
+
+ConditionContainer
+    Condition
+
+ConditionList
+    
+Statement
+
+StatementList
+    list of Statements
+
+Boolean
+    is a Value
+    is a Condition
+    
+Assignment
+    is a Statement
+    Attribute Operator Value
+    
+Comparison
+    is a Condition
+    Value Comparator Value
+
+Conjunction
+    is a Condition
+    Condition AND Condition
+
+Disjunction
+    is a Condition
+    Condition OR Condition
+
+Enough
+    is a Condition
+    ConditionList Integer
+
+If-Then-Else
+    is a Statement
+    Condition StatementList (StatementList)?
+
+While
+    is a Statement
+    Condition StatementList
