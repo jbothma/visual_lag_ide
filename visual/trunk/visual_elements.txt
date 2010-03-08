@@ -1,21 +1,23 @@
-    =================
-     Visual Elements
-    =================
+    =====================
+     LAG Visual Elements
+    =====================
     
 ContextDeletable
     context menu can delete
     yui Base
+    
+ContextInerts
+    abstract whatCanBeInserted?()
 
 Value
     can be dragged into ValueContainer
     is ContextDeletable
     yui Widget
     Value = Y.Base.build(Value.NAME, Value, [ContextDeletable], {dynamic:false});
-
-
-ValueContainer
-    context menu can insert a Value
-
+    UI item
+        drag node interacting with ValueContainer
+        displays Value string
+        
 Integer
     is a Value
     
@@ -32,61 +34,82 @@ Attribute
     is a Value
     (Model.)*(Concept.)?Value
     Concept
-    
-AttributeContainer
-    context menu can insert an Attribute
+    UI item overriding Value
+    yui Widget
     
 Condition
     can be dragged into any ConditionContainer and ConditionList
     is ContextDeletable
-
-ConditionContainer
-    Condition
-    event when Condition is dragged into it, it resizes to accommodate (by inserting the Condition)
-    context menu can insert Condition
-
-ConditionList
-    Condition+
-    context menu can insert Condition
     
 Statement
     can be dragged into StatementList
     is ContextDeletable
-
-StatementList
-    Statement+
-    event when Statement is dragged into it, it resizes to accommodate (by inserting the Statement)
-    context menu can insert Condition
+    yui Base
 
 Boolean
     is a Value
     is a Condition
     true|false
+    yui Base
+    
+AttributeContainer
+    here ContextInerts Attributes
+    yui Widget
+
+ValueContainer
+    here ContextInerts Values
+    UI item
+        drop target interacting with Value
+    yui Widget
+
+ConditionContainer
+    Condition
+    here ContextInerts Conditions
+    event when Condition is dragged into it, it resizes to accommodate (by inserting the Condition)
+    yui Widget
+
+ConditionList
+    Condition+
+    here ContextInerts Conditions
+    yui Widget
+
+StatementList
+    Statement+
+    here ContextInerts Statements
+    event when Statement is dragged into it, it resizes to accommodate (by inserting the Statement)
+    yui Widget
     
 Assignment
     is a Statement
     Attribute Operator Value
+    UI item
+    yui Widget
     
 Comparison
     is a Condition
     Value Comparator Value
+    yui Widget
 
 Conjunction
     is a Condition
-    Condition AND Condition
+    ConditionContainer AND ConditionCondition
+    yui Widget
 
 Disjunction
     is a Condition
-    Condition OR Condition
+    ConditionContainer OR ConditionCondition
+    yui Widget
 
 Enough
     is a Condition
     ConditionList Integer
+    yui Widget
 
 If-Then-Else
     is a Statement
-    Condition StatementList StatementList?
+    ConditionContainer StatementList StatementList?
 
 While
     is a Statement
     Condition StatementList
+    yui Widget
