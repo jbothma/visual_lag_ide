@@ -233,10 +233,10 @@
                                                 </div> <!-- end UM -->
                                             </li>
                                             <li>
-                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['true'])">true</a>
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.newBoolean('true')">true</a>
                                             </li>
                                             <li>
-                                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['false'])">false</a>
+                                                <a class="yui-menuitem-content" href="#" onclick="LAGVEAttr.newBoolean('false')">false</a>
                                             </li>
                                             <li class="yui-menuitem">
                                                 <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr([document.getElementById('custom').value]);return false"    title="Replace the text with out custom value and press Enter to finish">

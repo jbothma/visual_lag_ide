@@ -41,8 +41,8 @@ function indentOne(code) {
 var LAGVEAttr = new Object();
 
 YUI({
-    filter:     'raw',
-    combine:    true,
+    //filter:     'raw',
+    //combine:    true,
 }).use(
     'console',
     'dd-constrain',
@@ -138,6 +138,10 @@ YUI({
         newAttribute.addClass('action-child');
         newAttribute.addClass('comparison-child');
         
+        newAttribute.toLAG = function() {
+            return levels.join('.');
+        }
+        
         // Default to selected node.
         if (!isset(targetNode)) {
             targetNode = LAGVE.selectedNode;
@@ -147,11 +151,26 @@ YUI({
             targetNode.LAGVEInsert(newAttribute);
         } 
         
-        newAttribute.toLAG = function() {
-            return levels.join('.');
-        }
-        
         return newAttribute;
+    }
+    
+    
+    // Modify a new value to behave like a condition
+    LAGVEAttr.newBoolean = function(value) {        
+        // Is the attribute 'true' or 'false'?
+        if ( value in {'true':1, 'false':1} ) {
+            var newBoolean = LAGVEAttr.insertNewAttr([value]);
+            newBoolean.addClass('condition');
+            newBoolean.dd.addToGroup('condition');
+            
+            newBoolean.parentChanged = function() {};
+            
+            LAGVE.selectedNode.LAGVEInsert(newBoolean);
+            
+            return newBoolean;
+        } else {
+            Y.error(value + 'is not a valid Boolean value');
+        }
     }
 
 
@@ -387,7 +406,6 @@ LAGVEIf = new Object();
         
         ///////    IF    ////////
         ifThenElse.conditionPositioning         = Y.Node.create('<div class="ifthenelse-condition-positioning selectable"></div>');
-        ifThenElse.condition = ifThenElse.conditionPositioning;
         ifThenElse.conditionPositioning.select  = function() {
             ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','hidden');
             ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','visible');
@@ -413,6 +431,9 @@ LAGVEIf = new Object();
             // Bubble
             this.get('parentNode').resize('child action.resize | ' + reason);
         }
+        
+        
+        ifThenElse.condition = ifThenElse.conditionContainer;
         
         ifThenElse.arrows           = Y.Node.create('<div class="ifthenelse-arrows"></div>');
         ifThenElse.arrowheadLeft    = Y.Node.create('<div class="ifthenelse-arrowhead-left"></div>');
@@ -559,7 +580,7 @@ LAGVECondition = new Object();
      *    Parameters:    condition
      */
     LAGVECondition.wrapConditionInLI = function(child) {
-        var conditionLI = Y.Node.create( '<li class="condition deletable"></li>' );
+        var conditionLI = Y.Node.create( '<div class="condition deletable"></div>' );
     
         var conditionLIdd = new Y.DD.Drag({
             groups:    ['condition'],
@@ -1375,8 +1396,8 @@ LAGVE.oneIndentation = '  ';
     *    
     *    Insert attribute and hide menu automatically
     */
-    LAGVE.insertNewAttr = function(attributeLevelsArr, targetId) {
-        LAGVEAttr.insertNewAttr(attributeLevelsArr, targetId);
+    LAGVE.insertNewAttr = function(attributeLevelsArr, targetNode) {
+        LAGVEAttr.insertNewAttr(attributeLevelsArr, targetNode);
         LAGVE.attrMenu.addClass('yui-menu-hidden');
         LAGVE.attrMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
     }
