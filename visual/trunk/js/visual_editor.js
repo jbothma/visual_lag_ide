@@ -433,7 +433,6 @@ LAGVEIf = new Object();
         }
         
         
-        ifThenElse.condition = ifThenElse.conditionContainer;
         
         ifThenElse.arrows           = Y.Node.create('<div class="ifthenelse-arrows"></div>');
         ifThenElse.arrowheadLeft    = Y.Node.create('<div class="ifthenelse-arrowhead-left"></div>');
@@ -472,6 +471,8 @@ LAGVEIf = new Object();
                 }
             }
         }
+        
+        ifThenElse.condition = ifThenElse.conditionContainer;
         
         ///////    THEN and ELSE    ///////
         ifThenElse.thenAndElse = Y.Node.create('<div class="ifthenelse-thenelse"></div>');
@@ -1436,7 +1437,7 @@ LAGVE.oneIndentation = '  ';
     //
     // this can be separated out into individual functions, but it's
     // easier to edit as a switch with all the actions together.
-    LAGVE.ToVisual.action = function(command) {
+    LAGVE.ToVisual.action = function(command, value) {
         if (LAGVE.ToVisual.converting) {
             return function() {
                 switch (command) {
@@ -1499,6 +1500,10 @@ LAGVE.oneIndentation = '  ';
                         break;
                     case 'finish if':
                         LAGVE.ToVisual.stack.pop();
+                        break;
+                    case 'boolean':
+                        var newBoolean = LAGVEAttr.newBoolean(value);
+                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
                         break;
                     default:
                         if (console) console.log('nothing to do for \'' + command + '\'');

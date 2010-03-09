@@ -338,10 +338,10 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         // Need to allow for (condition)* -- DONE!
-        function condition(type) {
+        function condition(type, value) {
             if (type == "model") cont( ToVisual.action('start condition'), pushlex("stat"), expect("."), dotsep(model), optionalcompare, poplex, ToVisual.action('finish condition') );
             else if (type == "enough") cont( ToVisual.action('start condition'), pushlex("stat"), expect("("), pushlex(")"), setOfCondition, value, expect(")"), poplex, poplex, ToVisual.action('finish condition') );
-            else if (type == "boolean") cont( ToVisual.action('start condition'), logAction('make and finish boolean'), ToVisual.action('finish condition') );
+            else if (type == "boolean") cont( ToVisual.action('start condition'), ToVisual.action('boolean', value), ToVisual.action('finish condition') );
             else if (type == "(") cont( pushlex("stat"), condition, expect(")"), poplex ); // allows braces around conditions
             else {
                 markError();
