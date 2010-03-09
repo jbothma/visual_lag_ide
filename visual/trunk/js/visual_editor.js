@@ -756,139 +756,85 @@ LAGVECondition = new Object();
         
         return condition;
     }
-    
-    LAGVECondition._enoughThing = function() {
-        var enough = Y.Node.create('\
-            <div class="xjunction enough">ENOUGH = </div>\
-        ');
-        
-        enough.valueBox = Y.Node.create('\
-            <input type="text" class="xjunction enough value-box" value="1">\
-        ');
-        
-        enough.append(enough.valueBox);
-        
-        return enough;
-    }
+
     
     /**
-     *   Logical Con/Disjunction/Enough visual item
-     *
-     *  LAGVECondition.newXjunction({
-     *      targetNode: LAGVE.selectedNode,
-     *      type:       'conjunction',
-     *  });
-     *
-     *                                 __________________  
-     *                                |  ______________  | 
-     *                                | |              | | 
-     *                                | |  condition   | | 
-     *                                | |______________| | 
-     *                                |  ______________  | 
-     *                                | |              | | 
-     *                               /| |  condition   | | 
-     *                              / | |______________| | 
-     *                     _       /  |__________________| 
-     *                 ,`     `.  /                        
-     *                /         \                         
-     *                !  AND    !                         
-     *                \         /                         
-     *                 ` . _ . `
-     *
-     *  -   Diagonal line is an image with transparent background. It just has to 
-     *          start and end behind the things it's connecting, doesn't need to be exact.
-     *  -   Circle is Div with CSS3 rounded corners (maybe images for IE if i'm nice
-     *  -   Circle is contained in a Condition wrapper LI, Condition wrapper LI must scale 
-     *          to circle's size but exclude condition list
-     *  -   Condition container list is absolutely positioned.
-     *  -   .resize() will need to widen the container DIV
-     *
+     *  Enough construct
      */ 
-    LAGVECondition.newXjunction = function(options) {        
-        var xjunction = Y.Node.create('\
-            <div class="xjunction primary selectable"></div>\
+    LAGVECondition.newEnough = function(options) {        
+        var enough = Y.Node.create('\
+            <div class="enough primary selectable">ENOUGH</div>\
         ');
         
-        if ( isset( options ) && isset( options.type )) {
-            switch (options.type) {
-                case 'conjunction' :
-                    xjunction._maxConds = 2;
-                    xjunction.set('innerHTML','AND');
-                    xjunction._LAGVEName    = 'Conjunction';
-                    break;
-                case 'disjunction' :
-                    xjunction._maxConds = 2;
-                    xjunction.set('innerHTML','OR');
-                    xjunction._LAGVEName    = 'Disjunction';
-                    break;
-                case 'enough' :
-                    xjunction._maxConds = null;
-                    xjunction.append( LAGVECondition._enoughThing() );
-                    xjunction.addClass('enough');
-                    xjunction._LAGVEName    = 'Enough';
-                    break;
-                default:
-                    Y.log('options.type not specified correctly. enough, conjunction and disjunction are allowed.','error');
-                    return false;
-            }
-        } else {
-            Y.log('options.type not specified. enough, conjunction and disjunction are allowed.','error');
-            return false;
-        }
+        enough.threshold = Y.Node.create('\
+            <input type="text" class="enough value-box" value="1">\
+        ');
         
+        enough.append(enough.threshold);
+        
+        enough._LAGVEName = 'Enough';
+        enough.toLAG = function() {
+            var LAG = 'enough (';
             
-        xjunction.getName       = function() {
+            this.conditionList.get('children').each(function() {
+                LAG += indentOne(this.toLAG()) + '\n';
+            });
+            
+            LAG += ', ' + enough.threshold.get('value') + ')';
+            
+            return LAG;
+        }
+ 
+        enough.getName       = function() {
             return this._LAGVEName
         };
         
-        xjunction._resize       = function() {}
+        enough._resize       = function() {}
         
-        xjunction.select        = function() { 
+        enough.select        = function() { 
             this.addClass('selected');
-            xjunction.conditionList.select() 
+            enough.conditionList.select() 
         };
         
-        xjunction.deSelect      = function() { 
+        enough.deSelect      = function() { 
             this.removeClass('selected');
-            xjunction.conditionList.deSelect() 
+            enough.conditionList.deSelect() 
         };
         
-        xjunction.LAGVEInsert   = function(child) {
-            xjunction.conditionList.LAGVEInsert(child);
+        enough.LAGVEInsert   = function(child) {
+            enough.conditionList.LAGVEInsert(child);
         }
         
-        xjunction.diagonal = Y.Node.create('\
-            <div class="xjunction diagonal-container"></div>\
+        enough.diagonal = Y.Node.create('\
+            <div class="enough diagonal-container"></div>\
         ');
         
-        xjunction.conditionList = Y.Node.create('\
-            <ul class="xjunction condition-list selectable"></ul>\
+        enough.conditionList = Y.Node.create('\
+            <ul class="enough condition-list selectable"></ul>\
         ');
-        xjunction.conditionList.plug(
+        enough.conditionList.plug(
             Y.Plugin.Drop,
             {
                 groups:    ['condition'],
             }
         );        
-        xjunction.conditionList.resize        = function() {}
-        xjunction.conditionList.select        = LAGVE._genericSelect;
-        xjunction.conditionList.deSelect      = LAGVE._genericDeSelect;
+        enough.conditionList.resize        = function() {}
+        enough.conditionList.select        = LAGVE._genericSelect;
+        enough.conditionList.deSelect      = LAGVE._genericDeSelect;
 
-        xjunction.conditionList.LAGVEInsert   = function(child) {
-            if (child.hasClass('condition')) {
-                if (xjunction._maxConds === null || this.get('children').size() < xjunction._maxConds) {            
-                    this.append(child);
-                    child.parentChanged();
-                    child.resize('xjunction.conditionList.LAGVEInsert');
-                }
+        enough.conditionList.LAGVEInsert   = function(child) {
+            if (child.hasClass('condition')) {          
+                this.append(child);
+                child.parentChanged();
+                child.resize('enough.conditionList.LAGVEInsert');
             }
         }
         
-        xjunction.append(xjunction.diagonal);
-        xjunction.append(xjunction.conditionList);
+        enough.append(enough.diagonal);
+        enough.append(enough.conditionList);
         
-        // Wrap xjunction in an LI as a generic Condition
-        var condition = LAGVECondition.wrapConditionInLI( xjunction );
+        // Wrap enough in an LI as a generic Condition
+        var condition = LAGVECondition.wrapConditionInLI( enough );
 
         if ( isset( options ) && isset( options.targetNode )) {
             options.targetNode.LAGVEInsert(condition);
@@ -926,7 +872,7 @@ LAGVECondition = new Object();
         var dropNode = e.target.get('node');
         var dragNode = e.drag.get('node');
         
-        if (dropNode.hasClass('xjunction') && dropNode.hasClass('condition-list')) {
+        if (dropNode.hasClass('enough') && dropNode.hasClass('condition-list')) {
             dropNode.LAGVEInsert(dragNode);
         }
         

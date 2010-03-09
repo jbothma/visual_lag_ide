@@ -638,10 +638,10 @@ var Editor = (function(){
           event.stop();
         }
         else if (code == 83 && this.options.saveFunction) { // S
-          event.stop();
           this.options.saveFunction();
+          event.stop();
         }
-      }	  
+      }
     },
 
     // Check for characters that should re-indent the current line,

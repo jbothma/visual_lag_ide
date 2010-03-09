@@ -373,7 +373,7 @@ body {
 .comparator-select {
     font-size:  22px;            
 }
-.xjunction.primary {
+.enough.primary {
     border:                 1px solid black;
     -moz-border-radius:     50%;
     -webkit-border-radius:  50%;
@@ -385,7 +385,7 @@ body {
     margin:                 auto;
     background-color:       white;
 }
-.xjunction.diagonal-container{
+.enough.diagonal-container{
     position:               absolute;
     bottom:                 40px;
     left:                   18px;
@@ -394,7 +394,7 @@ body {
     background-image:       url("../images/diagonal_up_75x100.png");
     background-position:    left bottom;
 }
-.xjunction.condition-list {
+.enough.condition-list {
     position:               absolute;
     bottom:                 55px;
     left:                   65px;
@@ -405,10 +405,10 @@ body {
     padding:                 0px;
     background-color:       white;
 }
-.xjunction.primary.enough {
+.enough.primary.enough {
     width:                  130px;
 }
-.xjunction.enough.value-box {
+.enough.value-box {
     width:                  30px;
 }
 

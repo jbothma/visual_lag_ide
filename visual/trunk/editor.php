@@ -254,13 +254,7 @@
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newComparison(LAGVE.selectedNode)">Comparison</a>
                             </li>
                             <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newXjunction({targetNode:LAGVE.selectedNode,type:'conjunction'})">Conjunction</a>
-                            </li>
-                            <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newXjunction({targetNode:LAGVE.selectedNode,type:'disjunction'})">Disjunction</a>
-                            </li>
-                            <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newXjunction({targetNode:LAGVE.selectedNode,type:'enough'})">Enough</a>
+                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newEnough({targetNode:LAGVE.selectedNode})">Enough</a>
                             </li>
                             <li class="yui-menuitem">
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVE.selectedNode)">IfThenElse</a>
@@ -512,11 +506,11 @@
                         evaluateDescription();
                     }
                     
-                    Y.on("domready", function() {
-                        // select text editor tab by default.
-                        var textTab = Y.one('#texteditor-tab');
-                        textTab.simulate('click');
-                    });
+                    //Y.on("domready", function() {
+                    //    // select text editor tab by default.
+                    //    var textTab = Y.one('#texteditor-tab');
+                    //    textTab.simulate('click');
+                    //});
                     
                     
                     Y.one('#texteditor-tab').on('click', function() {
@@ -568,6 +562,17 @@
                             Y.all('.strategy-description-indicator').removeClass('strategy-description-ok');
                         }
                     }
+                    
+                    catchCtrlS = function(e) {
+                        if ((e.ctrlKey || e.metaKey) && (e.keyCode === 83)) { // ctrl+s
+                            Y.log('caught ctrl+s');
+                            e.halt();
+                            return false;
+                        }
+                    }
+                    
+                    Y.one('document').on('keydown', catchCtrlS);
+                    
                 }, 'body');
             });
             
