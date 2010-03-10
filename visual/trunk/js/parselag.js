@@ -270,9 +270,18 @@ var LAGParser = Editor.Parser = (function () {
         // element in the stack...
         function init(type) {
             if (type == "init") {
-                cont(pushlex("init"), ToVisual.action('start init'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), ToVisual.action('finish init'), poplex);
-            }
-            else {
+                cont(
+                    pushlex("init"),
+                    ToVisual.action('start init'),
+                    expect("("),
+                    pushlex(")"),
+                    multistatements,
+                    poplex,
+                    expect(")"),
+                    ToVisual.action('finish init'),
+                    poplex
+                );
+            } else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>initialization</b>");
                 cont(arguments.callee);
@@ -281,9 +290,19 @@ var LAGParser = Editor.Parser = (function () {
 
         function impl(type) {
             if (type == "impl") { 
-                cont(pushlex("impl"), ToVisual.action('start impl'), expect("("), pushlex(")"), multistatements, poplex, expect(")"), ToVisual.action('finish impl'), poplex, expect("EOF"));
-            }
-            else {
+                cont(
+                    pushlex("impl"), 
+                    ToVisual.action('start impl'), 
+                    expect("("), 
+                    pushlex(")"), 
+                    multistatements, 
+                    poplex, 
+                    expect(")"), 
+                    ToVisual.action('finish impl'), 
+                    poplex, 
+                    expect("EOF")
+                );
+            } else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>implementation</b>");
                 cont(arguments.callee);
@@ -319,15 +338,60 @@ var LAGParser = Editor.Parser = (function () {
         // Dispatches various types of statements based on the type of the
         // current token.
         function statement(type, tokenValue) {
-            if (type == "if") cont(ToVisual.action('start if'), condition, pushlex("form"), then, /*poplex,*/ ToVisual.action('finish if'));
-            else if (type == "while" && withinLexType("init")) cont(ToVisual.action('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, ToVisual.action('finish while'));
-            else if (type == "for") cont(ToVisual.action('make for'), pushlex("form"), range, dostat, poplex, ToVisual.action('finish for'));
-            else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
-            //else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
-            // assignment
-            else if (type == "model") pass(ToVisual.action('start assignment'), pushlex("form"), attribute(), operator, value, poplex, ToVisual.action('finish assignment'));
-            else if (type == ")") pass(); // end of init or impl?
-            else {
+            if (type == "if") {
+                cont(
+                    ToVisual.action('start if'),
+                    condition,
+                    pushlex("form"),
+                    then,
+                    /*poplex,*/
+                    ToVisual.action('finish if')
+                );
+            } else if (type == "while" && withinLexType("init")) {
+                cont(
+                    ToVisual.action('make while'),
+                    pushlex("form"),
+                    condition,
+                    expect("("),
+                    pushlex(")"),
+                    multistatements,
+                    expect(")"),
+                    poplex,
+                    poplex,
+                    ToVisual.action('finish while')
+                );
+            } else if (type == "for") {
+                cont(
+                    ToVisual.action('make for'),
+                    pushlex("form"),
+                    range,
+                    dostat,
+                    poplex,
+                    ToVisual.action('finish for')
+                );
+            } else if (type == "break") {   
+                cont(pushlex("form"), sourcelabel, poplex);
+            /*} else if (type == "stat") {
+                cont(
+                    pushlex("form"),
+                    expect("("),
+                    pushlex(")"),
+                    condition,
+                    expect(")"),
+                    poplex,
+                    poplex
+                );*/
+            } else if (type == "model") { // assignment
+                pass(
+                    ToVisual.action('start assignment'),
+                    pushlex("form"),
+                    attribute(),
+                    operator,
+                    value,
+                    poplex,
+                    ToVisual.action('finish assignment')
+                );
+            } else {
                 markError();
                 error(
                     "Found <b style=\"color:red;\">" + 
@@ -341,21 +405,67 @@ var LAGParser = Editor.Parser = (function () {
 
         // Need to allow for (condition)* -- DONE!
         function condition(type, tokenValue) {
-            if (type == "model") pass( ToVisual.action('start condition'), pushlex("stat"), attribute(), comparator, value, poplex, ToVisual.action('finish condition') );
-            else if (type == "enough") cont( ToVisual.action('start condition'), pushlex("stat"), ToVisual.action('start enough'), expect("("), pushlex(")"), ToVisual.action('start enough conditions'), setOfCondition, ToVisual.action('finish enough condition list'), ToVisual.action('start enough threshold'), value, ToVisual.action('finish enough threshold'), expect(")"), poplex, poplex, ToVisual.action('finish condition') );
-            else if (type == "boolean") cont( ToVisual.action('start condition'), ToVisual.action('boolean', tokenValue), ToVisual.action('finish condition') );
-            else if (type == "(") cont( pushlex("stat"), condition, expect(")"), poplex ); // allows braces around conditions
-            else {
+            if (type == "model") {
+                pass(
+                    ToVisual.action('start condition'),
+                    pushlex("stat"),
+                    attribute(),
+                    comparator,
+                    value,
+                    poplex,
+                    ToVisual.action('finish condition')
+                );
+            } else if (type == "enough") {
+                cont(
+                    ToVisual.action('start condition'),
+                    pushlex("stat"),
+                    ToVisual.action('start enough'),
+                    expect("("),
+                    pushlex(")"),
+                    ToVisual.action('start enough conditions'),
+                    setOfCondition,
+                    ToVisual.action('finish enough condition list'),
+                    ToVisual.action('start enough threshold'),
+                    value,
+                    ToVisual.action('finish enough threshold'),
+                    expect(")"),
+                    poplex,
+                    poplex,
+                    ToVisual.action('finish condition')
+                );
+            } else if (type == "boolean") {
+                cont(
+                    ToVisual.action('start condition'),
+                    ToVisual.action('boolean', tokenValue),
+                    ToVisual.action('finish condition')
+                );
+            } else if (type == "(") {
+                cont( pushlex("stat"), condition, expect(")"), poplex ); // allows braces around conditions
+            } else {
                 markError();
-                error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>GM, UM, PM, DM, Concept, enough, true, false</b>");
+                error(
+                    "Found <b style=\"color:red;\">" + 
+                    type + "</b>: Expected <b>GM, UM, PM, DM, Concept, enough, true, false</b>");
                 cont();
             }
         }
 
        
         function then(type) {
-            if (type == "then") cont( ToVisual.action('start then') , /*pushlex("form"), */expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, ToVisual.action('finish then') , posselse);
-            else {
+            if (type == "then") {
+                cont(
+                    ToVisual.action('start then'),
+                    /*pushlex("form"), */
+                    expect("("), 
+                    pushlex(")"), 
+                    multistatements, 
+                    expect(")"), 
+                    poplex, 
+                    poplex, 
+                    ToVisual.action('finish then'),
+                    posselse
+                );
+            } else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>then</b>");
                 cont();
@@ -363,13 +473,38 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         function posselse(type) {
-            if (type == "else") cont(ToVisual.action('start else') , pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, ToVisual.action('finish else') );
-            else pass(); // because it's optional, you need to NOT consume the token if it isnt an "else"
+            if (type == "else") {
+                cont(
+                    ToVisual.action('start else'), 
+                    pushlex("form"), 
+                    expect("("), 
+                    pushlex(")"), 
+                    multistatements, 
+                    expect(")"), 
+                    poplex, 
+                    poplex, 
+                    ToVisual.action('finish else')
+                );
+            } else {
+                // The 'else' block is optional so if the token isn't an else, 
+                // don't consume it, just leave it for the next action to 
+                // decide what to do with it.
+                pass();
+            }
         }
 
         function dostat(type) {
-            if (type == "do") cont(pushlex("form"), expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex);
-            else {
+            if (type == "do") {
+                cont(
+                    pushlex("form"), 
+                    expect("("), 
+                    pushlex(")"), 
+                    multistatements, 
+                    expect(")"), 
+                    poplex, 
+                    poplex
+                );
+            } else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>do</b>");
                 cont();
@@ -407,8 +542,13 @@ var LAGParser = Editor.Parser = (function () {
         
         function attribute(type, tokenValue) {
             return function(type) {
-                if (type == "model") pass(ToVisual.action('start attribute'), dotsep(model), ToVisual.action('finish attribute'));
-                else {
+                if (type == "model") {
+                    pass(
+                        ToVisual.action('start attribute'), 
+                        dotsep(model),
+                        ToVisual.action('finish attribute')
+                    );
+                } else {
                     markError();
                     error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM</b>");
                     cont();
@@ -448,7 +588,7 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         function operator(type, tokenValue) {
-            if (type == "operator") cont(ToVisual.action('operator'), tokenValue);
+            if (type == "operator") cont(ToVisual.action('operator', tokenValue));
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>=, .=, +=, -=</b>");
