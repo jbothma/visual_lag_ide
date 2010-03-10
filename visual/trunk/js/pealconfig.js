@@ -57,6 +57,6 @@ var autoKeywords = ["initialization", "implementation", "while", "then", "else",
 //
 // Currently the parser only knows of the keyword types as listed below.
 // For reference: trueFalse, stat, model, init, impl, if, while, then, else, do, for, enough, break
-// And a few general others: compare, operator, variable, number, whitespace, comment
+// And a few general others: comparator, operator, variable, number, whitespace, comment
 //
 

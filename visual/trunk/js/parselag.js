@@ -125,7 +125,8 @@ var LAGParser = Editor.Parser = (function () {
             while (true) {
                 consume = marked = false;
                 // Take and execute the topmost action.
-                cc.pop()(token.type, token.content);
+                var action = cc.pop();
+                action(token.type, token.content);
                 if (consume) {
                     // Marked is used to change the style of the current token.
                     if (marked) {
@@ -317,13 +318,14 @@ var LAGParser = Editor.Parser = (function () {
 
         // Dispatches various types of statements based on the type of the
         // current token.
-        function statement(type) {
+        function statement(type, tokenValue) {
             if (type == "if") cont(ToVisual.action('start if'), condition, pushlex("form"), then, /*poplex,*/ ToVisual.action('finish if'));
             else if (type == "while" && withinLexType("init")) cont(ToVisual.action('make while'), pushlex("form"), condition, expect("("), pushlex(")"), multistatements, expect(")"), poplex, poplex, ToVisual.action('finish while'));
             else if (type == "for") cont(ToVisual.action('make for'), pushlex("form"), range, dostat, poplex, ToVisual.action('finish for'));
             else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
             //else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
-            else if (type == "model") cont(pushlex("form"), expect("."), dotsep(model), optionalop /*op, value*/ , poplex);
+            // assignment
+            else if (type == "model") pass(pushlex("form"), attribute(), operator, value, poplex);
             else if (type == ")") pass(); // end of init or impl?
             else {
                 markError();
@@ -332,16 +334,16 @@ var LAGParser = Editor.Parser = (function () {
                     type + 
                     "</b>: Expected <b>), if, " +
                     (withinLexType("init") ? "while, " : "") +
-                    "for, break, generalise, specialise, GM, DM, PM, UM</b> or <b>operator</b>");
+                    "for, break, generalise, specialise, GM, DM, PM, UM</b>");
                 cont();
             }
         }
 
         // Need to allow for (condition)* -- DONE!
-        function condition(type, value) {
-            if (type == "model") cont( ToVisual.action('start condition'), pushlex("stat"), expect("."), dotsep(model), optionalcompare, poplex, ToVisual.action('finish condition') );
+        function condition(type, tokenValue) {
+            if (type == "model") pass( ToVisual.action('start condition'), pushlex("stat"), attribute(), comparator, value, poplex, ToVisual.action('finish condition') );
             else if (type == "enough") cont( ToVisual.action('start condition'), pushlex("stat"), expect("("), pushlex(")"), setOfCondition, value, expect(")"), poplex, poplex, ToVisual.action('finish condition') );
-            else if (type == "boolean") cont( ToVisual.action('start condition'), ToVisual.action('boolean', value), ToVisual.action('finish condition') );
+            else if (type == "boolean") cont( ToVisual.action('start condition'), ToVisual.action('boolean', tokenValue), ToVisual.action('finish condition') );
             else if (type == "(") cont( pushlex("stat"), condition, expect(")"), poplex ); // allows braces around conditions
             else {
                 markError();
@@ -402,13 +404,15 @@ var LAGParser = Editor.Parser = (function () {
             }
         }
         
-        // "model" expect("."), dotsep(model)
-        // "model" expect("."), dotsep(model)
-        // "model" expect("."), dotsep(model)
-        // pass(attribute(
-        function attribute(type) {
-            return function() {
-                if (type=="model") cont();
+        
+        function attribute() {
+            return function(type) {
+                if (type == "model") cont(logAction('start attribute'), expect("."), dotsep(model), logAction('finish attribute'));
+                else {
+                    markError();
+                    error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM</b>");
+                    cont();
+                }
             }
         }
         
@@ -424,7 +428,6 @@ var LAGParser = Editor.Parser = (function () {
 
         // Parses a dot-separated list of the things that are recognized
         // by the 'what' argument.
-        // Currently only handles: UM, GM, PM, DM, Concept
         function dotsep(what) {
             function proceed(type) {
                 if (type == ".") cont(what, proceed);
@@ -435,9 +438,9 @@ var LAGParser = Editor.Parser = (function () {
             };
         }
 
-        // If it is a comparer carry on, otherwise colour it red
-        function compare(type) {
-            if (type == "compare") cont();
+        // If it is a comparator carry on, otherwise colour it red
+        function comparator(type) {
+            if (type == "comparator") cont();
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>&lt;, &gt;, ==, !=, in</b>");
@@ -445,7 +448,7 @@ var LAGParser = Editor.Parser = (function () {
             }
         }
 
-        function op(type) {
+        function operator(type) {
             if (type == "operator") cont();
             else {
                 markError();
@@ -457,31 +460,13 @@ var LAGParser = Editor.Parser = (function () {
         // If it is text (variable) or numeric (number) then carry on, else mark it red
         function value(type) {
             if (type == "variable") cont();
-            else if (type == "model") cont(expect("."), dotsep(model));
+            else if (type == "model") pass(attribute());
             else if (type == "number") cont();
             else if (type == "boolean") cont();
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>variable, true, false, number, DM, UM, GM, PM, Concept</b>");
                 cont();
-            }
-        }
-
-        function optionalcompare(type) {
-            if (type == "compare") {
-                cont(value);
-            } else {
-                // skip that token
-                pass();
-            }
-        }
-
-        function optionalop(type) {
-            if (type == "operator") {
-                cont(value);
-            } else {
-                // skip that token
-                pass();
             }
         }
 

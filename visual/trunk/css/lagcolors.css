@@ -82,7 +82,7 @@ span.lag-string {
 span.lag-operator {
 	color: black;
 }
-span.lag-compare {
+span.lag-comparator {
 	color: black;
 }
 span.lag-syntax-error {

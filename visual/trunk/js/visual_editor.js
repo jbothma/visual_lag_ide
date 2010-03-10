@@ -30,15 +30,7 @@ function indentOne(code) {
 
 
 
-
-/* ATTRIBUTE */
-/**
- *    LAGVEAttr
- *
- *    Library for the LAG Visual Editor Attribute item
- */ 
-
-var LAGVEAttr = new Object();
+LAGVE.Attr = new Object();
 
 YUI({
     //filter:     'raw',
@@ -59,9 +51,12 @@ YUI({
     function (Y) {
 
     /**
+     *    LAGVE.Attr
      *
-     */
-    LAGVEAttr.newAttrLevel = function(levelValue, isRoot, sublevel) {
+     *    Library for the LAG Visual Editor Attribute item
+     */ 
+ 
+    LAGVE.Attr.newAttrLevel = function(levelValue, isRoot, sublevel) {
         var attrBox = Y.Node.create('<div class="attr_box"></div>');
         var attrBoxValue = Y.Node.create('<div class="attr_box_value">' + levelValue + '</div>');
         var subLevelContainer = Y.Node.create('<div class="sub_level_container"></div>');
@@ -90,7 +85,7 @@ YUI({
      *  would append PM.GM.accessed to the element 
      *    with id visual-editing-workspace
      */
-    LAGVEAttr.insertNewAttr = function(levels,targetNode) {
+    LAGVE.Attr.insertNewAttr = function(levels,targetNode) {
         var lowestAttrLevel;
         
         /*    create attribute levels in reverse
@@ -98,7 +93,7 @@ YUI({
          *    make visible, then make GM and insert visible to it, 
          *    then make PM and insert GM.visible into it. */
         for (var i = levels.length-1; i >= 0; i--) {
-            lowestAttrLevel = LAGVEAttr.newAttrLevel(levels[i],false,lowestAttrLevel);
+            lowestAttrLevel = LAGVE.Attr.newAttrLevel(levels[i],false,lowestAttrLevel);
         }
         
         var newAttribute = lowestAttrLevel;
@@ -156,10 +151,10 @@ YUI({
     
     
     // Modify a new value to behave like a condition
-    LAGVEAttr.newBoolean = function(value) {        
+    LAGVE.Attr.newBoolean = function(value) {        
         // Is the attribute 'true' or 'false'?
         if ( value in {'true':1, 'false':1} ) {
-            var newBoolean = LAGVEAttr.insertNewAttr([value]);
+            var newBoolean = LAGVE.Attr.insertNewAttr([value]);
             newBoolean.addClass('condition');
             newBoolean.dd.addToGroup('condition');
             
@@ -450,8 +445,8 @@ LAGVEIf = new Object();
         );
         
         ifThenElse.conditionContainer   = Y.Node.create('\
-            <ul id=' + Y.guid('condition-container-') + ' \
-            class="ifthenelse-condition-container"></ul>\
+            <div id=' + Y.guid('condition-container-') + ' \
+            class="ifthenelse-condition-container"></div>\
         ');
         ifThenElse.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -528,11 +523,13 @@ LAGVEIf = new Object();
 
         ifThenElse.toLAG = function() {
             var LAG = 
-                'if ( ' + ifThenElse.conditionContainer.toLAG() + ' ) then (\r\n' + 
-                ifThenElse.thenBlock.toLAG() +
-                ') else (\r\n' + 
-                ifThenElse.elseBlock.toLAG() +
-                ')';
+                'if ' + ifThenElse.conditionContainer.toLAG() + ' then (\r\n' + 
+                ifThenElse.thenBlock.toLAG() + ')';
+                
+            // Else is optional
+            var elseLAG = ifThenElse.elseBlock.toLAG();
+            if (elseLAG !== '')
+                LAG += ' else (\r\n' + elseLAG + ')';
             
             return LAG;
         }
@@ -635,7 +632,7 @@ LAGVECondition = new Object();
         };
         
         comparison._resize = function(reason) {
-            Y.log('comparison._resize by ' + reason);
+            //Y.log('comparison._resize by ' + reason);
             // Setup
             var attributeContainerWidth     = parseInt(this.attributeContainer.getComputedStyle('width'));
             var comparatorContainerWidth    = parseInt(this.comparatorContainer.getComputedStyle('width'));
@@ -775,13 +772,13 @@ LAGVECondition = new Object();
         
         enough._LAGVEName = 'Enough';
         enough.toLAG = function() {
-            var LAG = 'enough (';
+            var LAG = 'enough(';
             
             this.conditionList.get('children').each(function() {
-                LAG += indentOne(this.toLAG()) + '\n';
+                LAG += this.toLAG() + '\n';
             });
             
-            LAG += ', ' + enough.threshold.get('value') + ')';
+            LAG += ',' + enough.threshold.get('value') + ')';
             
             return LAG;
         }
@@ -811,7 +808,7 @@ LAGVECondition = new Object();
         ');
         
         enough.conditionList = Y.Node.create('\
-            <ul class="enough condition-list selectable"></ul>\
+            <div class="enough condition-list selectable"></div>\
         ');
         enough.conditionList.plug(
             Y.Plugin.Drop,
@@ -947,7 +944,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         }
         
         //////    LIST   ///////
-        statement.LAGVEUL = Y.Node.create( '<ul id=' + Y.guid('statement-ul-') + ' class="statement-list"></ul>' );
+        statement.LAGVEUL = Y.Node.create( '<div id=' + Y.guid('statement-ul-') + ' class="statement-list"></div>' );
         statement.LAGVEUL.resize = function(reason) { statement.resize(reason) };
         statement.LAGVEUL.plug(
             Y.Plugin.Drop,
@@ -986,7 +983,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     };
     
     LAGVEStmt._newStatementChildContainer = function(child) {
-        var childContainer      = Y.Node.create( '<li class="statement-child-container deletable"></li>' );
+        var childContainer      = Y.Node.create( '<div class="statement-child-container deletable"></div>' );
     
         var childContainerDrag  = new Y.DD.Drag({
             node:        childContainer,
@@ -1344,7 +1341,16 @@ LAGVE.oneIndentation = '  ';
     *    Insert attribute and hide menu automatically
     */
     LAGVE.insertNewAttr = function(attributeLevelsArr, targetNode) {
-        LAGVEAttr.insertNewAttr(attributeLevelsArr, targetNode);
+        LAGVE.Attr.insertNewAttr(attributeLevelsArr, targetNode);
+        LAGVE._hideAttrMenu()
+    }
+    
+    LAGVE.insertNewBoolean = function(value) {
+        LAGVE.Attr.newBoolean(value);
+        LAGVE._hideAttrMenu()
+    }
+    
+    LAGVE._hideAttrMenu = function() {
         LAGVE.attrMenu.addClass('yui-menu-hidden');
         LAGVE.attrMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
     }
@@ -1502,7 +1508,7 @@ LAGVE.oneIndentation = '  ';
                         LAGVE.ToVisual.stack.pop();
                         break;
                     case 'boolean':
-                        var newBoolean = LAGVEAttr.newBoolean(value);
+                        var newBoolean = LAGVE.Attr.newBoolean(value);
                         LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
                         break;
                     default:

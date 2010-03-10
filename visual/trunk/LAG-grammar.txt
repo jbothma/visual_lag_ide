@@ -1,14 +1,22 @@
-PM.next
-PM.ToDo
-PM.menu
-GM.Concept.label
-GM.Concept.access
+PM.next //LAOSCM.ATTR 
+PM.ToDo // LAOSCM.ATTR 
+PM.GM.ToDo //LAOSCM.LAOSCM.ATTRATTR |
+PM.menu //LAOSCM.ATTR
+GM.Concept.label // LAOSCONCEPTMAP.CONCEPT.ATTR |
+GM.Concept.access  // LAOSCONCEPTMAP.CONCEPT.ATTR 
 PM.DM.Concept.Relatedness.Concept.show
-UM.GM.level
-GM.Concept.level
-UM.GM.Concept.parent.access
-PM.GM.Concept.show
-PM.GM.Concept.type
+UM.GM.level //LAOSCM.LAOSCM.ATTRATTR |
+GM.Concept.level  // LAOSCONCEPTMAP.CONCEPT.ATTR 
+UM.GM.Concept.parent.access //LAOSCM.LAOSCM.CONCEPT.ATTR.ATTRATTR 
+PM.GM.Concept.show // LAOSCM.LAOSCM.CONCEPT.ATTR  
+PM.GM.Concept.type // LAOSCM.LAOSCM.CONCEPT.ATTR  
+PM.DM.Concept.title.access // LAOSCM.LAOSCM.CONCEPT.ATTR.ATTRATTR
+// as general as grammar but restrict to x.GM|DM.
+
+//for discussion:
+(GM.Concept.weight.order)// LAOSCONCEPTMAP.CONCEPT.ATTR.ATTRATTR
+(PM.UM.GM.Concept.knowledge.show)
+
 
 PM
 GM
@@ -22,6 +30,8 @@ label
 access
 Relatedness
 show
-level
+level // ATTRATTR
 parent
 type
+
+PM.models

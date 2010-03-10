@@ -82,9 +82,9 @@ var tokenizeLAG = (function() {
   }();
 
   // Some helper regexp matchers.
-  var isOperatorCompareChar = matcher(/!|=|\+|\.|-|i|<|>/);
+  var isOperatorComparatorChar = matcher(/!|=|\+|\.|-|i|<|>/);
   var isOperator = matcher(/=|\.=|\+=|-=/);					// matches =  +=  -=  .=
-  var isCompare = matcher(/!=|==|<=|<|>=|>|\b(in)\b/);		// matches ==  <  >  in != >= <=	a lookahead just helps matching.. the character in the lookahead isnt matched...
+  var isComparator = matcher(/!=|==|<=|<|>=|>|\b(in)\b/);		// matches ==  <  >  in != >= <=	a lookahead just helps matching.. the character in the lookahead isnt matched...
   var isDigit = matcher(/[0-9]/);
   var isHexDigit = matcher(/[0-9A-Fa-f]/);
   var isWordChar = matcher(/[\w\$_]/);
@@ -169,9 +169,9 @@ var tokenizeLAG = (function() {
       source.nextWhile(isOperator);
       return {type: "operator", style: "lag-operator"};
     }
-	function readCompare() {
-	  source.nextWhile(isCompare);
-	  return {type: "compare", style: "lag-compare"};
+	function readComparator() {
+	  source.nextWhile(isComparator);
+	  return {type: "comparator", style: "lag-comparator"};
 	}
 
     // Fetch the next token. Dispatches on first character in the
@@ -203,11 +203,11 @@ var tokenizeLAG = (function() {
       else
         return readOperator();
     }
-	// Is ch an operator or compare character?
+	// Is ch an operator or comparator character?
 	// Consume the next character
 	// Run regexp checks on the two-character string
 	// Return type or return word
-	else if (isOperatorCompareChar(ch)) {
+	else if (isOperatorComparatorChar(ch)) {
 		var a = ch;
 		// Don't consume it yet otherwise we end up with tokens with extra spaces.. namely for the chars "i" and "="
 		var b = source.peek();
@@ -222,12 +222,12 @@ var tokenizeLAG = (function() {
 		}
 		var tmp = a+b;
 		if (tmp == "==" || tmp == "!=") {
-			return {type: "compare", style: "lag-compare"};
-		} else if (isCompare(tmp)) {
+			return {type: "comparator", style: "lag-comparator"};
+		} else if (isComparator(tmp)) {
 			if (tmp == "in" && !source.equals(" ")) {
 				return readWord();
 			} else {
-				return {type: "compare", style: "lag-compare"};
+				return {type: "comparator", style: "lag-comparator"};
 			}
 		} else if (isOperator(tmp)) {
 			return {type: "operator", style: "lag-operator"};
