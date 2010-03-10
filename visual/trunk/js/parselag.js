@@ -394,9 +394,9 @@ var LAGParser = Editor.Parser = (function () {
             }
         }
 
-        function model(type) {
-            if (type == "model") cont();
-            else if (type == "variable") cont();
+        function model(type, tokenValue) {
+            if (type == "model") cont(logAction('model ' + tokenValue));
+            else if (type == "variable") cont(logAction('model ' + tokenValue));
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM, Concept, variable</b>");
@@ -405,9 +405,9 @@ var LAGParser = Editor.Parser = (function () {
         }
         
         
-        function attribute() {
+        function attribute(type, tokenValue) {
             return function(type) {
-                if (type == "model") cont(logAction('start attribute'), expect("."), dotsep(model), logAction('finish attribute'));
+                if (type == "model") pass(logAction('start attribute'), dotsep(model), logAction('finish attribute'));
                 else {
                     markError();
                     error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM</b>");
@@ -431,7 +431,6 @@ var LAGParser = Editor.Parser = (function () {
         function dotsep(what) {
             function proceed(type) {
                 if (type == ".") cont(what, proceed);
-                //else if (type == "variable") cont();
             };
             return function () {
                 pass(what, proceed);
