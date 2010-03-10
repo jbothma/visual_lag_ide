@@ -304,9 +304,9 @@ var LAGParser = Editor.Parser = (function () {
         // Creates an action that discards tokens until it finds one of
         // the given type.
         function expect(wanted) {
-            return function (type) {
+            return function (type, tokenValue) {
                 if (type == wanted) {
-                    logAction('make and finish ' + type);
+                    ToVisual.action('found expected ' + wanted, tokenValue);
                     cont();
                 } else {
                     markError();
@@ -325,7 +325,7 @@ var LAGParser = Editor.Parser = (function () {
             else if (type == "break") cont(pushlex("form"), sourcelabel, poplex);
             //else if (type == "stat") cont(pushlex("form"), expect("("), pushlex(")"), condition, expect(")"), poplex, poplex);
             // assignment
-            else if (type == "model") pass(pushlex("form"), attribute(), operator, value, poplex);
+            else if (type == "model") pass(ToVisual.action('start assignment'), pushlex("form"), attribute(), operator, value, poplex, ToVisual.action('finish assignment'));
             else if (type == ")") pass(); // end of init or impl?
             else {
                 markError();
@@ -342,7 +342,7 @@ var LAGParser = Editor.Parser = (function () {
         // Need to allow for (condition)* -- DONE!
         function condition(type, tokenValue) {
             if (type == "model") pass( ToVisual.action('start condition'), pushlex("stat"), attribute(), comparator, value, poplex, ToVisual.action('finish condition') );
-            else if (type == "enough") cont( ToVisual.action('start condition'), pushlex("stat"), expect("("), pushlex(")"), setOfCondition, value, expect(")"), poplex, poplex, ToVisual.action('finish condition') );
+            else if (type == "enough") cont( ToVisual.action('start condition'), pushlex("stat"), ToVisual.action('start enough'), expect("("), pushlex(")"), ToVisual.action('start enough conditions'), setOfCondition, ToVisual.action('finish enough condition list'), ToVisual.action('start enough threshold'), value, ToVisual.action('finish enough threshold'), expect(")"), poplex, poplex, ToVisual.action('finish condition') );
             else if (type == "boolean") cont( ToVisual.action('start condition'), ToVisual.action('boolean', tokenValue), ToVisual.action('finish condition') );
             else if (type == "(") cont( pushlex("stat"), condition, expect(")"), poplex ); // allows braces around conditions
             else {
@@ -395,8 +395,8 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         function model(type, tokenValue) {
-            if (type == "model") cont(logAction('model ' + tokenValue));
-            else if (type == "variable") cont(logAction('model ' + tokenValue));
+            if (type == "model") cont(ToVisual.action('model', tokenValue));
+            else if (type == "variable") cont(ToVisual.action('model', tokenValue));
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM, Concept, variable</b>");
@@ -407,7 +407,7 @@ var LAGParser = Editor.Parser = (function () {
         
         function attribute(type, tokenValue) {
             return function(type) {
-                if (type == "model") pass(logAction('start attribute'), dotsep(model), logAction('finish attribute'));
+                if (type == "model") pass(ToVisual.action('start attribute'), dotsep(model), ToVisual.action('finish attribute'));
                 else {
                     markError();
                     error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM</b>");
@@ -438,8 +438,8 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         // If it is a comparator carry on, otherwise colour it red
-        function comparator(type) {
-            if (type == "comparator") cont();
+        function comparator(type, tokenValue) {
+            if (type == "comparator") cont(ToVisual.action('comparator', tokenValue));
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>&lt;, &gt;, ==, !=, in</b>");
@@ -447,8 +447,8 @@ var LAGParser = Editor.Parser = (function () {
             }
         }
 
-        function operator(type) {
-            if (type == "operator") cont();
+        function operator(type, tokenValue) {
+            if (type == "operator") cont(ToVisual.action('operator'), tokenValue);
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>=, .=, +=, -=</b>");

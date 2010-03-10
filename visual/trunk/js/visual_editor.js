@@ -1511,6 +1511,18 @@ LAGVE.oneIndentation = '  ';
                         var newBoolean = LAGVE.Attr.newBoolean(value);
                         LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
                         break;
+                    /*case 'model':
+                        var newBoolean = LAGVE.Attr.newBoolean(value);
+                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
+                        break;
+                    case 'start attribute':
+                        var newBoolean = LAGVE.Attr.newBoolean(value);
+                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
+                        break;
+                    case 'finish attribute':
+                        var newBoolean = LAGVE.Attr.newBoolean(value);
+                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
+                        break;*/
                     default:
                         if (console) console.log('nothing to do for \'' + command + '\'');
                         break;
