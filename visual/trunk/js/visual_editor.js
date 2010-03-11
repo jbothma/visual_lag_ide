@@ -251,13 +251,13 @@ YUI({
         *   Set the operator of the Assignment to the operator passed, if found.
         *   @argument str operator - The operator we want to select.
         */
-        assignment.operatorSelect.setOperator = function(operator) {
+        assignment.setOperator = function(operator) {
             var wantedOption;
-            assignment.operatorSelect.get('childNodes').each(
+            this.operatorSelect.get('childNodes').each(
                 function(currentNode) {
-                        if (currentNode.get('value') === operator) {
-                            wantedOption = currentNode;
-                        }
+                    if (currentNode.get('value') === operator) {
+                        wantedOption = currentNode;
+                    }
                 }
             );
             
@@ -570,7 +570,7 @@ LAGVEIf = new Object();
 
     
 /* CONDITION */
-LAGVECondition = new Object();
+LAGVE.Condition = new Object();
 
 
     /**
@@ -579,28 +579,28 @@ LAGVECondition = new Object();
      *    Returns the container LI after inserting the new condition.
      *    Parameters:    condition
      */
-    LAGVECondition.wrapConditionInLI = function(child) {
-        var conditionLI = Y.Node.create( '<div class="condition deletable"></div>' );
+    LAGVE.Condition.wrapCondition = function(child) {
+        var conditionWrapper = Y.Node.create( '<div class="condition deletable"></div>' );
     
-        var conditionLIdd = new Y.DD.Drag({
+        var conditionWrapperDD = new Y.DD.Drag({
             groups:    ['condition'],
-            node:    conditionLI,
+            node:    conditionWrapper,
         });
                                                     
-        conditionLIdd.plug(
+        conditionWrapperDD.plug(
             Y.Plugin.DDProxy, 
             {
                 moveOnEnd:    false,
             }
         );
         
-        conditionLI.resize = function(reason) {             
-            this.get('firstChild')._resize('conditionLI.resize')
+        conditionWrapper.resize = function(reason) {             
+            this.get('firstChild')._resize('conditionWrapper.resize')
             
             //Bubble
-            this.get('parentNode').resize('conditionLI.resize')
+            this.get('parentNode').resize('conditionWrapper.resize')
         }
-        conditionLI.parentChanged = function() {
+        conditionWrapper.parentChanged = function() {
             if (this.get('parentNode')) {
                 //this.resize = this.get('parentNode').resize;
                 //this.resize('new parent');
@@ -611,21 +611,22 @@ LAGVECondition = new Object();
             this._oldParent = this.get('parentNode');
         }
         
-        conditionLI.getName = function() {
+        conditionWrapper.getName = function() {
             return child.getName();
         }
-        conditionLI.toLAG = function() {
+        conditionWrapper.toLAG = function() {
             return this.get('firstChild').toLAG();
         }
 
-        conditionLI.append(child);
-        conditionLI.parentChanged();        
-        //child.resize('new condition');
+        conditionWrapper.append(child);
+        conditionWrapper.parentChanged();        
         
-        return conditionLI;
+        conditionWrapper.getCondition = function() { return this.get('firstChild') }
+        
+        return conditionWrapper;
     };
     
-    LAGVECondition.newComparison = function(targetNode) {
+    LAGVE.Condition.newComparison = function(targetNode) {
         ///////    COMPARISON    ///////
         var comparison          = Y.Node.create( '<div class="comparison"></div>' );
         comparison._LAGVEName   = 'Comparison';        
@@ -671,7 +672,7 @@ LAGVECondition = new Object();
         comparison.attributeContainer.select        = LAGVE._genericSelect;
         comparison.attributeContainer.deSelect      = LAGVE._genericDeSelect;
         comparison.attributeContainer.LAGVEInsert   = function(node) {
-            if (LAGVECondition.tryInsertComparisonChild(comparison.attributeContainer,node)) {
+            if (LAGVE.Condition.tryInsertComparisonChild(comparison.attributeContainer,node)) {
                 node.resize('comparison.attributeContainer.LAGVEInsert');
             }
         };
@@ -687,11 +688,29 @@ LAGVECondition = new Object();
         ');
         comparison.comparatorSelect =  Y.Node.create('\
             <select class="comparator-select">\
+                <option value=""></option>\
                 <option value="==">==</option>\
                 <option value="&gt;">&gt;</option>\
                 <option value="&lt;">&lt;</option>\
             </select>\
         ');
+        
+        /**
+        *   Set the comparator of the Comparison to the comparator passed, if found.
+        *   @argument str comparator - The comparator we want to select.
+        */
+        comparison.setComparator = function(comparator) {
+            var wantedOption;
+            this.comparatorSelect.get('childNodes').each(
+                function(currentNode) {
+                        if (currentNode.get('value') === comparator) {
+                            wantedOption = currentNode;
+                        }
+                }
+            );
+            
+            if (wantedOption) wantedOption.set('selected', 'selected');            
+        }
         
         
         //////    VALUE CONTAINER    //////
@@ -706,7 +725,7 @@ LAGVECondition = new Object();
         comparison.valueContainer._LAGVEName    = 'Value position';
         comparison.valueContainer.getName       = function()      { return this._LAGVEName };        
         comparison.valueContainer.LAGVEInsert   = function(node) {
-            if (LAGVECondition.tryInsertComparisonChild(comparison.valueContainer,node)) {
+            if (LAGVE.Condition.tryInsertComparisonChild(comparison.valueContainer,node)) {
                 node.resize('comparison.valueContainer.LAGVEInsert');
             }
         };
@@ -747,8 +766,8 @@ LAGVECondition = new Object();
             return LAG;
         }
         
-        // Wrap comparison in an LI as a generic Condition
-        var condition = LAGVECondition.wrapConditionInLI( comparison );
+        // Wrap comparison as a typical Condition
+        var condition = LAGVE.Condition.wrapCondition( comparison );
         
         if ( isset( targetNode )) {
             targetNode.LAGVEInsert(condition);
@@ -761,7 +780,7 @@ LAGVECondition = new Object();
     /**
      *  Enough construct
      */ 
-    LAGVECondition.newEnough = function(options) {        
+    LAGVE.Condition.newEnough = function(options) {        
         var enough = Y.Node.create('\
             <div class="enough primary selectable">ENOUGH</div>\
         ');
@@ -834,7 +853,7 @@ LAGVECondition = new Object();
         enough.append(enough.conditionList);
         
         // Wrap enough in an LI as a generic Condition
-        var condition = LAGVECondition.wrapConditionInLI( enough );
+        var condition = LAGVE.Condition.wrapConditionInLI( enough );
 
         if ( isset( options ) && isset( options.targetNode )) {
             options.targetNode.LAGVEInsert(condition);
@@ -843,24 +862,24 @@ LAGVECondition = new Object();
         return condition;
     }
     
-    LAGVECondition.tryInsertComparisonChild = function( target, child ) {
+    LAGVE.Condition.tryInsertComparisonChild = function( target, child ) {
         if (target.hasClass('comparison-child-container')) {
             if (child.hasClass('comparison-child')) {
                 if (!target.hasChildNodes()) {            
                     target.append(child);
-                    target.resize('LAGVECondition.tryInsertComparisonChild');
+                    target.resize('LAGVE.Condition.tryInsertComparisonChild');
                     return true;
                 } else {
-                    //Y.log('LAGVECondition.insertComparisonChild() didn\'t insert. Target had a child.');
+                    //Y.log('LAGVE.Condition.insertComparisonChild() didn\'t insert. Target had a child.');
                 }
                 
-                LAGVECondition._positionChild(child);
+                LAGVE.Condition._positionChild(child);
             } 
         }
         return false;
     }
     
-    LAGVECondition._positionChild = function(child) {
+    LAGVE.Condition._positionChild = function(child) {
         if (child.hasClass('comparison-child')) {
             child.setStyles({   position:   'relative',
                                 left:       '0px',
@@ -876,15 +895,15 @@ LAGVECondition = new Object();
             dropNode.LAGVEInsert(dragNode);
         }
         
-        LAGVECondition.tryInsertComparisonChild(dropNode,dragNode);
+        LAGVE.Condition.tryInsertComparisonChild(dropNode,dragNode);
     });
     
     Y.DD.DDM.on('drop:hit',function(e) {
-        LAGVECondition.tryInsertComparisonChild(e.drop.get('node'),e.drag.get('node'));
+        LAGVE.Condition.tryInsertComparisonChild(e.drop.get('node'),e.drag.get('node'));
     });
     
     Y.DD.DDM.on('drag:dropmiss',function(e) {
-        LAGVECondition._positionChild(e.target.get('node'));
+        LAGVE.Condition._positionChild(e.target.get('node'));
     });
 
 
@@ -1543,7 +1562,7 @@ LAGVE.oneIndentation = '  ';
                         LAGVE.ToVisual.stack.pop();
                         // set the operator of the assignement statement 
                         // at the top of LAGVE.ToVisual.stack to the operator token value
-                        LAGVE.ToVisual.stack.peek().operatorSelect.setOperator(tokenValue);
+                        LAGVE.ToVisual.stack.peek().setOperator(tokenValue);
                         // push the assignment value container onto LAGVE.ToVisual.stack
                         LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().valueContainer);
                         break;
@@ -1573,7 +1592,7 @@ LAGVE.oneIndentation = '  ';
                         break;
                     case 'start enough':
                         // make a new Enough
-                        var newEnough = LAGVECondition.newEnough();
+                        var newEnough = LAGVE.Condition.newEnough();
                         // insert to the thing at the top of LAGVE.ToVisual.stack
                         LAGVE.ToVisual.stack.peek().LAGVEInsert(newEnough);
                         // push onto LAGVE.ToVisual.stack
@@ -1590,8 +1609,34 @@ LAGVE.oneIndentation = '  ';
                     case 'finish enough threshold':
                         LAGVE.ToVisual.stack.pop();
                         break;
+                    case 'start comparison':
+                        // create new comparison target node is whatever's on top of LAGVE.ToVisual.stack.
+                        // getCondition() at the end because conditions except booleans 
+                        // are currently wrapped in a conditionWrapper.
+                        var newComparison = LAGVE.Condition.newComparison(LAGVE.ToVisual.stack.peek()).getCondition();
+                        // push new assignment onto LAGVE.ToVisual.stack so we can find it
+                        LAGVE.ToVisual.stack.push(newComparison);
+                        // push new assignment's comparison container onto LAGVE.ToVisual.stack
+                        // because we're expecting an comparison that we'll want to insert.
+                        LAGVE.ToVisual.stack.push(newComparison.attributeContainer);
+                        break;
+                    case 'comparator':
+                        // pop the comparison attribute container off of LAGVE.ToVisual.stack
+                        LAGVE.ToVisual.stack.pop();
+                        // set the comparator of the comparison 
+                        // at the top of LAGVE.ToVisual.stack to the comparator token value
+                        LAGVE.ToVisual.stack.peek().setComparator(tokenValue);
+                        // push the assignment value container onto LAGVE.ToVisual.stack
+                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().valueContainer);
+                        break;
+                    case 'finish comparison':
+                        // pop the value container off
+                        LAGVE.ToVisual.stack.pop();
+                        // pop the comparison off
+                        LAGVE.ToVisual.stack.pop();
+                        break;
                     default:
-                        if (console) console.log('nothing to do for \'' + command + '\'');
+                        Y.log('nothing to do for \'' + command + '\'');
                         break;
                 }
             }

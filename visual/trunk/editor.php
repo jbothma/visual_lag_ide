@@ -251,10 +251,10 @@
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVE.Assignment.newAssignment(LAGVE.selectedNode)">Assignment</a>
                             </li>
                             <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newComparison(LAGVE.selectedNode)">Comparison</a>
+                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newComparison(LAGVE.selectedNode)">Comparison</a>
                             </li>
                             <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newEnough({targetNode:LAGVE.selectedNode})">Enough</a>
+                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newEnough({targetNode:LAGVE.selectedNode})">Enough</a>
                             </li>
                             <li class="yui-menuitem">
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVE.selectedNode)">IfThenElse</a>

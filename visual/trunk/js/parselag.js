@@ -381,7 +381,7 @@ var LAGParser = Editor.Parser = (function () {
                     poplex,
                     poplex
                 );*/
-            } else if (type == "model") { // assignment
+            } else if (type == "model") { // assignment: attribute operator value
                 pass(
                     ToVisual.action('start assignment'),
                     pushlex("form"),
@@ -405,14 +405,16 @@ var LAGParser = Editor.Parser = (function () {
 
         // Need to allow for (condition)* -- DONE!
         function condition(type, tokenValue) {
-            if (type == "model") {
+            if (type == "model") { // comparison: attribute comparator value
                 pass(
                     ToVisual.action('start condition'),
+                    ToVisual.action('start comparison'),
                     pushlex("stat"),
                     attribute(),
                     comparator,
                     value,
                     poplex,
+                    ToVisual.action('finish comparison'),
                     ToVisual.action('finish condition')
                 );
             } else if (type == "enough") {
