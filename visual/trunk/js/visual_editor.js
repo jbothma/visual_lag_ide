@@ -56,68 +56,36 @@ YUI({
      *    Library for the LAG Visual Editor Attribute item
      */ 
  
-    LAGVE.Attr.newAttrLevel = function(levelValue, isRoot, sublevel) {
-        var attrBox = Y.Node.create('<div class="attr_box"></div>');
-        var attrBoxValue = Y.Node.create('<div class="attr_box_value">' + levelValue + '</div>');
-        var subLevelContainer = Y.Node.create('<div class="sub_level_container"></div>');
-        
-        attrBox.append(attrBoxValue);
-        attrBox.append(subLevelContainer);
-        
-        attrBox.valueDiv = attrBoxValue;
-        attrBox.subLevelContainer = subLevelContainer;
-        
-        attrBox.addSubLevel = function(attrLevel) {
-            attrLevel.addClass('sub_level');
-            this.subLevelContainer.append(attrLevel);
-        }
-        
-        if (isset(sublevel)) {
-            attrBox.addSubLevel(sublevel);
-        }
-        
-        return attrBox;
-    }
     
-
     /**
-     *    insertNewAttr(['PM','GM','accessed'],'visual-editing-workspace')
-     *  would append PM.GM.accessed to the element 
-     *    with id visual-editing-workspace
+     *   e.g. insertNewAttr('UM.GM.Concept.experience,some.yui.node.object)
      */
-    LAGVE.Attr.insertNewAttr = function(levels,targetNode) {
-        var lowestAttrLevel;
+    LAGVE.Attr.insertNewAttr = function(value,targetNode) {
+        var newAttribute = Y.Node.create('<div class="attr_box"></div>');
+        newAttribute.valueContainer = Y.Node.create('<div class="attr_box_value">' + value + '</div>');
         
-        /*    create attribute levels in reverse
-         *    e.g. for PM.GM.visible
-         *    make visible, then make GM and insert visible to it, 
-         *    then make PM and insert GM.visible into it. */
-        for (var i = levels.length-1; i >= 0; i--) {
-            lowestAttrLevel = LAGVE.Attr.newAttrLevel(levels[i],false,lowestAttrLevel);
-        }
+        newAttribute.append(newAttribute.valueContainer);
         
-        var newAttribute = lowestAttrLevel;
         newAttribute._LAGVEName = 'Attribute/Value';
-        newAttribute.getName = function() { return this._LAGVEName }
-        /**
-         *
-         */
+        newAttribute.getName = function() { return this._LAGVEName }        
+        newAttribute.setName = function(newName) { this._LAGVEName = newName }
+
         newAttribute.resize = function(reason) {
             //Y.log('newAttribute.resize triggered by ' + reason);
             // Setup
-            var valueWidth      = parseInt(this.valueDiv.getComputedStyle('width'));
-            var subLevelWidth   = parseInt(this.subLevelContainer.getComputedStyle('width'));
+            var valueWidth      = parseInt(this.valueContainer.getComputedStyle('width'));
                         
             // Compute
-            attributeWidth      = valueWidth + subLevelWidth + 28;
+            attributeWidth      = valueWidth + 28;
             
             // Output
             this.setStyle('width', attributeWidth + 'px');
             
+            //bubble
             this.get('parentNode').resize('attribute resize | ' + reason);
         }
         
-        // make the root attribute level box dragable
+        // make the attribute box dragable
         var attributeDD = new Y.DD.Drag({
             node:    newAttribute,
             groups:    ['attribute'],
@@ -130,11 +98,20 @@ YUI({
                             { constrain2node: Y.one('body') } );*/
                                                                                 
         newAttribute.addClass('deletable');
-        newAttribute.addClass('action-child');
+        newAttribute.addClass('assignment-child');
         newAttribute.addClass('comparison-child');
         
+        newAttribute.getValue = function() {
+            return this.valueContainer.get('innerHTML');
+        }
+        
+        newAttribute.setValue = function(newValue) {
+            this.valueContainer.set('innerHTML', newValue);
+            this.resize();
+        }
+        
         newAttribute.toLAG = function() {
-            return levels.join('.');
+            return this.getValue();
         }
         
         // Default to selected node.
@@ -151,16 +128,23 @@ YUI({
     
     
     // Modify a new value to behave like a condition
-    LAGVE.Attr.newBoolean = function(value) {        
+    LAGVE.Attr.newBoolean = function(value, targetNode) {        
         // Is the attribute 'true' or 'false'?
         if ( value in {'true':1, 'false':1} ) {
-            var newBoolean = LAGVE.Attr.insertNewAttr([value]);
+            var newBoolean = LAGVE.Attr.insertNewAttr([value], targetNode);
             newBoolean.addClass('condition');
             newBoolean.dd.addToGroup('condition');
             
             newBoolean.parentChanged = function() {};
             
-            LAGVE.selectedNode.LAGVEInsert(newBoolean);
+            // Default to selected node.
+            if (!isset(targetNode)) {
+                targetNode = LAGVE.selectedNode;
+            }
+            
+            if (isset(targetNode)) {
+                targetNode.LAGVEInsert(newBoolean);
+            } 
             
             return newBoolean;
         } else {
@@ -169,115 +153,133 @@ YUI({
     }
 
 
-/* ACTION */
-LAGVEActn = new Object();
+/* Assignment Statement */
 
-        
-    LAGVEActn.newAction = function(targetNode) {
-        //////    ACTION    //////
-        var action      = Y.Node.create( '<div class="action statement-child"></div>' );
-        action.resize   = function(reason) {
-            //Y.log('action.resize triggered by ' + reason);
+    LAGVE.Assignment = new Object();
+    
+    LAGVE.Assignment.newAssignment = function(targetNode) {
+        //////    ASSIGNMENT    //////
+        var assignment      = Y.Node.create( '<div class="assignment statement-child"></div>' );
+        assignment.resize   = function(reason) {
+            //Y.log('assignment.resize triggered by ' + reason);
             // Setup
             var attributeContainerWidth = parseInt(this.attributeContainer.getComputedStyle('width'));
             var valueContainerWidth     = parseInt(this.valueContainer.getComputedStyle('width'));
             var operatorContainerWidth  = parseInt(this.operatorContainer.getComputedStyle('width'));
                         
             // Compute
-            actionWidth = attributeContainerWidth + operatorContainerWidth + valueContainerWidth + 22;
+            assignmentWidth = attributeContainerWidth + operatorContainerWidth + valueContainerWidth + 22;
             
             // Output
-            this.setStyle('width', actionWidth + 'px');
+            this.setStyle('width', assignmentWidth + 'px');
             
             // Bubble
-            this.get('parentNode').resize('action.resize | ' + reason);
+            this.get('parentNode').resize('assignment.resize | ' + reason);
         }
-        action._LAGVEName     = 'Action';
-        action.getName        = function() { return this._LAGVEName };
+        assignment._LAGVEName     = 'Assignment';
+        assignment.getName        = function() { return this._LAGVEName };
         
         //////    ATTRIBUTE CONTAINER    //////
-        action.attributeContainer               = Y.Node.create('\
-            <div    class="action-attribute-container action-child-container selectable" \
+        assignment.attributeContainer               = Y.Node.create('\
+            <div    class="assignment-attribute-container assignment-child-container selectable" \
                     \title="Drop an attribute here."></div>\
         ');
-        action.attributeContainer._LAGVEName    = 'Action attribute';
-        action.attributeContainer.select        = LAGVE._genericSelect;
-        action.attributeContainer.deSelect      = LAGVE._genericDeSelect;
-        action.attributeContainer.LAGVEInsert   = function(node) {
-            if (LAGVEActn.tryInsertActionChild(action.attributeContainer,node)) {
-                node.resize('action.attributeContainer.LAGVEInsert');
+        assignment.attributeContainer._LAGVEName    = 'Assignment attribute';
+        assignment.attributeContainer.select        = LAGVE._genericSelect;
+        assignment.attributeContainer.deSelect      = LAGVE._genericDeSelect;
+        assignment.attributeContainer.LAGVEInsert   = function(node) {
+            if (LAGVE.Assignment.tryInsertAssignmentChild(assignment.attributeContainer,node)) {
+                node.resize('assignment.attributeContainer.LAGVEInsert');
             }
         };
-        action.attributeContainer.getName       = function() { return this._LAGVEName };
-        action.attributeContainer.resize        = function( reason ) { 
-            action.resize('child action.attributeContainer.resize | ' + reason) 
+        assignment.attributeContainer.getName       = function() { return this._LAGVEName };
+        assignment.attributeContainer.resize        = function( reason ) { 
+            assignment.resize('child assignment.attributeContainer.resize | ' + reason) 
         };
         new Y.DD.Drop({
-            node:        action.attributeContainer,
+            node:        assignment.attributeContainer,
             groups:        ['attribute'],
         });
         
         
         //////    VALUE CONTAINER    //////
-        action.valueContainer               = Y.Node.create('\
-            <div class="action-attribute-container action-child-container selectable" \
+        assignment.valueContainer               = Y.Node.create('\
+            <div class="assignment-attribute-container assignment-child-container selectable" \
             title="Drop an attribute or value here."></div>\
         ');
-        action.valueContainer._LAGVEName    = 'Action value';
-        action.valueContainer.select        = LAGVE._genericSelect;
-        action.valueContainer.deSelect      = LAGVE._genericDeSelect;
-        action.valueContainer.resize        = function( reason ) { 
-            action.resize('child action.valueContainer.resize | ' + reason);
+        assignment.valueContainer._LAGVEName    = 'Assignment value';
+        assignment.valueContainer.select        = LAGVE._genericSelect;
+        assignment.valueContainer.deSelect      = LAGVE._genericDeSelect;
+        assignment.valueContainer.resize        = function( reason ) { 
+            assignment.resize('child assignment.valueContainer.resize | ' + reason);
         };
         new Y.DD.Drop({
-            node:    action.valueContainer,
+            node:    assignment.valueContainer,
             groups:    ['attribute'],
         });
-        action.valueContainer.LAGVEInsert   = function(node) {
-            if (LAGVEActn.tryInsertActionChild(action.valueContainer,node)) {
-                node.resize('action.valueContainer.LAGVEInsert');
+        assignment.valueContainer.LAGVEInsert   = function(node) {
+            if (LAGVE.Assignment.tryInsertAssignmentChild(assignment.valueContainer,node)) {
+                node.resize('assignment.valueContainer.LAGVEInsert');
             }
         };
-        action.valueContainer.getName       = function() { return this._LAGVEName };
+        assignment.valueContainer.getName       = function() { return this._LAGVEName };
         
         
         //////    OPERATOR CONTAINER    //////
-        action.operatorContainer    = Y.Node.create('\
-            <div class="action-operator-container action-child-container" \
+        assignment.operatorContainer    = Y.Node.create('\
+            <div class="assignment-operator-container assignment-child-container" \
             title="Select an operator from the list."></div>\
         ');
-        action.operatorSelect       =  Y.Node.create(
+        assignment.operatorSelect       =  Y.Node.create(
             '<select class="operator-select">\
+                <option value=""></option>\
                 <option value="=">=</option>\
-                <option value="+=" title="Add to the current value">+=</option>\
+                <option value="+=">+=</option>\
                 <option value="-=">-=</option>\
                 <option value=".=">.=</option>\
             </select>'
         );
-        action.operatorContainer.append(action.operatorSelect);
+        assignment.operatorContainer.append(assignment.operatorSelect);
         
         
         //////      BUILD AND INSERT/RETURN    //////
-        action.append(action.attributeContainer);
-        action.append(action.operatorContainer);
-        action.append(action.valueContainer);
+        assignment.append(assignment.attributeContainer);
+        assignment.append(assignment.operatorContainer);
+        assignment.append(assignment.valueContainer);
         
-        action.attributeContainer.toLAG = function() {
+        /**
+        *   Set the operator of the Assignment to the operator passed, if found.
+        *   @argument str operator - The operator we want to select.
+        */
+        assignment.operatorSelect.setOperator = function(operator) {
+            var wantedOption;
+            assignment.operatorSelect.get('childNodes').each(
+                function(currentNode) {
+                        if (currentNode.get('value') === operator) {
+                            wantedOption = currentNode;
+                        }
+                }
+            );
+            
+            if (wantedOption) wantedOption.set('selected', 'selected');            
+        }
+        
+        assignment.attributeContainer.toLAG = function() {
             if (this.hasChildNodes()) {
                 return this.get('firstChild').toLAG();
             }
             return '';
         }
-        action.operatorContainer.toLAG = function() {
+        assignment.operatorContainer.toLAG = function() {
             return this.get('firstChild').get('value');
         }
-        action.valueContainer.toLAG = function() {
+        assignment.valueContainer.toLAG = function() {
             if (this.hasChildNodes()) {
                 return this.get('firstChild').toLAG();
             }
             return '';
         }
-        action.toLAG = function() {
+        assignment.toLAG = function() {
             var LAG = 
                 this.attributeContainer.toLAG() + ' ' +
                 this.operatorContainer.toLAG() + ' ' +
@@ -287,29 +289,29 @@ LAGVEActn = new Object();
         }
                 
         if (isset(targetNode)) {
-            targetNode.LAGVEInsert(action);
+            targetNode.LAGVEInsert(assignment);
         }
         
-        return action;
+        return assignment;
     }
     
-    LAGVEActn.tryInsertActionChild = function(target,child) {
-        if (target.hasClass('action-child-container')) {
-            if (child.hasClass('action-child')) {
+    LAGVE.Assignment.tryInsertAssignmentChild = function(target,child) {
+        if (target.hasClass('assignment-child-container')) {
+            if (child.hasClass('assignment-child')) {
                 if (!target.hasChildNodes()) {            
                     target.append(child);
-                    target.resize('LAGVEActn.tryInsertActionChild');
+                    target.resize('LAGVE.Assignment.tryInsertAssignmentChild');
                     return true;
                 }
         
-                LAGVEActn._positionChild(child);
+                LAGVE.Assignment._positionChild(child);
             }
         }
         return false;
     }
     
-    LAGVEActn._positionChild = function(child) {
-        if (child.hasClass('action-child')) {
+    LAGVE.Assignment._positionChild = function(child) {
+        if (child.hasClass('assignment-child')) {
             child.setStyles({
                 position:    'relative',
                 left:        '0px',
@@ -319,16 +321,16 @@ LAGVEActn = new Object();
     }
     
     Y.DD.DDM.on('drop:enter',function(e) {
-        LAGVEActn.tryInsertActionChild(e.drop.get('node'),e.drag.get('node'));
+        LAGVE.Assignment.tryInsertAssignmentChild(e.drop.get('node'),e.drag.get('node'));
     });
     
     Y.DD.DDM.on('drop:hit',function(e) {
-        LAGVEActn.tryInsertActionChild(e.drop.get('node'),e.drag.get('node'))
+        LAGVE.Assignment.tryInsertAssignmentChild(e.drop.get('node'),e.drag.get('node'))
     });
     
     Y.DD.DDM.on('drag:dropmiss',function(e) {
-        if (e.target.get('node').hasClass('action-child')) {
-            LAGVEActn._positionChild(e.target.get('node'));
+        if (e.target.get('node').hasClass('assignment-child')) {
+            LAGVE.Assignment._positionChild(e.target.get('node'));
         }
     });
 
@@ -424,7 +426,7 @@ LAGVEIf = new Object();
             this.setStyle('width', conditionPositioningWidth + 'px');
             
             // Bubble
-            this.get('parentNode').resize('child action.resize | ' + reason);
+            this.get('parentNode').resize('child assignment.resize | ' + reason);
         }
         
         
@@ -1122,7 +1124,7 @@ LAGVEContext = new Object();
 
     /*
     switch (context.name) {
-        case 'action': _useButton(LAGVEContext.action);
+        case 'assignment': _useButton(LAGVEContext.assignment);
         case 'x': _useButton(LAGVEContext.x);
     }
     
@@ -1443,9 +1445,10 @@ LAGVE.oneIndentation = '  ';
     //
     // this can be separated out into individual functions, but it's
     // easier to edit as a switch with all the actions together.
-    LAGVE.ToVisual.action = function(command, value) {
+    LAGVE.ToVisual.action = function(command, tokenValue) {
         if (LAGVE.ToVisual.converting) {
             return function() {
+                Y.log('found ' + command);
                 switch (command) {
                     case 'start init':
                         // initialization always exists so don't create it. 
@@ -1508,21 +1511,71 @@ LAGVE.oneIndentation = '  ';
                         LAGVE.ToVisual.stack.pop();
                         break;
                     case 'boolean':
-                        var newBoolean = LAGVE.Attr.newBoolean(value);
-                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
+                        // target node is whatever's on top of LAGVE.ToVisual.stack
+                        var newBoolean = LAGVE.Attr.newBoolean(tokenValue, LAGVE.ToVisual.stack.peek());
                         break;
-                    /*case 'model':
-                        var newBoolean = LAGVE.Attr.newBoolean(value);
-                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
+                    case 'start assignment':
+                        // create new assignment
+                        // target node is whatever's on top of LAGVE.ToVisual.stack
+                        var newAssignment = LAGVE.Assignment.newAssignment(LAGVE.ToVisual.stack.peek());
+                        // push new assignment onto LAGVE.ToVisual.stack so we can find it
+                        LAGVE.ToVisual.stack.push(newAssignment);
+                        // push new assignment's attribute container onto LAGVE.ToVisual.stack
+                        // because we're expecting an attribute that we'll want to insert.
+                        LAGVE.ToVisual.stack.push(newAssignment.attributeContainer);
+                        break;
+                    case 'operator':
+                        // pop the assignment attribute container off of LAGVE.ToVisual.stack
+                        LAGVE.ToVisual.stack.pop();
+                        // set the operator of the assignement statement 
+                        // at the top of LAGVE.ToVisual.stack to the operator token value
+                        LAGVE.ToVisual.stack.peek().operatorSelect.setOperator(tokenValue);
+                        // push the assignment value container onto LAGVE.ToVisual.stack
+                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().valueContainer);
+                        break;
+                    case 'finish assignment':
+                        // pop the value container off
+                        LAGVE.ToVisual.stack.pop();
+                        // pop the assignment off
+                        LAGVE.ToVisual.stack.pop();
                         break;
                     case 'start attribute':
-                        var newBoolean = LAGVE.Attr.newBoolean(value);
-                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
+                        // Start with empty value - upcoming Model tokens will modify its value
+                        // target node is whatever's on top of LAGVE.ToVisual.stack
+                        var newAttribute = LAGVE.Attr.insertNewAttr([''], LAGVE.ToVisual.stack.peek());
+                        // push the new Attribute to the 
+                        LAGVE.ToVisual.stack.push(newAttribute);
                         break;
                     case 'finish attribute':
-                        var newBoolean = LAGVE.Attr.newBoolean(value);
-                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newBoolean);
-                        break;*/
+                        LAGVE.ToVisual.stack.pop();
+                        break;
+                    case 'model':
+                        // get value of attribute on top of LAGVE.ToVisual.stack
+                        var currentValue = LAGVE.ToVisual.stack.peek().getValue();
+                        // don't prepend a '.' to the first Model
+                        var newValue = ((currentValue === '') ? '' : currentValue + '.') + tokenValue;
+                        // update value
+                        LAGVE.ToVisual.stack.peek().setValue(newValue);
+                        break;
+                    case 'start enough':
+                        // make a new Enough
+                        var newEnough = LAGVECondition.newEnough();
+                        // insert to the thing at the top of LAGVE.ToVisual.stack
+                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newEnough);
+                        // push onto LAGVE.ToVisual.stack
+                        LAGVE.ToVisual.stack.push(newEnough);
+                        break;
+                    case 'start enough threshold':
+                        // Get the new Enough from the top of LAGVE.ToVisual.stack,
+                        // get its threshold container and push that 
+                        // to LAGVE.ToVisual.stack.
+                        LAGVE.ToVisual.stack.push(
+                            LAGVE.ToVisual.stack.peek().getThresholdContainer()
+                        );
+                        break;
+                    case 'finish enough threshold':
+                        LAGVE.ToVisual.stack.pop();
+                        break;
                     default:
                         if (console) console.log('nothing to do for \'' + command + '\'');
                         break;

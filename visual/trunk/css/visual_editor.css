@@ -188,7 +188,7 @@ body {
 
 
 /* ACTION */
-.action {
+.assignment {
     position:           relative;
     top:                0px;
     left:               0px;
@@ -196,26 +196,26 @@ body {
     height:             65px;
     background-color:   white;
 }
-/*.action-child {
+/*.assignment-child {
     position:    relative;
     top:        0px;
     left:        0px;
 }*/
-.action-child-container {
+.assignment-child-container {
     min-width:  20px;
     border:     1px solid black;
     padding:    1px;
     margin:     1px;
     float:      left;
 }
-.action-attribute-container {
+.assignment-attribute-container {
     min-width:  50px;
     min-height: 50px;
     height:     59px;
 }
-.action-operator-container {
+.assignment-operator-container {
     position:   relative;
-    top:        16px;    /* we know the height of of attributes so we know what height to expect an action block to be.*/
+    top:        16px;    /* we know the height of of attributes so we know what height to expect an assignment block to be.*/
 }
 .operator-select {
     font-size:  22px;            

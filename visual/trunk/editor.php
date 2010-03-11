@@ -248,7 +248,7 @@
                                 </div> <!-- end LAG-attr-menu -->
                             </li>
                             <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="LAGVEActn.newAction(LAGVE.selectedNode)">Action</a>
+                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.Assignment.newAssignment(LAGVE.selectedNode)">Assignment</a>
                             </li>
                             <li class="yui-menuitem">
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVECondition.newComparison(LAGVE.selectedNode)">Comparison</a>

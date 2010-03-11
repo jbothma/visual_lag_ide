@@ -597,12 +597,26 @@ var LAGParser = Editor.Parser = (function () {
         }
         
         // If it is text (variable) or numeric (number) then carry on, else mark it red
-        function value(type) {
-            if (type == "variable") cont();
-            else if (type == "model") pass(attribute());
-            else if (type == "number") cont();
-            else if (type == "boolean") cont();
-            else {
+        function value(type, tokenValue) {
+            if (type == "variable") {
+                cont(
+                    // variables are currently Attribute visual elements
+                    ToVisual.action('start attribute'), 
+                    ToVisual.action('model', tokenValue),
+                    ToVisual.action('finish attribute')
+                );
+            } else if (type == "model") { 
+                pass(attribute());
+            } else if (type == "number") { 
+                cont(
+                    // variables are currently Attribute visual elements
+                    ToVisual.action('start attribute'), 
+                    ToVisual.action('model', tokenValue),
+                    ToVisual.action('finish attribute')
+                );
+            } else if (type == "boolean") {
+                cont(ToVisual.action('boolean', tokenValue));
+            } else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>variable, true, false, number, DM, UM, GM, PM, Concept</b>");
                 cont();
