@@ -36,7 +36,7 @@ var LAGParser = Editor.Parser = (function () {
     
     // indentation rules.
     function indentLAG(lexical) {
-        return function (firstChars) {
+        return function indenting(firstChars) {
             var firstChar = firstChars && firstChars.charAt(0);
             var closing = firstChar == lexical.type;
             if (lexical.type == "vardef") return lexical.indented; // + 4;
@@ -323,7 +323,7 @@ var LAGParser = Editor.Parser = (function () {
         // Creates an action that discards tokens until it finds one of
         // the given type.
         function expect(wanted) {
-            return function (type, tokenValue) {
+            return function expecting (type, tokenValue) {
                 if (type == wanted) {
                     ToVisual.action('found expected ' + wanted, tokenValue);
                     cont();
@@ -572,7 +572,7 @@ var LAGParser = Editor.Parser = (function () {
             function proceed(type) {
                 if (type == ".") cont(what, proceed);
             };
-            return function () {
+            return function dotSepAction() {
                 pass(what, proceed);
             };
         }
