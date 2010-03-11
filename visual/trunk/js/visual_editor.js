@@ -1430,13 +1430,27 @@ LAGVE.oneIndentation = '  ';
     // be converted to the visual representation
     LAGVE.ToVisual.converting = false;
     
+    // the last editor onChange timestamp converted to visual representation
+    LAGVE.ToVisual.lastEditorChange = 0;
+    
+    LAGVE.ToVisual.convertIfCodeChanged = function(editorChangeTimestamp) {
+        if ( editorChangeTimestamp > LAGVE.ToVisual.lastEditorChange ) {
+            LAGVE.ToVisual.convert();
+        }
+    }
+    
     LAGVE.ToVisual.convert = function() {
+        // update last code change converted to visual
+        LAGVE.ToVisual.lastEditorChange = editorChangeTimestamp;
+        
+        // allow conversion - unset by implementation handler
         LAGVE.ToVisual.converting = true;
         
         // hackedly force full parse by copying
         // and replacing all the code in the editor.
         var code = editor.mirror.getCode();
         editor.mirror.setCode(code);
+        
     }
         
     // this is called to create an action function that goes on the action 
@@ -1448,7 +1462,7 @@ LAGVE.oneIndentation = '  ';
     LAGVE.ToVisual.action = function(command, tokenValue) {
         if (LAGVE.ToVisual.converting) {
             return function() {
-                Y.log('found ' + command);
+                //Y.log('found ' + command);
                 switch (command) {
                     case 'start init':
                         // initialization always exists so don't create it. 

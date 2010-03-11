@@ -262,9 +262,6 @@
                             <li class="yui-menuitem">
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
                             </li>
-                            <li class="yui-menuitem">
-                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.ToVisual.convert()">To Visual</a>
-                            </li>
                         </ul>
                     </div>
                 </div> <!-- end VE-menu -->
@@ -437,6 +434,11 @@
             // CDATA line is commented because IE can only use xhmtl pages by acting like it's HTML.
             
             var textarea = document.getElementById('code');
+            
+            var editorChangeTimestamp = 0;
+            var editorChangeHandler = function() {
+                editorChangeTimestamp = new Date().getTime();
+            }
 
             var editor = new MirrorFrame(CodeMirror.replace(textarea), {
                 height: "200px",
@@ -447,7 +449,8 @@
                 path: "js/",
                 lineNumbers: true,
                 autoMatchParens: true,
-                saveFunction: saveStrategy
+                saveFunction: saveStrategy,
+                onChange: editorChangeHandler,
             });
           
             var Y = new YUI({combine: true}).use('dd-drag','node', 'node-event-simulate', 'event', function(Y) {
@@ -528,6 +531,7 @@
                     
                     Y.all('.visualeditor-tab').on('click', function() {
                         showVEMenu();
+                        LAGVE.ToVisual.convert();
                     });
                     
                     Y.one('#strategy-description-tab').on('click', function() {
