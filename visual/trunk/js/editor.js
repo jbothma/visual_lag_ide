@@ -347,9 +347,9 @@ var Editor = (function(){
     this.history = new History(container, options.undoDepth, options.undoDelay,
                                this, options.onChange);
     var self = this;
-	
-	// for autocomplete
-	this.curWord = "";
+    
+    // for autocomplete
+    this.curWord = "";
 
     if (!Editor.Parser)
       throw "No parser loaded.";
@@ -401,20 +401,21 @@ var Editor = (function(){
       addEventHandler(document, "keypress", method(this, "keyPress"));
       addEventHandler(document, "keyup", method(this, "keyUp"));
 
-      function cursorActivity() { self.cursorActivity(false); }
-	  function mouseActivity() { this.curWord = "";
-		removeAllChildren(this.parent.document.getElementById("autowords"));
-		this.parent.document.getElementById("autocomplete").style.left = -1000 + "px";
-		this.parent.document.getElementById("autocomplete").style.top = 0 + "px";		
-		self.cursorActivity(false);
-	  }
+      function cursorActivity() {self.cursorActivity(false);}
+      
+      function mouseActivity() { this.curWord = "";
+        removeAllChildren(this.parent.document.getElementById("autowords"));
+        this.parent.document.getElementById("autocomplete").style.left = -1000 + "px";
+        this.parent.document.getElementById("autocomplete").style.top = 0 + "px";        
+        self.cursorActivity(false);
+      }
       addEventHandler(document.body, "paste", cursorActivity);
       addEventHandler(document.body, "cut", cursorActivity);
       addEventHandler(document.body, "mouseup", mouseActivity);
 
       if (this.options.autoMatchParens) {
         addEventHandler(document.body, "click", method(this, "scheduleParenBlink"));
-	  }
+      }
     }
   }
 
@@ -600,12 +601,12 @@ var Editor = (function(){
           this.reparseBuffer();
         }
         else {
-			// Check for autocomplete selection
-			if (this.parent.document.getElementById("autowords").selectedIndex < 0) {
-				select.insertNewlineAtCursor(this.win);
-				this.indentAtCursor();
-				select.scrollToCursor(this.container);
-			}
+          // Check for autocomplete selection
+          if (this.parent.document.getElementById("autowords").selectedIndex < 0) {
+            select.insertNewlineAtCursor(this.win);
+            this.indentAtCursor();
+            select.scrollToCursor(this.container);
+          }
         }
         event.stop();
       }
@@ -647,17 +648,9 @@ var Editor = (function(){
     // Check for characters that should re-indent the current line,
     // and prevent Opera from handling enter and tab anyway.
     keyPress: function(event) {
-        var electric = Editor.Parser.electricChars;
-        // Hack for Opera, and Firefox on OS X, in which stopping a
-        // keydown event does not prevent the associated keypress event
-        // from happening, so we have to cancel enter and tab again
-        // here.
-        if (event.code == 13 || event.code == 9) event.stop();
-        else if ((event.character == "[" || event.character == "]") && event.ctrlKey) event.stop(),
-        this.blinkParens();
-        else if (electric && electric.indexOf(event.character) != -1) this.parent.setTimeout(method(this, "indentAtCursor"), 0);
-            
-	  /*var electric = Editor.Parser.electricChars;
+      var BACKSPACE_CODE = 8;
+      
+      var electric = Editor.Parser.electricChars;
       // Hack for Opera, and Firefox on OS X, in which stopping a
       // keydown event does not prevent the associated keypress event
       // from happening, so we have to cancel enter and tab again
@@ -670,171 +663,190 @@ var Editor = (function(){
         event.stop(), this.blinkParens();
       else if (electric && electric.indexOf(event.character) != -1)
         this.parent.setTimeout(method(this, "indentAtCursor"), 0);
-		
-	 
-	  // Autocomplete start...
-	  
-	  var autoWords = (this.parent.document.getElementById("autowords") || document.getElementById("autowords"));
-	  var autoComplete = (this.parent.document.getElementById("autocomplete") || document.getElementById("autocomplete"));
+        
+     
+      // Autocomplete start...
+      
+      var autoWords = (this.parent.document.getElementById("autowords") || document.getElementById("autowords"));
+      var autoComplete = (this.parent.document.getElementById("autocomplete") || document.getElementById("autocomplete"));
 
-	  // if its an ENTER, then clear the curWord
-	  if (event.keyCode == 13 && autoWords) {
-		if (autoWords.selectedIndex > -1) {
-			this.parent.insertAutoComplete();
-			autoComplete.style.left = -1000 + "px";
-			autoComplete.style.top = 0 + "px";			
-		} else {
-			this.curWord == "";
-			//try {
-				this.parent.removeAllChildren(autoWords);
-			//} catch (e) {
-			//	removeAllChildren(autoWords);
-			//}
-			autoComplete.style.left = -1000 + "px";
-			autoComplete.style.top = 0 + "px";	*/		
-			clearDebugDisplay(); /*
-		}
-	  }
-	  
-	  // if it's a SPACE
-	  if (event.charCode == 32 && autoWords) {
-		this.curWord = "";
-		removeAllChildren(autoWords);
-		autoComplete.style.left = -1000 + "px";
-		autoComplete.style.top = 0 + "px";
-	  }
-	  
-	  // if its a BACKSPACE, remove one character
-	  // if the key pressed is a 0 character or alphanumeric or punctuation
-	  if (event.charCode >= 48 || event.keyCode == 8 || event.character == '.') {
-		removeAllChildren(autoWords);
-		autoComplete.style.left = -1000 + "px";
-		autoComplete.style.top = 0 + "px";
-		
-		clearDebugDisplay();
-		
-		// get current cursor position and the text from its current token
-		//var curWord2 = tmpToken
+      // if its an ENTER, then clear the curWord
+      if (event.keyCode == 13 && autoWords) {
+        if (autoWords.selectedIndex > -1) {
+            this.parent.insertAutoComplete();
+            autoComplete.style.left = -1000 + "px";
+            autoComplete.style.top = 0 + "px";
+        } else {
+            this.curWord == "";
+            //try {
+                this.parent.removeAllChildren(autoWords);
+            //} catch (e) {
+            //  removeAllChildren(autoWords);
+            //}
+            autoComplete.style.left = -1000 + "px";
+            autoComplete.style.top = 0 + "px";
+            clearDebugDisplay();
+        }
+      }
+      
+      // if it's a SPACE
+      if (event.charCode == 32 && autoWords) {
+        this.curWord = "";
+        removeAllChildren(autoWords);
+        autoComplete.style.left = -1000 + "px";
+        autoComplete.style.top = 0 + "px";
+      }
+      
+      // if its a BACKSPACE, remove one character
+      // if the key pressed is a 0 character or alphanumeric or punctuation
+      if (event.charCode >= 48 || event.keyCode == BACKSPACE_CODE || event.character == '.') {
+        removeAllChildren(autoWords);
+        autoComplete.style.left = -1000 + "px";
+        autoComplete.style.top = 0 + "px";
+        
+        clearDebugDisplay();
+        
+        // get current cursor position and the text from its current token
+        //var curWord2 = tmpToken
         var cursorPos = this.parent.editor.mirror.cursorPosition();
-		// if there is currently no word in storage - then check the preceding token to the cursor
-		if (this.curWord == "") {
-		  var offset = cursorPos.character;
-		  tmpToken = cursorPos.line;
+        // if there is currently no word in storage - then check the preceding token to the cursor
+        if (this.curWord == "") {
+          var offset = cursorPos.character;
+          tmpToken = cursorPos.line;
 
-		  var lc = this.lineContent(tmpToken);
-		  
-		  var tmpstr = lc.substring(0, offset);
-		  var lio = (tmpstr.lastIndexOf('.') > tmpstr.lastIndexOf(' ') ? tmpstr.lastIndexOf('.') : tmpstr.lastIndexOf(' '));
-		  
-		  curWord2 = lc.substring(lio+1, offset);
-		// if there is no word in storage, store nothing...
-		} else {
-		  curWord2 = this.curWord;
-		  tmpToken = "not needed";
-		}
-		//debugger;
-		// Need to add event.character (the character just typed) since it hasnt been put into a token in the editor yet...
-		// Or remove a character if backspace has been pressed
-		if (event.keyCode == 8) {
-			this.curWord = curWord2.substring(0, curWord2.length-1);
-		} else {
-			this.curWord = curWord2 + event.character;
-		}
-		  
-		  // if its a . character between models or parenthesis
-		  //if (event.character == '.') {
-			//this.curWord = "";
-		  //}
-		  
-		  //DEBUGGING //this.parent.document.getElementById('cc').innerHTML += " curWord:" + this.curWord + " offset:" + cursorPos.character + " tmpToken:" + tmpToken.innerHTML + "|";
-		  
-		  // if there is a word in mem to check against
-		  if (this.curWord != "") {
-			var results = new Array();
-			// Get words from keywords...
-			for (var i=0; i<autoKeywords.length; i++) {
-				if (autoKeywords[i].indexOf(this.curWord) == 0 && autoKeywords[i] != this.curWord) {
-					results.push(autoKeywords[i]);
-				}
-			}
-			/*
-			for (var i=0; i<Editor.Parser.vars.length; i++) {
-				if (Editor.Parser.vars[i].indexOf(this.curWord) == 0 && Editor.Parser.vars[i] != this.curWord) {
-					results.push(Editor.Parser.vars[i]);
-				}
-			}
-			*/
-			// Sort array
-			/*results.sort();
-			if (results.length > 0) {
-				for (var i=0; i<results.length; i++) {
-					var ne = document.createElement("option");
-					ne.innerHTML = results[i];
-					autoWords.appendChild(ne);
-				}
-                
-				//Positioning...
-                // #peal
-                var debuggerOutputDiv = this.parent.document.getElementById("cc")
-                
-                // 
-				var a = debuggerOutputDiv.offsetTop + 20;	//each character is 16pixels high, so 20px is probs alright
-				var b = cursorPos.line.offsetTop;
-				var e = debuggerOutputDiv.childNodes[0].childNodes[1].nextSibling.scrollTop;
-				var c = ((event.keyCode == 8) ? ((cursorPos.character-1) * 8) : (cursorPos.character * 8));		// each character is 8 pixels across - a backspace will obv need the autocomplete moving left a bit more
-				var d = debuggerOutputDiv.firstChild.offsetLeft + 8;
-				var f = debuggerOutputDiv.childNodes[0].childNodes[1].nextSibling.scrollLeft;
-				autoComplete.style.top = (a + b - e) + "px";
-				autoComplete.style.left = (d + c - f) + "px";
-			}
-		  } else {
-			autoComplete.style.left = -1000 + "px";
-			autoComplete.style.top = 0 + "px";			
-		  }
-	  }
-	  
-	  // If it's a 		down 				or up arrow
-	  if (event.keyCode == 40 || event.keyCode == 38) {
-		var eAuto = this.parent.document.getElementById("autowords");
-		if (eAuto && eAuto.hasChildNodes()) {
-			// prevent it from actually moving the cursor down or up
-			event.stop();
+          var lc = this.lineContent(tmpToken);
+          
+          var tmpstr = lc.substring(0, offset);
+          var lio = (tmpstr.lastIndexOf('.') > tmpstr.lastIndexOf(' ') ? tmpstr.lastIndexOf('.') : tmpstr.lastIndexOf(' '));
+          
+          curWord2 = lc.substring(lio+1, offset);
+        // if there is no word in storage, store nothing...
+        } else {
+          curWord2 = this.curWord;
+          tmpToken = "not needed";
+        }
+        //debugger;
+        // Need to add event.character (the character just typed) since it hasnt been put into a token in the editor yet...
+        // Or remove a character if backspace has been pressed
+        if (event.keyCode == BACKSPACE_CODE) {
+            this.curWord = curWord2.substring(0, curWord2.length-1);
+        } else {
+            this.curWord = curWord2 + event.character;
+        }
+          
+        // if its a . character between models or parenthesis
+        //if (event.character == '.') {
+          //this.curWord = "";
+        //}
+        
+        //DEBUGGING //this.parent.document.getElementById('cc').innerHTML += " curWord:" + this.curWord + " offset:" + cursorPos.character + " tmpToken:" + tmpToken.innerHTML + "|";
+        
+        // if there is a word in mem to check against
+        if (this.curWord != "") {
+          var results = new Array();
+          // Get words from keywords...
+          for (var i=0; i<autoKeywords.length; i++) {
+            if (autoKeywords[i].indexOf(this.curWord) == 0 && autoKeywords[i] != this.curWord) {
+              results.push(autoKeywords[i]);
+            }
+          }
+          /*
+          for (var i=0; i<Editor.Parser.vars.length; i++) {
+            if (Editor.Parser.vars[i].indexOf(this.curWord) == 0 && Editor.Parser.vars[i] != this.curWord) {
+              results.push(Editor.Parser.vars[i]);
+            }
+          }
+          */
+          // Sort array
+          results.sort();
+          if (results.length > 0) {
+            for (var i=0; i<results.length; i++) {
+              var ne = document.createElement("option");
+              ne.innerHTML = results[i];
+              autoWords.appendChild(ne);
+            }
+            
+            // Positioning the Autocomplete suggestions:
+            
+            // CodeMirror IFRAME
+            var frame = this.parent.editor.mirror.frame;
 
-			// handle the moving up and down in the dropdown list box...
-			var sel = eAuto.selectedIndex;
-			if (event.keyCode == 40) {
-				if (eAuto.selectedIndex < eAuto.options.length-1) {
-					eAuto.selectedIndex++;
-				} else {
-					eAuto.selectedIndex = -1;
-				}
-			} else if (event.keyCode == 38) {
-				if (eAuto.selectedIndex > 0) {
-					eAuto.selectedIndex--;
-				} else {
-					eAuto.selectedIndex = -1;
-				}
-			}
-		// if you are just moving the cursor using the keypad (up and down)
-		} else {
-			this.curWord = "";
-		}
-	  }
+            // Top of frame from window plus one line (
+            // so that we don't cover currentl line with Autocomplete suggestions).
+            // Each character is 16pixels high, so 20px is probs alright.
+            // offsetParent is used because frame's offset is from its offsetParent.
+            var frameTop = frame.offsetParent.offsetTop + 20;
+            
+            // Top of current line but remember code is inside the iframe 
+            // so this isn't relative to browser viewport, only code viewport.
+            var currentLineTop = (cursorPos.line) ? cursorPos.line.offsetTop : 0;
+            
+            // offset for having scrolled down the iframe
+            var frameScrollTop = frame.scrollTop;
+            
+            // each character is 8 pixels across 
+            // - a backspace moves autocomplete suggestions left one character
+            var charLeft = ((event.keyCode == BACKSPACE_CODE) ? (cursorPos.character-1) : (cursorPos.character)) * 8;
+            
+            // Frame left-edge from window plus one char (
+            // so that we don't cover current char with Autocomplete suggestions).
+            // offsetParent is used because frame's offset is from its offsetParent.
+            var frameLeft = frame.offsetParent.offsetLeft + 8;
+            
+            // offset for having scrolled horizontally
+            var frameScrollLeft = frame.scrollLeft;
+            
+            autoComplete.style.top  = (frameTop + currentLineTop - frameScrollTop) + "px";
+            autoComplete.style.left = (frameLeft + charLeft - frameScrollLeft) + "px";
+          }
+        } else {
+          autoComplete.style.left = -1000 + "px";
+          autoComplete.style.top = 0 + "px";            
+        }
+      }
+      
+      // If it's a         down                or up arrow
+      if (event.keyCode == 40 || event.keyCode == 38) {
+        var eAuto = this.parent.document.getElementById("autowords");
+        if (eAuto && eAuto.hasChildNodes()) {
+          // prevent it from actually moving the cursor down or up
+          event.stop();
 
-	  // if you are just moving the cursor using the keypad (left and right)
-	  if (event.keyCode == 37 || event.keyCode == 39) {
-		this.curWord = "";
-		removeAllChildren(autoWords);
-		autoComplete.style.left = -1000 + "px";
-		autoComplete.style.top = 0 + "px";
-	 }
-	*/  
-	},
+          // handle the moving up and down in the dropdown list box...
+          var sel = eAuto.selectedIndex;
+          if (event.keyCode == 40) {
+            if (eAuto.selectedIndex < eAuto.options.length-1) {
+              eAuto.selectedIndex++;
+            } else {
+              eAuto.selectedIndex = -1;
+            }
+          } else if (event.keyCode == 38) {
+            if (eAuto.selectedIndex > 0) {
+              eAuto.selectedIndex--;
+            } else {
+              eAuto.selectedIndex = -1;
+            }
+          }
+        // if you are just moving the cursor using the keypad (up and down)
+        } else {
+          this.curWord = "";
+        }
+      }
+
+      // if you are just moving the cursor using the keypad (left and right)
+      if (event.keyCode == 37 || event.keyCode == 39) {
+        this.curWord = "";
+        removeAllChildren(autoWords);
+        autoComplete.style.left = -1000 + "px";
+        autoComplete.style.top = 0 + "px";
+     }
+    
+    },
 
     // Mark the node at the cursor dirty when a non-safe key is
     // released.
     keyUp: function(event) {
-		this.cursorActivity(isSafeKey(event.keyCode));
+        this.cursorActivity(isSafeKey(event.keyCode));
     },
 
     // Indent the line following a given <br>, or null for the first
@@ -938,7 +950,7 @@ var Editor = (function(){
       if (this.parenEvent) this.parent.clearTimeout(this.parenEvent);
       this.parenEvent = this.parent.setTimeout(method(this, "blinkParens"), 300);
     },
-	
+    
     isNearParsedNode: function(node) {
       var distance = 0;
       while (node && (!node.parserFromHere || node.dirty)) {
@@ -1080,7 +1092,7 @@ var Editor = (function(){
           this.addDirtyNode(cursor);
         }
       }
-	  
+      
     },
 
     reparseBuffer: function() {
