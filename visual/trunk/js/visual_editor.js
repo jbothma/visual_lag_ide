@@ -114,11 +114,6 @@ YUI({
             return this.getValue();
         }
         
-        // Default to selected node.
-        if (!isset(targetNode)) {
-            targetNode = LAGVE.selectedNode;
-        }
-        
         if (isset(targetNode)) {
             targetNode.LAGVEInsert(newAttribute);
         } 
@@ -131,20 +126,15 @@ YUI({
     LAGVE.Attr.newBoolean = function(value, targetNode) {        
         // Is the attribute 'true' or 'false'?
         if ( value in {'true':1, 'false':1} ) {
-            var newBoolean = LAGVE.Attr.insertNewAttr([value], targetNode);
+            var newBoolean = LAGVE.Attr.insertNewAttr(value, targetNode);
             newBoolean.addClass('condition');
             newBoolean.dd.addToGroup('condition');
             
             newBoolean.parentChanged = function() {};
             
-            // Default to selected node.
-            if (!isset(targetNode)) {
-                targetNode = LAGVE.selectedNode;
-            }
-            
             if (isset(targetNode)) {
                 targetNode.LAGVEInsert(newBoolean);
-            } 
+            }
             
             return newBoolean;
         } else {
@@ -468,9 +458,7 @@ LAGVEIf = new Object();
                 }
             }
         }
-        
-        ifThenElse.condition = ifThenElse.conditionContainer;
-        
+                
         ///////    THEN and ELSE    ///////
         ifThenElse.thenAndElse = Y.Node.create('<div class="ifthenelse-thenelse"></div>');
         
@@ -580,7 +568,7 @@ LAGVE.Condition = new Object();
      *    Parameters:    condition
      */
     LAGVE.Condition.wrapCondition = function(child) {
-        var conditionWrapper = Y.Node.create( '<div class="condition deletable"></div>' );
+        var conditionWrapper = Y.Node.create( '<div class="condition deletable wrapper"></div>' );
     
         var conditionWrapperDD = new Y.DD.Drag({
             groups:    ['condition'],
@@ -786,7 +774,7 @@ LAGVE.Condition = new Object();
         ');
         
         enough.threshold = Y.Node.create('\
-            <input type="text" class="enough value-box" value="1">\
+            <input type="text" class="enough threshold" value="0">\
         ');
         
         enough.append(enough.threshold);
@@ -799,26 +787,39 @@ LAGVE.Condition = new Object();
                 LAG += this.toLAG() + '\n';
             });
             
-            LAG += ',' + enough.threshold.get('value') + ')';
+            LAG += ',' + this.threshold.getValue() + ')';
             
             return LAG;
         }
  
         enough.getName       = function() {
-            return this._LAGVEName
-        };
+            return this._LAGVEName;
+        }
+        
+        enough.getThreshold = function() { 
+            return this.threshold;
+        }
+        
+        enough.threshold.setValue = function(newValue) {
+            this.set('value', newValue);
+        }
+        enough.threshold.getValue = function() {
+            return this.get('value');
+        }
+        
+        
         
         enough._resize       = function() {}
         
         enough.select        = function() { 
             this.addClass('selected');
             enough.conditionList.select() 
-        };
+        }
         
         enough.deSelect      = function() { 
             this.removeClass('selected');
             enough.conditionList.deSelect() 
-        };
+        }
         
         enough.LAGVEInsert   = function(child) {
             enough.conditionList.LAGVEInsert(child);
@@ -826,20 +827,21 @@ LAGVE.Condition = new Object();
         
         enough.diagonal = Y.Node.create('\
             <div class="enough diagonal-container"></div>\
-        ');
+        ')
         
         enough.conditionList = Y.Node.create('\
             <div class="enough condition-list selectable"></div>\
-        ');
+        ')
         enough.conditionList.plug(
             Y.Plugin.Drop,
             {
                 groups:    ['condition'],
             }
-        );        
+        )     
         enough.conditionList.resize        = function() {}
         enough.conditionList.select        = LAGVE._genericSelect;
         enough.conditionList.deSelect      = LAGVE._genericDeSelect;
+        enough.conditionContainer = enough.conditionList;
 
         enough.conditionList.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {          
@@ -853,7 +855,7 @@ LAGVE.Condition = new Object();
         enough.append(enough.conditionList);
         
         // Wrap enough in an LI as a generic Condition
-        var condition = LAGVE.Condition.wrapConditionInLI( enough );
+        var condition = LAGVE.Condition.wrapCondition( enough );
 
         if ( isset( options ) && isset( options.targetNode )) {
             options.targetNode.LAGVEInsert(condition);
@@ -1481,7 +1483,7 @@ LAGVE.oneIndentation = '  ';
     LAGVE.ToVisual.action = function(command, tokenValue) {
         if (LAGVE.ToVisual.converting) {
             return function() {
-                //Y.log('found ' + command);
+                Y.log('found ' + command);
                 switch (command) {
                     case 'start init':
                         // initialization always exists so don't create it. 
@@ -1521,7 +1523,7 @@ LAGVE.oneIndentation = '  ';
                         break;
                     case 'start condition':
                         // push the condition of the thing at top of stack
-                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().condition);
+                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().conditionContainer);
                         break;
                     case 'finish condition':
                         LAGVE.ToVisual.stack.pop();
@@ -1573,14 +1575,25 @@ LAGVE.oneIndentation = '  ';
                         LAGVE.ToVisual.stack.pop();
                         break;
                     case 'start attribute':
-                        // Start with empty value - upcoming Model tokens will modify its value
-                        // target node is whatever's on top of LAGVE.ToVisual.stack
-                        var newAttribute = LAGVE.Attr.insertNewAttr([''], LAGVE.ToVisual.stack.peek());
-                        // push the new Attribute to the 
-                        LAGVE.ToVisual.stack.push(newAttribute);
+                        var target = LAGVE.ToVisual.stack.peek();
+                        if (target.setValue) {
+                            target.setValue('');
+                        } else {
+                            // Start with empty value - upcoming Model tokens will modify its value
+                            // target node is whatever's on top of LAGVE.ToVisual.stack
+                            var newAttribute = LAGVE.Attr.insertNewAttr('', target);
+                            // push the new Attribute to the 
+                            LAGVE.ToVisual.stack.push(newAttribute);
+                        }
                         break;
                     case 'finish attribute':
-                        LAGVE.ToVisual.stack.pop();
+                        // finished the attribute (not adding anything more to it)
+                        // so pop it off.
+                        // Check whether the top of stack really is an attribute box
+                        // because things like Enough take the value token but don't build an
+                        // attribute/value visual element for it.
+                        if (LAGVE.ToVisual.stack.peek().hasClass('attr_box'))
+                            LAGVE.ToVisual.stack.pop();
                         break;
                     case 'model':
                         // get value of attribute on top of LAGVE.ToVisual.stack
@@ -1596,14 +1609,14 @@ LAGVE.oneIndentation = '  ';
                         // insert to the thing at the top of LAGVE.ToVisual.stack
                         LAGVE.ToVisual.stack.peek().LAGVEInsert(newEnough);
                         // push onto LAGVE.ToVisual.stack
-                        LAGVE.ToVisual.stack.push(newEnough);
+                        LAGVE.ToVisual.stack.push(newEnough.getCondition());
                         break;
                     case 'start enough threshold':
                         // Get the new Enough from the top of LAGVE.ToVisual.stack,
                         // get its threshold container and push that 
                         // to LAGVE.ToVisual.stack.
                         LAGVE.ToVisual.stack.push(
-                            LAGVE.ToVisual.stack.peek().getThresholdContainer()
+                            LAGVE.ToVisual.stack.peek().getThreshold()
                         );
                         break;
                     case 'finish enough threshold':

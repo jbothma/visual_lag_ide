@@ -424,9 +424,7 @@ var LAGParser = Editor.Parser = (function () {
                     ToVisual.action('start enough'),
                     expect("("),
                     pushlex(")"),
-                    ToVisual.action('start enough conditions'),
                     setOfCondition,
-                    ToVisual.action('finish enough condition list'),
                     ToVisual.action('start enough threshold'),
                     value,
                     ToVisual.action('finish enough threshold'),
@@ -559,7 +557,7 @@ var LAGParser = Editor.Parser = (function () {
         }
         
 
-        // Look for conditions until a closing brace is found.
+        // Look for conditions until a comma is found.
         function setOfCondition(type) {
             if (type == ",") {
                 return cont();

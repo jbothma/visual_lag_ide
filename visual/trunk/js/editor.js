@@ -606,6 +606,7 @@ var Editor = (function(){
             select.insertNewlineAtCursor(this.win);
             this.indentAtCursor();
             select.scrollToCursor(this.container);
+            this.curWord = "";
           }
         }
         event.stop();
