@@ -19,7 +19,7 @@
 
         <title><?php echo $peal_version_string;?></title>
         
-        <link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.0.0/build/widget/assets/skins/sam/widget.css&3.0.0/build/console/assets/skins/sam/console.css&3.0.0/build/node-menunav/assets/skins/sam/node-menunav.css">
+        <!--<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.0.0/build/widget/assets/skins/sam/widget.css&3.0.0/build/console/assets/skins/sam/console.css&3.0.0/build/node-menunav/assets/skins/sam/node-menunav.css">-->
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
         <link rel="stylesheet" type="text/css" href="css/peal.css"/>
         <link rel="stylesheet" type="text/css" href="css/visual_editor.css"/>
@@ -258,6 +258,9 @@
                             </li>
                             <li class="yui-menuitem">
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVE.selectedNode)">IfThenElse</a>
+                            </li>
+                            <li class="yui-menuitem">
+                                <a class="yui-menuitem-content" href="#" onclick="LAGVE.Elements.newWhile(LAGVE.selectedNode)">While()/For concepts where()</a>
                             </li>
                             <li class="yui-menuitem">
                                 <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
@@ -520,10 +523,6 @@
                         hideVEMenu();
                         if (LAGVE.initialization && LAGVE.implementation) {
                             var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
-                            
-                            //editor.mirror.setCode(LAG);
-                            var message = 'Inserting the visual program into the text editor sometimes fails but it will basically look like this:\r\n\r\n';
-                            var tryanyway = '\r\n\r\nTry anyway?';
                             
                             editor.mirror.setCode(LAG);
                         }

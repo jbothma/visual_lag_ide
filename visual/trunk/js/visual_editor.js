@@ -149,7 +149,7 @@ YUI({
     
     LAGVE.Assignment.newAssignment = function(targetNode) {
         //////    ASSIGNMENT    //////
-        var assignment      = Y.Node.create( '<div class="assignment statement-child"></div>' );
+        var assignment      = Y.Node.create( '<div class="assignment statement-list-child"></div>' );
         assignment.resize   = function(reason) {
             //Y.log('assignment.resize triggered by ' + reason);
             // Setup
@@ -331,7 +331,7 @@ LAGVEIf = new Object();
         
     LAGVEIf.newIf = function(targetNode) {
         ////////     IF-THEN-ELSE     /////////
-        var ifThenElse          = Y.Node.create('<div id=' + Y.guid('ifthenelse-') + ' class="ifthenelse statement-child"></div>');
+        var ifThenElse          = Y.Node.create('<div class="ifthenelse statement-list-child"></div>');
         ifThenElse._LAGVEName   = 'If-Then-Else block';
         ifThenElse.getName      = function() { return this._LAGVEName; }
         
@@ -394,12 +394,12 @@ LAGVEIf = new Object();
         ///////    IF    ////////
         ifThenElse.conditionPositioning         = Y.Node.create('<div class="ifthenelse-condition-positioning selectable"></div>');
         ifThenElse.conditionPositioning.select  = function() {
-            ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','hidden');
-            ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','visible');
+            ifThenElse.rhombus.setStyle('visibility','hidden');
+            ifThenElse.rhombusSelected.setStyle('visibility','visible');
         };
         ifThenElse.conditionPositioning.deSelect    = function() {
-            ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image-selected').setStyle('visibility','hidden');
-            ifThenElse.conditionPositioning.get('children').filter('.ifthenelse-diamond-image').setStyle('visibility','visible');
+            ifThenElse.rhombusSelected.setStyle('visibility','hidden');
+            ifThenElse.rhombus.setStyle('visibility','visible');
         };
         ifThenElse.conditionPositioning.LAGVEInsert = function(child) {
             ifThenElse.conditionContainer.LAGVEInsert(child);
@@ -424,21 +424,19 @@ LAGVEIf = new Object();
         ifThenElse.arrows           = Y.Node.create('<div class="ifthenelse-arrows"></div>');
         ifThenElse.arrowheadLeft    = Y.Node.create('<div class="ifthenelse-arrowhead-left"></div>');
         ifThenElse.arrowheadRight   = Y.Node.create('<div class="ifthenelse-arrowhead-right"></div>');
-        ifThenElse.ifDiamondIMG     = Y.Node.create(
-            '<img    alt="if-then-else diamond shape" \
-            class="ifthenelse-diamond-image" \
-            src="images/ifthenelse_diamond.png" ></img>\
-        ');    
-        ifThenElse.ifDiamondIMGSelected = Y.Node.create(
-            '<img    alt="if-then-else diamond shape selected" \
-                    class="ifthenelse-diamond-image-selected" \
-                    src="images/ifthenelse_diamond_selected.png" >\
-            </img>'
+        ifThenElse.rhombus          = Y.Node.create(
+            '<img alt="condition rhombus shape" \
+                  class="ifthenelse-rhombus-image" \
+                  src="images/ifthenelse_rhombus.png" >'
+        );    
+        ifThenElse.rhombusSelected  = Y.Node.create(
+            '<img alt="condition rhombus shape selected" \
+                 class="ifthenelse-rhombus-image-selected" \
+                 src="images/ifthenelse_rhombus_selected.png" >'
         );
         
         ifThenElse.conditionContainer   = Y.Node.create('\
-            <div id=' + Y.guid('condition-container-') + ' \
-            class="ifthenelse-condition-container"></div>\
+            <div class="ifthenelse-condition-container"></div>\
         ');
         ifThenElse.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -489,8 +487,8 @@ LAGVEIf = new Object();
                     arrows
                         arrowhead left
                         arrowhead right
-                    ifDiamondIMG
-                    ifDiamondIMGSelected
+                    rhombus
+                    rhombusSelected
                     conditionContainer
             thenAndElse
                 thenBlock
@@ -502,8 +500,8 @@ LAGVEIf = new Object();
         ifThenElse.arrows.append(               ifThenElse.arrowheadLeft        );
         ifThenElse.arrows.append(               ifThenElse.arrowheadRight       );
         ifThenElse.conditionPositioning.append( ifThenElse.arrows               );
-        ifThenElse.conditionPositioning.append( ifThenElse.ifDiamondIMG         );
-        ifThenElse.conditionPositioning.append( ifThenElse.ifDiamondIMGSelected );
+        ifThenElse.conditionPositioning.append( ifThenElse.rhombus         );
+        ifThenElse.conditionPositioning.append( ifThenElse.rhombusSelected );
         ifThenElse.conditionPositioning.append( ifThenElse.conditionContainer   );
         ifThenElse.append(                      ifThenElse.thenAndElse          );
         ifThenElse.thenAndElse.append(          ifThenElse.thenBlock            );
@@ -555,7 +553,125 @@ LAGVEIf = new Object();
             dropNode.LAGVEInsert(e.drag.get('node'));
         }
     });
+    
+    
+    LAGVE.Elements = new Object();
 
+    
+    LAGVE.Elements.newWhile = function(targetNode) {
+        // .while.statement-list-child
+        var newWhile = Y.Node.create('<div class = "while statement-list-child"></div>');
+        // .while.condition-positioning
+        newWhile.conditionPositioning = Y.Node.create('<div class="while condition-positioning selectable"></div>');
+        // .while.condition-container
+        newWhile.conditionContainer   = Y.Node.create('<div class="while condition-container"></div>');
+        
+        // .while.condition-rhombus
+        newWhile.rhombus = Y.Node.create(
+            '<img alt="condition rhombus shape" \
+                  class="while condition-rhombus" \
+                  src="images/ifthenelse_rhombus.png">');
+                  
+        // .while.condition-rhombus.selected
+        newWhile.rhombusSelected = Y.Node.create(
+            '<img alt="condition rhombus shape selected" \
+                  class="while condition-rhombus selected" \
+                  src="images/ifthenelse_rhombus_selected.png">');
+                  
+        // .while.multiple-documents-symbol
+        newWhile.multiDocsSymbol = Y.Node.create(
+            '<div class="while multiple-documents-symbol">\
+                <img alt="multiple-documents-symbol" \
+                     class="while multiple-documents-symbol" \
+                     src="images/multiple_documents.png">\
+                <span class="while multiple-documents-symbol">For each concept in the lesson</span>\
+            </div>');
+            
+        // .while.over-arrow
+        newWhile.overArrow = Y.Node.create(
+            '<img alt="overarrow" \
+                  class="while over-arrow" \
+                  src="images/curved_arrow_bottom_left_over_top_right.png">');
+        // .while.under-arrow
+        newWhile.underArrow = Y.Node.create(
+            '<img alt="under arrow" \
+                  class="while under-arrow" \
+                  src="images/curved_arrow_top_right_under_bottom_left.png">'); 
+        
+        // .while.statement
+        newWhile.statementList = LAGVEStmt.newStatement();
+        newWhile.statementList.addClass('while');
+        
+        // .while.statementListPositioning
+        
+        
+        newWhile._LAGVEName   = 'For Each Concept';
+        newWhile.getName      = function() { return this._LAGVEName; }
+        
+        newWhile.conditionContainer.plug(
+            Y.Plugin.Drop,
+            {
+                groups:    ['condition'],
+            }
+        );
+        
+        /*ifThenElse.conditionContainer.resize        = function(reason) {
+            ifThenElse.resize('ifThenElse.conditionContainer.resize | ' + reason);
+        };*/
+        
+        newWhile.conditionContainer.LAGVEInsert   = function(child) {
+            if (child.hasClass('condition')) {
+                if (!this.hasChildNodes()) {            
+                    this.append(child);
+                    child.parentChanged();
+                    child.resize('while.conditionContainer.LAGVEInsert');
+                }
+            }
+        }
+        
+        
+        
+        newWhile.conditionPositioning.append( newWhile.rhombus              );
+        newWhile.conditionPositioning.append( newWhile.rhombusSelected      );
+        newWhile.conditionPositioning.append( newWhile.conditionContainer   );
+        newWhile.append( newWhile.statementList         );
+        newWhile.append( newWhile.multiDocsSymbol       );
+        newWhile.append( newWhile.overArrow             );
+        newWhile.append( newWhile.underArrow            );
+        newWhile.append( newWhile.conditionPositioning  );
+        
+        
+        newWhile.conditionPositioning.select = function() {
+            newWhile.rhombus.setStyle('visibility','hidden');
+            newWhile.rhombusSelected.setStyle('visibility','visible');
+        };
+        newWhile.conditionPositioning.deSelect = function() {
+            newWhile.rhombus.setStyle('visibility','visible');
+            newWhile.rhombusSelected.setStyle('visibility','hidden');
+        };
+        
+        newWhile.conditionContainer.toLAG = function() {
+            if (this.hasChildNodes()) {
+                return this.get('firstChild').toLAG();
+            }
+            return '';
+        }
+        /*newWhile.statementList.toLAG = function() {
+            var LAG = this.get('firstChild').toLAG();
+            
+            return LAG;
+        }*/
+        newWhile.toLAG = function() {
+            return 'while ' + this.conditionContainer.toLAG() + '(\n' + this.statementList.toLAG() + ')\n';
+        };
+        newWhile.resize = function() {throw "function not implemented"}
+                
+        if ( isset( targetNode )) {
+            targetNode.LAGVEInsert(newWhile);
+        }
+        
+        return newWhile;
+    }
     
 /* CONDITION */
 LAGVE.Condition = new Object();
@@ -940,7 +1056,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     LAGVEStmt.newStatement = function(targetNode) {
     
         //////    STATEMENT BLOCK   ///////
-        var statement = Y.Node.create( '<div id=' + Y.guid('statement-') + ' class="statement deletable selectable"></div>' );
+        var statement = Y.Node.create( '<div class="statement deletable selectable"></div>' );
         
         statement.resize = function(reason) {    
             // "bubble up"
@@ -956,7 +1072,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
          * Function to insert nodes asked to be inserted.
          */
         statement.LAGVEInsert = function(node) {
-            if (node.hasClass('statement-child')) {
+            if (node.hasClass('statement-list-child')) {
                 var newChildContainer = LAGVEStmt._newStatementChildContainer(node)
                 statement.LAGVEUL.append(newChildContainer);
                 newChildContainer.parentChanged();
@@ -967,7 +1083,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         }
         
         //////    LIST   ///////
-        statement.LAGVEUL = Y.Node.create( '<div id=' + Y.guid('statement-ul-') + ' class="statement-list"></div>' );
+        statement.LAGVEUL = Y.Node.create( '<div class="statement-list"></div>' );
         statement.LAGVEUL.resize = function(reason) { statement.resize(reason) };
         statement.LAGVEUL.plug(
             Y.Plugin.Drop,
@@ -1006,7 +1122,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     };
     
     LAGVEStmt._newStatementChildContainer = function(child) {
-        var childContainer      = Y.Node.create( '<div class="statement-child-container deletable"></div>' );
+        var childContainer      = Y.Node.create( '<div class="statement-list-child-container deletable"></div>' );
     
         var childContainerDrag  = new Y.DD.Drag({
             node:        childContainer,
@@ -1066,7 +1182,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
                     dropNode = topOfDropStack;
                 
                 //Are we dropping on a li node?
-                if (dropNode.hasClass('statement-child-container')) {
+                if (dropNode.hasClass('statement-list-child-container')) {
                     //Are we going down? (not going up)
                     // then we want to insert below, but not below a placeholder
                     if (LAGVEStmt.goingDown) {

@@ -1,7 +1,43 @@
     =====================
      LAG Visual Elements
     =====================
+=======================
+Need to work these into nicer format below ===
+
+while
+    has a
+        condition rhombus
+        statement list
     
+    is a
+        statement
+            
+    can be
+        dragged
+        
+statement
+    drag
+        can be ddragged into
+            statement-container
+            
+    has a toLAG
+    has class statement-list-child
+    
+    
+selectable
+    class selectable
+    method select
+    method deSelect
+    
+has a condition
+    property conditionContainer
+    
+conditionContainer
+    method LAGVEInsert
+    
+statementList
+    method LAGVEInsert
+===================================    
 ContextDeletable
     context menu can delete
     yui Base
@@ -113,3 +149,4 @@ While
     is a Statement
     Condition StatementList
     yui Widget
+
