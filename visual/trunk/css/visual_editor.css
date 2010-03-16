@@ -471,8 +471,8 @@ DIV.selected {
     border:             1px solid black;
     height:             65px;
     background-color:   white;
-    height:             400px;
-    width:              400px;
+    height:             215px;
+    width:              493px;
 }
 .while.condition-positioning {
     position:   absolute;
@@ -522,25 +522,36 @@ SPAN.while.multiple-documents-symbol {
     top:        8px;
     width:      106px;
 }
-.while.over-arrow {
-    width:      120px;
-    height:     70px;
-    top:        0px;
-    left:       40px;
+.while.arrowlines {
     position:   absolute;
+    top:        5px;
+    left:       53px;
+    height:     145px;
+    width:      108px;
+    border:     1px solid black;
+    -moz-border-radius:    5px;
+    -webkit-border-radius: 5px;
+    border-radius:         5px;
 }
-.while.under-arrow {
-    width:      120px;
-    height:     80px;
-    top:        75px;
-    left:       40px;
+.while.arrowhead-into-rhombus {
     position:   absolute;
+    height:     12px;
+    width:      9px;
+    top:        8px;
+    left:       156px;
+}
+.while.arrowhead-into-multidocs {
+    position:   absolute;
+    top:        132px;
+    left:       47px;
+    width:      9px;
+    height:     12px;
 }
 .while.statement {
     position:   absolute;
-    top:        125px;
-    left:       15px;
+    top:        97px;
+    left:       222px;
     min-width:  260px;
     min-height: 100px;
-    border:     1px solid black;    
+    border:     1px solid black;
 }

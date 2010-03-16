@@ -587,22 +587,23 @@ LAGVEIf = new Object();
                 <span class="while multiple-documents-symbol">For each concept in the lesson</span>\
             </div>');
             
-        // .while.over-arrow
-        newWhile.overArrow = Y.Node.create(
-            '<img alt="overarrow" \
-                  class="while over-arrow" \
-                  src="images/curved_arrow_bottom_left_over_top_right.png">');
-        // .while.under-arrow
-        newWhile.underArrow = Y.Node.create(
-            '<img alt="under arrow" \
-                  class="while under-arrow" \
-                  src="images/curved_arrow_top_right_under_bottom_left.png">'); 
+        // .while.arrowlines
+        newWhile.arrowlines = Y.Node.create('<div class="while arrowlines"></div>');
         
+        // .while.arrowhead-left
+        newWhile.arrowheadIntoMultidocs = Y.Node.create(
+            '<img src="images/arrowhead_up.png" \
+                  class="while arrowhead-into-multidocs">');
+        // .while.arrowhead-right
+        newWhile.arrowheadIntoRhombus = Y.Node.create(
+            '<img src="images/arrowhead_down.png" \
+                  class="while arrowhead-into-rhombus">');
+                  
         // .while.statement
         newWhile.statementList = LAGVEStmt.newStatement();
         newWhile.statementList.addClass('while');
         
-        // .while.statementListPositioning
+        // .while.statementListPositioning  
         
         
         newWhile._LAGVEName   = 'For Each Concept';
@@ -615,10 +616,30 @@ LAGVEIf = new Object();
             }
         );
         
-        /*ifThenElse.conditionContainer.resize        = function(reason) {
-            ifThenElse.resize('ifThenElse.conditionContainer.resize | ' + reason);
-        };*/
+        /*
+            HTML elements in this order to overlap correctly.
+            while
+                statementList
+                arrowlines
+                arrowheadIntoMultidocs
+                arrowheadIntoRhombus
+                multiDocsSymbol
+                conditionPositioning
+                    rhombus
+                    rhombusSelected
+                    conditionContainer
+        */
         
+        newWhile.append( newWhile.statementList          );
+        newWhile.append( newWhile.arrowlines             );
+        newWhile.append( newWhile.arrowheadIntoMultidocs );
+        newWhile.append( newWhile.arrowheadIntoRhombus   );
+        newWhile.append( newWhile.multiDocsSymbol        );
+        newWhile.append( newWhile.conditionPositioning   );
+        newWhile.conditionPositioning.append( newWhile.rhombus            );
+        newWhile.conditionPositioning.append( newWhile.rhombusSelected    );
+        newWhile.conditionPositioning.append( newWhile.conditionContainer );
+                
         newWhile.conditionContainer.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {
                 if (!this.hasChildNodes()) {            
@@ -629,17 +650,9 @@ LAGVEIf = new Object();
             }
         }
         
-        
-        
-        newWhile.conditionPositioning.append( newWhile.rhombus              );
-        newWhile.conditionPositioning.append( newWhile.rhombusSelected      );
-        newWhile.conditionPositioning.append( newWhile.conditionContainer   );
-        newWhile.append( newWhile.statementList         );
-        newWhile.append( newWhile.multiDocsSymbol       );
-        newWhile.append( newWhile.overArrow             );
-        newWhile.append( newWhile.underArrow            );
-        newWhile.append( newWhile.conditionPositioning  );
-        
+        newWhile.conditionPositioning.LAGVEInsert = function(child) {
+            newWhile.conditionContainer.LAGVEInsert(child);
+        };
         
         newWhile.conditionPositioning.select = function() {
             newWhile.rhombus.setStyle('visibility','hidden');
@@ -656,15 +669,82 @@ LAGVEIf = new Object();
             }
             return '';
         }
-        /*newWhile.statementList.toLAG = function() {
-            var LAG = this.get('firstChild').toLAG();
-            
-            return LAG;
-        }*/
         newWhile.toLAG = function() {
             return 'while ' + this.conditionContainer.toLAG() + '(\n' + this.statementList.toLAG() + ')\n';
         };
-        newWhile.resize = function() {throw "function not implemented"}
+        
+        newWhile.resize = function() {
+            // Setup
+            var conditionWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
+            var conditionHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
+            
+            var statementListHeight = parseInt(this.statementList.getComputedStyle('height'));
+            var statementListWidth = parseInt(this.statementList.getComputedStyle('width'));
+            
+            // Calculations
+            var rhombusHeight        = conditionHeight * 2.2;
+            var rhombusWidth         = conditionWidth * 1.6;
+            
+            if (rhombusWidth < rhombusHeight*2) {
+                rhombusWidth = rhombusHeight * 2;
+            }
+            
+            var conditionLeft   = (rhombusWidth - conditionWidth)/2;
+            var conditionTop    = (rhombusHeight - conditionHeight)/2;
+            
+            // this.statementList grows right- and downwards with its children
+            
+            // 20,45 65
+            // this.multiDocsSymbol top is conditionPositioning height / 2 + offset
+            var multiDocsSymbTop = (rhombusHeight / 2) + 20;
+            
+            // rhombus horiz midpoint + rhombus left - arrowlines left
+            var arrowlinesWidth = (rhombusWidth / 2) + 10;
+            
+            // max( multidocs bottom, rhombus bottom) + offset
+            var arrowlinesHeight = Math.max((multiDocsSymbTop + 80), (rhombusHeight + 25));
+            
+            // multidocs bottom
+            var arrowheadIntoMultidocsTop = multiDocsSymbTop + 65;
+            
+            // arrowlinesWidth + arrowlines left - half arrowhead width
+            var arrowheadIntoRhombusLeft = arrowlinesWidth + 48;
+            
+            // just below and to the right of the rhombus
+            var statementListTop = rhombusHeight * 0.75 + 30;            
+            var statementListLeft = rhombusWidth * 0.75 + 73;
+            
+            // this (the 'while' visual element container)
+            // statementListTop + statementList height
+            var whileHeight = statementListTop + statementListHeight + 5;
+            var whileWidth = statementListLeft + statementListWidth + 5;
+            // Output
+            
+            this.conditionPositioning.setStyle('width', rhombusWidth + 'px');
+            this.conditionPositioning.setStyle('height', rhombusHeight + 'px');
+            
+            this.conditionContainer.setStyle('left', conditionLeft + 'px');
+            this.conditionContainer.setStyle('top', conditionTop + 'px');
+            
+            this.multiDocsSymbol.setStyle('top', multiDocsSymbTop + 'px');
+            
+            this.arrowlines.setStyle('width', arrowlinesWidth + 'px');
+            this.arrowlines.setStyle('height', arrowlinesHeight + 'px');
+            
+            this.arrowheadIntoMultidocs.setStyle('top', arrowheadIntoMultidocsTop + 'px');
+            
+            this.arrowheadIntoRhombus.setStyle('left', arrowheadIntoRhombusLeft + 'px');
+            
+            this.statementList.setStyle('top', statementListTop + 'px');
+            this.statementList.setStyle('left', statementListLeft + 'px');
+            
+            this.setStyle('height', whileHeight + 'px');
+            this.setStyle('width', whileWidth + 'px');
+        }
+        
+        newWhile.conditionContainer.resize = function(reason) {
+            newWhile.resize('newWhile.conditionContainer.resize | ' + reason);
+        };
                 
         if ( isset( targetNode )) {
             targetNode.LAGVEInsert(newWhile);
