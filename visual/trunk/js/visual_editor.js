@@ -436,7 +436,7 @@ LAGVEIf = new Object();
         );
         
         ifThenElse.conditionContainer   = Y.Node.create('\
-            <div class="ifthenelse-condition-container"></div>\
+            <div class="ifthenelse condition-container"></div>\
         ');
         ifThenElse.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -549,7 +549,7 @@ LAGVEIf = new Object();
     
     Y.DD.DDM.on('drop:enter',function(e) {
         var dropNode = e.target.get('node');
-        if (dropNode.hasClass('ifthenelse-condition-container')) {
+        if (dropNode.hasClass('condition-container')) {
             dropNode.LAGVEInsert(e.drag.get('node'));
         }
     });
@@ -562,9 +562,11 @@ LAGVEIf = new Object();
         // .while.statement-list-child
         var newWhile = Y.Node.create('<div class = "while statement-list-child"></div>');
         // .while.condition-positioning
-        newWhile.conditionPositioning = Y.Node.create('<div class="while condition-positioning selectable"></div>');
+        newWhile.conditionPositioning = Y.Node.create(
+            '<div class="while condition-positioning selectable"></div>');
         // .while.condition-container
-        newWhile.conditionContainer   = Y.Node.create('<div class="while condition-container"></div>');
+        newWhile.conditionContainer   = Y.Node.create(
+            '<div class="while condition-container"></div>');
         
         // .while.condition-rhombus
         newWhile.rhombus = Y.Node.create(

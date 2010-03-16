@@ -263,7 +263,7 @@ DIV.selected {
     height:             16px;
     background-image:   url('../images/arrowhead_down.png');
 }
-.ifthenelse-condition-container {
+.ifthenelse.condition-container {
     position:           relative;
     min-height:         50px;
     min-width:          100px;
