@@ -522,12 +522,24 @@ SPAN.while.multiple-documents-symbol {
     top:        8px;
     width:      106px;
 }
-.while.arrowlines {
+.while.arrowline.multidocs-to-rhombus {
     position:   absolute;
     top:        5px;
     left:       53px;
-    height:     145px;
+    height:     90px;
     width:      108px;
+    border:     1px solid black;
+    border-bottom:         none;
+    -moz-border-radius:    5px;
+    -webkit-border-radius: 5px;
+    border-radius:         5px;
+}
+.while.arrowline.rhombus-statements-multidocs {
+    position:   absolute;
+    top:        70px;
+    left:       53px;
+    height:     90px;
+    width:      220px;
     border:     1px solid black;
     -moz-border-radius:    5px;
     -webkit-border-radius: 5px;
@@ -539,6 +551,13 @@ SPAN.while.multiple-documents-symbol {
     width:      9px;
     top:        8px;
     left:       156px;
+}
+.while.arrowhead-into-statements {
+    position:   absolute;
+    height:     12px;
+    width:      9px;
+    top:        87px;
+    left:       268px;
 }
 .while.arrowhead-into-multidocs {
     position:   absolute;

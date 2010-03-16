@@ -587,17 +587,25 @@ LAGVEIf = new Object();
                 <span class="while multiple-documents-symbol">For each concept in the lesson</span>\
             </div>');
             
-        // .while.arrowlines
-        newWhile.arrowlines = Y.Node.create('<div class="while arrowlines"></div>');
+        // .while.arrowline.multidocs-to-rhombus
+        newWhile.arrowlineMultidocsToRhombus = Y.Node.create(
+            '<div class="while arrowline multidocs-to-rhombus"></div>');
+        // .while.arrowline.rhombus-statements-multidocs
+        newWhile.arrowlineRhombusStatementsMultidocs = Y.Node.create(
+            '<div class="while arrowline rhombus-statements-multidocs"></div>');
         
-        // .while.arrowhead-left
+        // .while.arrowhead-into-multidocs
         newWhile.arrowheadIntoMultidocs = Y.Node.create(
             '<img src="images/arrowhead_up.png" \
                   class="while arrowhead-into-multidocs">');
-        // .while.arrowhead-right
+        // .while.arrowhead-into-rhombus
         newWhile.arrowheadIntoRhombus = Y.Node.create(
             '<img src="images/arrowhead_down.png" \
                   class="while arrowhead-into-rhombus">');
+        // .while.arrowhead-into-statements
+        newWhile.arrowheadIntoStatements = Y.Node.create(
+            '<img src="images/arrowhead_down.png" \
+                  class="while arrowhead-into-statements">');
                   
         // .while.statement
         newWhile.statementList = LAGVEStmt.newStatement();
@@ -619,10 +627,12 @@ LAGVEIf = new Object();
         /*
             HTML elements in this order to overlap correctly.
             while
+                arrowlineMultidocsToRhombus
+                arrowlineRhombusStatementsMultidocs
                 statementList
-                arrowlines
                 arrowheadIntoMultidocs
                 arrowheadIntoRhombus
+                arrowheadIntoStatements
                 multiDocsSymbol
                 conditionPositioning
                     rhombus
@@ -630,15 +640,17 @@ LAGVEIf = new Object();
                     conditionContainer
         */
         
-        newWhile.append( newWhile.statementList          );
-        newWhile.append( newWhile.arrowlines             );
-        newWhile.append( newWhile.arrowheadIntoMultidocs );
-        newWhile.append( newWhile.arrowheadIntoRhombus   );
-        newWhile.append( newWhile.multiDocsSymbol        );
-        newWhile.append( newWhile.conditionPositioning   );
-        newWhile.conditionPositioning.append( newWhile.rhombus            );
-        newWhile.conditionPositioning.append( newWhile.rhombusSelected    );
-        newWhile.conditionPositioning.append( newWhile.conditionContainer );
+        newWhile.append( newWhile.arrowlineMultidocsToRhombus               );
+        newWhile.append( newWhile.arrowlineRhombusStatementsMultidocs       );
+        newWhile.append( newWhile.statementList                             );
+        newWhile.append( newWhile.arrowheadIntoMultidocs                    );
+        newWhile.append( newWhile.arrowheadIntoRhombus                      );
+        newWhile.append( newWhile.arrowheadIntoStatements                   );
+        newWhile.append( newWhile.multiDocsSymbol                           );
+        newWhile.append( newWhile.conditionPositioning                      );
+        newWhile.conditionPositioning.append( newWhile.rhombus              );
+        newWhile.conditionPositioning.append( newWhile.rhombusSelected      );
+        newWhile.conditionPositioning.append( newWhile.conditionContainer   );
                 
         newWhile.conditionContainer.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {
@@ -692,32 +704,41 @@ LAGVEIf = new Object();
             var conditionLeft   = (rhombusWidth - conditionWidth)/2;
             var conditionTop    = (rhombusHeight - conditionHeight)/2;
             
-            // this.statementList grows right- and downwards with its children
+            // just below and to the right of the rhombus
+            var statementListTop = rhombusHeight * 0.75 + 30;            
+            var statementListLeft = rhombusWidth * 0.75 + 73;
             
-            // 20,45 65
             // this.multiDocsSymbol top is conditionPositioning height / 2 + offset
             var multiDocsSymbTop = (rhombusHeight / 2) + 20;
             
             // rhombus horiz midpoint + rhombus left - arrowlines left
-            var arrowlinesWidth = (rhombusWidth / 2) + 10;
+            var arrowlineMultidocsToRhombusWidth = (rhombusWidth / 2) + 10;
             
-            // max( multidocs bottom, rhombus bottom) + offset
-            var arrowlinesHeight = Math.max((multiDocsSymbTop + 80), (rhombusHeight + 25));
+            // bottom of div must be just below multidocs top
+            var arrowlineMultidocsToRhombusHeight = multiDocsSymbTop;
             
             // multidocs bottom
             var arrowheadIntoMultidocsTop = multiDocsSymbTop + 65;
             
             // arrowlinesWidth + arrowlines left - half arrowhead width
-            var arrowheadIntoRhombusLeft = arrowlinesWidth + 48;
+            var arrowheadIntoRhombusLeft = arrowlineMultidocsToRhombusWidth + 48;
             
-            // just below and to the right of the rhombus
-            var statementListTop = rhombusHeight * 0.75 + 30;            
-            var statementListLeft = rhombusWidth * 0.75 + 73;
+            // rhombusWidth + rhombusLeft + offset
+            var arrowlineRhombusStatementsMultidocsWidth = rhombusWidth + 63;
+            // rhombusHeight/2 + rhombusTop
+            var arrowlineRhombusStatementsMultidocsTop = rhombusHeight/2 + 22;
+            
+            // statementListTop - arrowheadIntoStatements heigh
+            var arrowheadIntoStatementsTop = statementListTop - 15;
+            // arrowlineRhombusStatementsMultidocsWidth + left
+            var arrowheadIntoStatementsLeft = arrowlineRhombusStatementsMultidocsWidth + 48;
             
             // this (the 'while' visual element container)
             // statementListTop + statementList height
             var whileHeight = statementListTop + statementListHeight + 5;
             var whileWidth = statementListLeft + statementListWidth + 5;
+            
+            
             // Output
             
             this.conditionPositioning.setStyle('width', rhombusWidth + 'px');
@@ -728,13 +749,21 @@ LAGVEIf = new Object();
             
             this.multiDocsSymbol.setStyle('top', multiDocsSymbTop + 'px');
             
-            this.arrowlines.setStyle('width', arrowlinesWidth + 'px');
-            this.arrowlines.setStyle('height', arrowlinesHeight + 'px');
+            this.arrowlineMultidocsToRhombus.setStyle('width', arrowlineMultidocsToRhombusWidth + 'px');
+            this.arrowlineMultidocsToRhombus.setStyle('height', arrowlineMultidocsToRhombusHeight + 'px');
             
             this.arrowheadIntoMultidocs.setStyle('top', arrowheadIntoMultidocsTop + 'px');
-            
             this.arrowheadIntoRhombus.setStyle('left', arrowheadIntoRhombusLeft + 'px');
             
+            this.arrowlineRhombusStatementsMultidocs.
+                setStyle('width', arrowlineRhombusStatementsMultidocsWidth + 'px');
+            this.arrowlineRhombusStatementsMultidocs.
+                setStyle('top', arrowlineRhombusStatementsMultidocsTop + 'px');
+            this.arrowheadIntoStatements.
+                setStyle('left', arrowheadIntoStatementsLeft + 'px');
+            this.arrowheadIntoStatements.
+                setStyle('top', arrowheadIntoStatementsTop + 'px');
+                
             this.statementList.setStyle('top', statementListTop + 'px');
             this.statementList.setStyle('left', statementListLeft + 'px');
             
