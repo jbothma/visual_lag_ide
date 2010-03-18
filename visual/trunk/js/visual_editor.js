@@ -1372,17 +1372,42 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
 /* CONTEXT MENU */
 LAGVEContext = new Object();
 
-    /*
-        visualElement.context = {
-            delete: true,
-            insert: {
-                attribute:  true,
-            },
-        }
-    */
+LAGVEContext.items = {
+    visualElement: {
+        delete: true,
+        insert: {
+            attribute:  true,
+        },
+    },
+    attributeContainer: {
+        insert: {
+            attribute: true,
+        },
+        help : true,
+    },   
+    valueContainer: {
+        insert: {
+            attribute: true,
+            boolean: true,
+            value: true,
+        },
+        help : true,
+    },
+    statementContainer: {
+        insert: {
+            statement: true,
+        },
+        help: true,
+    },
+    statement: {
+        delete: true,
+        help: true,
+    },
+}
+    
     /*
         1. Build all menu possibilities into one
-        2. For each kind of visual element, clone relevant menu items to build an element-specific menu
+        2. For each kind of visual element, make only the needed menu items visible.
         
         Menu items can have right-click to help and title for brief description
         
@@ -1414,42 +1439,6 @@ LAGVEContext = new Object();
                 Boolean
             Condition container
                 Conditions
-                
-            LAGVE.menuDescribers.push
-            
-ATTRIBUTE --> GENCONCEPTATTR | SPECCONCEPTATTR
-GENCONCEPT ATTR --> 
-        LAOSCM.CONCEPT.ATTR |   
-        LAOSCM.CONCEPT.ATTR.ATTRATTR |
-        LAOSCM.ATTR |
-        LAOSCM.LAOSCM.ATTRATTR |
-        LAOSCM.LAOSCM.CONCEPT.ATTR  |
-        LAOSCM.LAOSCM.CONCEPT.ATTR.ATTRATTR 
-
-SPECCONCEPTATTR --> ‘\SPECCONMAP\SPECCON\SPECATTR\ATTR’.ATTRATTR
-LAOSCM, LAOSCONCEPTMAP --> ['DM', 'GM', 'UM', 'PM', 'CM']
-CONCEPT --> ['Concept']
-ATTR --> ['Attribute', 'title', 'keywords', 'text', 'introduction', 
-Concept.
-            'conclusion', 'exercise', 'child', 'parent', 'Relatedness', 'ATTR.ATTR', 'CONCEPT.ATTR',
-            'label', 'weight']
-ATTRATTR =  ['type', 'order', 'next', 'ToDo', 'menu', 'show', 'access', 'visited']
-UM
-PM
-GM
-PM.next
-PM.ToDo
-PM.GM.ToDo
-PM.menu
-GM.Concept.label
-GM.Concept.access
-PM.DM.Concept.Relatedness.Concept.show
-UM.GM.level
-GM.Concept.level
-UM.GM.Concept.parent.access
-PM.GM.Concept.show
-PM.GM.Concept.type
-PM.DM.Concept.title.access
                     
     */
     
@@ -1503,21 +1492,24 @@ PM.DM.Concept.title.access
         
      Y.on('contextmenu', function(e) {
         LAGVEContext.context = e.target;
-        if (LAGVEContext.context.ancestor(LAGVEContext._isWorkspace)) {
-            LAGVEContext.menu.setStyles({
+        //if (LAGVEContext.context.ancestor(LAGVEContext._isWorkspace)) {
+        //    LAGVEContext.menu.setStyles({
+        
+            Y.one('#VE-menu').setStyles({
                 left:       e.clientX + 'px',
                 top:        e.clientY + 'px',
                 visibility: 'visible',
             });
             e.preventDefault();
-        }
+        //}
     });
     
     Y.on('click', function() {
-        LAGVEContext.menu.setStyle('visibility','hidden');
+        //LAGVEContext.menu
+        //Y.one('#VE-menu').setStyle('visibility','hidden');
     });
     
-    Y.on("contentready", LAGVEContext._init,"body");
+    //Y.on("contentready", LAGVEContext._init,"body");
 
     
 /* VISUAL EDITOR */

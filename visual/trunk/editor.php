@@ -257,156 +257,170 @@
             </div>
         </div>
        
-        <div id="VE-menu-container" style="display:none">
-            <div id="VE-menu" class="yui-menu yui-menu-horizontal" style="display:none">
-                <div class="yui-menu-content">
-                    <ul class="first-of-type"> 
-                        <li class="yui-menuitem">
-                            <a id="LAG-Attr-menulabel" class="yui-menu-label" href="#LAG-Attr-Menu" title="Insert a LAG Attribute or value">                                    
-                                Attribute
-                            </a>
-                            <div id="LAG-Attr-Menu" class="yui-menu">
-                                <div class="yui-menu-content">
-                                    <ul> 
-                                        <li>
-                                            <a class="yui-menu-label" href="#GM" title="Goal Model"><em>GM</em></a>
-                                            <div id="GM" class="yui-menu">
-                                                <div class="yui-menu-content">
-                                                    <ul> 
-                                                        <li>
-                                                            <a class="yui-menu-label" href="#GM-Concept"><em>Concept</em></a>
-                                                            <div id="GM-Concept" class="yui-menu">
-                                                                <div class="yui-menu-content">
-                                                                    <ul> 
-                                                                        <li class="yui-menuitem">
-                                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM.Concept.label'])">label</a>
-                                                                        </li>
-                                                                        <li class="yui-menuitem"><!-- Bounding box -->
-                                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM.Concept.weight'])">weight</a>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div> <!-- end GM.Concept -->
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div> <!-- end GM -->
-                                        </li>
+        
+        <div id="VE-menu" class="yui-menu">
+            <div class="yui-menu-content">
+                <ul> 
+                    <li class="yui-menuitem">
+                        <a class="yui-menuitem-content" href="#" onclick="deletesomething()">Delete</a>
+                    </li>
+                    <li>
+                        <a id="Insert-menulabel" class="yui-menu-label" href="#Insert-Menu" title="Insert a LAG Visual Element">                                    
+                            Insert
+                        </a>
+                        <div id="Insert-Menu" class="yui-menu">
+                            <div class="yui-menu-content">
+                                <ul> 
+                                    <li>
+                                        <a id="LAG-Attr-menulabel" class="yui-menu-label" href="#LAG-Attr-Menu" title="Insert a LAG Attribute or value">                                    
+                                            Attribute
+                                        </a>
+                                        <div id="LAG-Attr-Menu" class="yui-menu">
+                                            <div class="yui-menu-content">
+                                                <ul> 
+                                                    <li>
+                                                        <a class="yui-menu-label" href="#GM" title="Goal Model"><em>GM</em></a>
+                                                        <div id="GM" class="yui-menu">
+                                                            <div class="yui-menu-content">
+                                                                <ul> 
+                                                                    <li>
+                                                                        <a class="yui-menu-label" href="#GM-Concept"><em>Concept</em></a>
+                                                                        <div id="GM-Concept" class="yui-menu">
+                                                                            <div class="yui-menu-content">
+                                                                                <ul> 
+                                                                                    <li class="yui-menuitem">
+                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM.Concept.label'])">label</a>
+                                                                                    </li>
+                                                                                    <li class="yui-menuitem"><!-- Bounding box -->
+                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM.Concept.weight'])">weight</a>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div> <!-- end GM.Concept -->
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div> <!-- end GM -->
+                                                    </li>
 
-                                        <li>
-                                            <a class="yui-menu-label" href="#PM" title="Presentation Model"><em>PM</em></a>
-                                            <div id="PM" class="yui-menu">
-                                                <div class="yui-menu-content">
-                                                    <ul> 
-                                                        <li>
-                                                            <a class="yui-menu-label" href="#PM-GM" title="Goal Model"><em>GM</em></a>
-                                                            <div id="PM-GM" class="yui-menu">
-                                                                <div class="yui-menu-content">
-                                                                    <ul> 
-                                                                        <li>
-                                                                            <a class="yui-menu-label" href="#PM-GM-Concept"><em>Concept</em></a>
-                                                                            <div id="PM-GM-Concept" class="yui-menu">
-                                                                                <div class="yui-menu-content">
-                                                                                    <ul>
-                                                                                        <li class="yui-menuitem">
-                                                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.access'])">access</a>
-                                                                                        </li>
-                                                                                        <li class="yui-menuitem">
-                                                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.show'])">show</a>
-                                                                                        </li>
-                                                                                        <li class="yui-menuitem">
-                                                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.type'])">type</a>
-                                                                                        </li>
-                                                                                        <li class="yui-menuitem">
-                                                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.visible'])">visible</a>
-                                                                                        </li>
-                                                                                    </ul>
-                                                                                </div>
-                                                                            </div> <!-- end PM.GM.Concept -->
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div> <!-- end PM.GM -->
-                                                        </li>
-                                                        <li>
-                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.menu'])">menu</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.next'])">next</a>
-                                                        </li>
-                                                        <li>
-                                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.ToDo'])">ToDo</a>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div> <!-- end PM -->
-                                        </li>
+                                                    <li>
+                                                        <a class="yui-menu-label" href="#PM" title="Presentation Model"><em>PM</em></a>
+                                                        <div id="PM" class="yui-menu">
+                                                            <div class="yui-menu-content">
+                                                                <ul> 
+                                                                    <li>
+                                                                        <a class="yui-menu-label" href="#PM-GM" title="Goal Model"><em>GM</em></a>
+                                                                        <div id="PM-GM" class="yui-menu">
+                                                                            <div class="yui-menu-content">
+                                                                                <ul> 
+                                                                                    <li>
+                                                                                        <a class="yui-menu-label" href="#PM-GM-Concept"><em>Concept</em></a>
+                                                                                        <div id="PM-GM-Concept" class="yui-menu">
+                                                                                            <div class="yui-menu-content">
+                                                                                                <ul>
+                                                                                                    <li class="yui-menuitem">
+                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.access'])">access</a>
+                                                                                                    </li>
+                                                                                                    <li class="yui-menuitem">
+                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.show'])">show</a>
+                                                                                                    </li>
+                                                                                                    <li class="yui-menuitem">
+                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.type'])">type</a>
+                                                                                                    </li>
+                                                                                                    <li class="yui-menuitem">
+                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.GM.Concept.visible'])">visible</a>
+                                                                                                    </li>
+                                                                                                </ul>
+                                                                                            </div>
+                                                                                        </div> <!-- end PM.GM.Concept -->
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div> <!-- end PM.GM -->
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.menu'])">menu</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.next'])">next</a>
+                                                                    </li>
+                                                                    <li>
+                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['PM.ToDo'])">ToDo</a>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div> <!-- end PM -->
+                                                    </li>
 
-                                        <li>
-                                            <a class="yui-menu-label" href="#UM" title="User Model"><em>UM</em></a>
-                                            <div id="UM" class="yui-menu">
-                                                <div class="yui-menu-content">
-                                                    <ul> 
-                                                        <li>
-                                                            <a class="yui-menu-label" href="#UM-Concept"><em>Concept</em></a>
-                                                            <div id="UM-Concept" class="yui-menu">
-                                                                <div class="yui-menu-content">
-                                                                    <ul> 
-                                                                        <li class="yui-menuitem">
-                                                                            <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM.Concept.' + document.getElementById('UM-Concept-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
-                                                                                <div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text" /></div>
-                                                                            </form>
-                                                                        </li>
-                                                                    </ul>
-                                                                </div>
-                                                            </div> <!-- end UM.Concept -->
-                                                        </li>
-                                                        <li class="yui-menuitem">
-                                                            <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM.' + document.getElementById('UM-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
-                                                                <div><input id="UM-custom" class="menu-form-input" value="custom" type="text" /></div>
-                                                            </form>
-                                                        </li>
-                                                    </ul>
-                                                </div>
-                                            </div> <!-- end UM -->
-                                        </li>
-                                        <li>
-                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewBoolean('true')">true</a>
-                                        </li>
-                                        <li>
-                                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewBoolean('false')">false</a>
-                                        </li>
-                                        <li class="yui-menuitem">
-                                            <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr([document.getElementById('custom').value]);return false"    title="Replace the text with out custom value and press Enter to finish">
-                                                <div><input id="custom" class="menu-form-input" value="value" type="text" /></div>
-                                            </form>
-                                        </li>
-                                    </ul> 
-                                </div> 
-                            </div> <!-- end LAG-attr-menu -->
-                        </li>
-                        <li class="yui-menuitem">
-                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.Assignment.newAssignment(LAGVE.selectedNode)">Assignment</a>
-                        </li>
-                        <li class="yui-menuitem">
-                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newComparison(LAGVE.selectedNode)">Comparison</a>
-                        </li>
-                        <li class="yui-menuitem">
-                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newEnough({targetNode:LAGVE.selectedNode})">Enough</a>
-                        </li>
-                        <li class="yui-menuitem">
-                            <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVE.selectedNode)">IfThenElse</a>
-                        </li>
-                        <li class="yui-menuitem">
-                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.Elements.newWhile(LAGVE.selectedNode)">While()/For concepts where()</a>
-                        </li>
-                        <li class="yui-menuitem">
-                            <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
-                        </li>
-                    </ul>
-                </div>
-            </div> <!-- end VE-menu -->
-        </div> <!-- end VE-menu-container -->
+                                                    <li>
+                                                        <a class="yui-menu-label" href="#UM" title="User Model"><em>UM</em></a>
+                                                        <div id="UM" class="yui-menu">
+                                                            <div class="yui-menu-content">
+                                                                <ul> 
+                                                                    <li>
+                                                                        <a class="yui-menu-label" href="#UM-Concept"><em>Concept</em></a>
+                                                                        <div id="UM-Concept" class="yui-menu">
+                                                                            <div class="yui-menu-content">
+                                                                                <ul> 
+                                                                                    <li class="yui-menuitem">
+                                                                                        <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM.Concept.' + document.getElementById('UM-Concept-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
+                                                                                            <div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text" /></div>
+                                                                                        </form>
+                                                                                    </li>
+                                                                                </ul>
+                                                                            </div>
+                                                                        </div> <!-- end UM.Concept -->
+                                                                    </li>
+                                                                    <li class="yui-menuitem">
+                                                                        <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr(['UM.' + document.getElementById('UM-custom').value]);return false" title="Replace the text with out custom value and press Enter to finish">
+                                                                            <div><input id="UM-custom" class="menu-form-input" value="custom" type="text" /></div>
+                                                                        </form>
+                                                                    </li>
+                                                                </ul>
+                                                            </div>
+                                                        </div> <!-- end UM -->
+                                                    </li>
+                                                    <li>
+                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewBoolean('true')">true</a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewBoolean('false')">false</a>
+                                                    </li>
+                                                    <li class="yui-menuitem">
+                                                        <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr([document.getElementById('custom').value]);return false"    title="Replace the text with out custom value and press Enter to finish">
+                                                            <div><input id="custom" class="menu-form-input" value="value" type="text" /></div>
+                                                        </form>
+                                                    </li>
+                                                </ul> 
+                                            </div> 
+                                        </div> <!-- end LAG-attr-menu -->
+                                    </li>
+                                    <li class="yui-menuitem">
+                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Assignment.newAssignment(LAGVE.selectedNode)">Assignment</a>
+                                    </li>
+                                    <li class="yui-menuitem">
+                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newComparison(LAGVE.selectedNode)">Comparison</a>
+                                    </li>
+                                    <li class="yui-menuitem">
+                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newEnough({targetNode:LAGVE.selectedNode})">Enough</a>
+                                    </li>
+                                    <li class="yui-menuitem">
+                                        <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVE.selectedNode)">IfThenElse</a>
+                                    </li>
+                                    <li class="yui-menuitem">
+                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Elements.newWhile(LAGVE.selectedNode)">While()/For concepts where()</a>
+                                    </li>
+                                    <li class="yui-menuitem">
+                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.showHelp()">Help</a>
+                                    </li>
+                                </ul>
+                            </div>
+                        </div> <!-- end insert meny -->
+                    </li>
+                </ul>
+            </div>
+        </div> <!-- end VE-menu -->
+
         
         <div id="VE-help">
             <div id="VE-help-titlebar">

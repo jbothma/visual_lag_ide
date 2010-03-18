@@ -574,3 +574,8 @@ SPAN.while.multiple-documents-symbol {
     min-height: 100px;
     border:     1px solid black;
 }
+
+#VE-menu {
+    position:   absolute;
+    visibility: hidden;
+}

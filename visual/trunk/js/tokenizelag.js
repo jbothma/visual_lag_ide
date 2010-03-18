@@ -45,6 +45,15 @@ var tokenizeLAG = (function() {
     var stat = typeOfKeyword("stat", "lag-keyword5");				// generalize, specialize, generalise, specialise
     var model = typeOfKeyword("model", "lag-keyword6");				// DM, GM, UM, PM, CM, Concept
 
+    
+    // For each token, an object called "typeOfKeyword" is required stating the
+    // name for that token and the CSS styling you want to use for every occurence
+    // of that keyword in the code.
+    //
+    // Currently the parser only knows of the keyword types as listed below.
+    // For reference: trueFalse, stat, model, init, impl, if, while, then, else, do, for, enough, break
+    // And a few general others: comparator, operator, variable, number, whitespace, comment
+
     var LAGkeywords = {
         "initialization": typeOfKeyword("init", "lag-keyword1"),
         "implementation": typeOfKeyword("impl","lag-keyword1"),
