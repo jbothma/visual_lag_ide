@@ -1372,16 +1372,86 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
 /* CONTEXT MENU */
 LAGVEContext = new Object();
 
-
     /*
-    switch (context.name) {
-        case 'assignment': _useButton(LAGVEContext.assignment);
-        case 'x': _useButton(LAGVEContext.x);
-    }
-    
-    context.hasClass('deletable') { _useButton(LAGVEContext.delete) };
+        visualElement.context = {
+            delete: true,
+            insert: {
+                attribute:  true,
+            },
+        }
     */
-    
+    /*
+        1. Build all menu possibilities into one
+        2. For each kind of visual element, clone relevant menu items to build an element-specific menu
+        
+        Menu items can have right-click to help and title for brief description
+        
+        1.
+            Delete.
+            Insert >
+                Attribute >
+                Value [___].
+                Statements >
+                    Action.
+                    "For each concept".
+                    "If condition satisfied".
+                Conditions >
+                    Boolean >
+                        true.
+                        false.
+                    AND.
+                    OR.
+                    Enough
+                
+            Containers have insert:
+            Statement block:
+                Statement
+            Attribute container
+                Attribute
+            Value Container
+            Attribute
+                Value
+                Boolean
+            Condition container
+                Conditions
+                
+            LAGVE.menuDescribers.push
+            
+ATTRIBUTE --> GENCONCEPTATTR | SPECCONCEPTATTR
+GENCONCEPT ATTR --> 
+        LAOSCM.CONCEPT.ATTR |   
+        LAOSCM.CONCEPT.ATTR.ATTRATTR |
+        LAOSCM.ATTR |
+        LAOSCM.LAOSCM.ATTRATTR |
+        LAOSCM.LAOSCM.CONCEPT.ATTR  |
+        LAOSCM.LAOSCM.CONCEPT.ATTR.ATTRATTR 
+
+SPECCONCEPTATTR --> ‘\SPECCONMAP\SPECCON\SPECATTR\ATTR’.ATTRATTR
+LAOSCM, LAOSCONCEPTMAP --> ['DM', 'GM', 'UM', 'PM', 'CM']
+CONCEPT --> ['Concept']
+ATTR --> ['Attribute', 'title', 'keywords', 'text', 'introduction', 
+Concept.
+            'conclusion', 'exercise', 'child', 'parent', 'Relatedness', 'ATTR.ATTR', 'CONCEPT.ATTR',
+            'label', 'weight']
+ATTRATTR =  ['type', 'order', 'next', 'ToDo', 'menu', 'show', 'access', 'visited']
+UM
+PM
+GM
+PM.next
+PM.ToDo
+PM.GM.ToDo
+PM.menu
+GM.Concept.label
+GM.Concept.access
+PM.DM.Concept.Relatedness.Concept.show
+UM.GM.level
+GM.Concept.level
+UM.GM.Concept.parent.access
+PM.GM.Concept.show
+PM.GM.Concept.type
+PM.DM.Concept.title.access
+                    
+    */
     
     LAGVEContext._init = function() {
         // MENU
