@@ -495,8 +495,9 @@
                         var tabview     = e.container, 
                             tabs        = tabview.all('.tabview-tabs li'), 
                             contents    = tabview.all('.tabview-content > *'), 
-                            tab         = e.currentTarget.get('parentNode');
-                            tabContents = Y.one(e.currentTarget.get('hash'));
+                            tab         = e.currentTarget.get('parentNode'),
+                            tabHash     = e.currentTarget.get('hash'),
+                            tabContents = Y.one(tabHash);
                  
                         // hide all tab contents
                         contents.addClass('tabview-hidden');
@@ -507,36 +508,30 @@
                         // unhide active tab's contents
                         tabContents.removeClass('tabview-hidden');
                         
+                        if (tabHash === '#texteditor') {
+                            hideVEMenu();
+                            
+                            var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
+                            
+                            LAGVE.ToVisual.converting = false;
+                                                        
+                            editor.mirror.setCode(LAG);
+                            editor.mirror.reindent();
+                        }
+                        
+                        if (tabContents.hasClass('visualeditor')) {                        
+                            showVEMenu();
+                            LAGVE.ToVisual.convert();
+                        }
+                        
+                        if (tabHash === '#strategy-description') {
+                            hideVEMenu();
+                        }
+                        
                         // We can check and colour description
                         // each time we change tabs
                         evaluateDescription();
                     }
-                    
-                    //Y.on("domready", function() {
-                    //    // select text editor tab by default.
-                    //    var textTab = Y.one('#texteditor-tab');
-                    //    textTab.simulate('click');
-                    //});
-                    
-                    
-                    Y.one('#texteditor-tab').on('click', function() {
-                        hideVEMenu();
-                        if (LAGVE.initialization && LAGVE.implementation) {
-                            var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
-                            
-                            editor.mirror.setCode(LAG);
-                            editor.mirror.reindent();
-                        }
-                    });
-                    
-                    Y.all('.visualeditor-tab').on('click', function() {
-                        showVEMenu();
-                        LAGVE.ToVisual.convert();
-                    });
-                    
-                    Y.one('#strategy-description-tab').on('click', function() {
-                        hideVEMenu();
-                    });
                     
                     function hideVEMenu() {
                         if (LAGVE.mainMenu) LAGVE.mainMenu.setStyle('display','none');

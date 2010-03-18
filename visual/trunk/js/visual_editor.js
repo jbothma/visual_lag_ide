@@ -1691,6 +1691,8 @@ LAGVE.oneIndentation = '  ';
     }
     
     LAGVE.ToVisual.convert = function() {
+        LAGVE.ToVisual.stack = new Array();
+        
         // update last code change converted to visual
         LAGVE.ToVisual.lastEditorChange = editorChangeTimestamp;
         
@@ -1701,8 +1703,6 @@ LAGVE.oneIndentation = '  ';
         // and replacing all the code in the editor.
         var code = editor.mirror.getCode();
         editor.mirror.setCode(code);
-
-        //editor.mirror.reindent();
     }
     
                 /*if ( LAGVE.ToVisual.stack.length > 0 &&
