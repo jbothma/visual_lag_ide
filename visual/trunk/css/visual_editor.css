@@ -577,5 +577,12 @@ SPAN.while.multiple-documents-symbol {
 
 #VE-menu {
     position:   absolute;
-    visibility: hidden;
+}
+
+.hidden-by-default-menu {
+    display:    none !important;
+}
+
+.valid-menu {
+    display:    block !important;
 }

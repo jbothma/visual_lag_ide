@@ -1170,7 +1170,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     LAGVEStmt.newStatement = function(targetNode) {
     
         //////    STATEMENT BLOCK   ///////
-        var statement = Y.Node.create( '<div class="statement deletable selectable"></div>' );
+        var statement = Y.Node.create( '<div class="statement selectable statement-container"></div>' );
         
         statement.resize = function(reason) {    
             // "bubble up"
@@ -1181,6 +1181,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         statement.getName       = function() {return this._LAGVEName};
         statement.select        = LAGVE._genericSelect;
         statement.deSelect      = LAGVE._genericDeSelect;
+        statement.contextMenuItems = LAGVEContext.items.statementContainer;
         
         /**
          * Function to insert nodes asked to be inserted.
@@ -1372,93 +1373,49 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
 /* CONTEXT MENU */
 LAGVEContext = new Object();
 
-LAGVEContext.items = {
-    visualElement: {
-        delete: true,
-        insert: {
-            attribute:  true,
-        },
-    },
-    attributeContainer: {
-        insert: {
-            attribute: true,
-        },
-        help : true,
-    },   
-    valueContainer: {
-        insert: {
-            attribute: true,
-            boolean: true,
-            value: true,
-        },
-        help : true,
-    },
-    statementContainer: {
-        insert: {
-            statement: true,
-        },
-        help: true,
-    },
-    statement: {
-        delete: true,
-        help: true,
-    },
+LAGVEContext.menus = {
+    deleteElement       : Y.one('#context-menu-delete'),
+    insertMenu          : Y.one('#context-menu-insert'),
+    insertAttributeMenu : Y.one('#context-menu-insert-attribute'),
+    insertValue         : Y.one('#context-menu-value'),
+    insertStatementMenu : Y.one('#context-menu-insert-statement'),
+    insertConditionMenu : Y.one('#context-menu-insert-condition'),
+    insertBoolean       : Y.one('#context-menu-boolean'),
+    help                : Y.one('#context-menu-help'),
 }
+
+LAGVEContext.items = {
+    visualElement: [
+        LAGVEContext.menus.deleteElement,
+        LAGVEContext.menus.help
+    ],
     
-    /*
-        1. Build all menu possibilities into one
-        2. For each kind of visual element, make only the needed menu items visible.
-        
-        Menu items can have right-click to help and title for brief description
-        
-        1.
-            Delete.
-            Insert >
-                Attribute >
-                Value [___].
-                Statements >
-                    Action.
-                    "For each concept".
-                    "If condition satisfied".
-                Conditions >
-                    Boolean >
-                        true.
-                        false.
-                    AND.
-                    OR.
-                    Enough
-                
-            Containers have insert:
-            Statement block:
-                Statement
-            Attribute container
-                Attribute
-            Value Container
-            Attribute
-                Value
-                Boolean
-            Condition container
-                Conditions
-                    
-    */
+    attributeContainer: [
+        LAGVEContext.menus.insertMenu,
+        LAGVEContext.menus.insertAttributeMenu,
+        LAGVEContext.menus.help
+    ],
     
-    LAGVEContext._init = function() {
-        // MENU
-        LAGVEContext.menu   = Y.Node.create( '<div id="context-menu"></div>' );
-        
-        // MENU ITEM
-        var menuItemDelete  = Y.Node.create( '<div id="delete" class="context-menu-item">Delete</div>' );
-        menuItemDelete.on('click',function() { LAGVEContext.deleteItem(LAGVEContext.context); });
-        //menuItemDelete.on('click',LAGVEContext.deleteItem,LAGVEContext.context);
-        LAGVEContext.menu.append(menuItemDelete);
-        
-        // create context menu (but it should be hidden by CSS until needed
-        Y.one('body').append(LAGVEContext.menu);
-    }
+    valueContainer: [
+        LAGVEContext.menus.insertMenu,
+        LAGVEContext.menus.insertAttributeMenu,
+        LAGVEContext.menus.insertValue,
+        LAGVEContext.menus.insertBoolean,
+        LAGVEContext.menus.help
+    ],
     
-    LAGVEContext._isWorkspace = function(node) {
-        return node.hasClass('VE-workspace');
-    }
+    statementContainer: [
+        LAGVEContext.menus.insertMenu,
+        LAGVEContext.menus.insertStatementMenu,
+        LAGVEContext.menus.help
+    ],
+    
+    conditionContainer: [
+        LAGVEContext.menus.insertMenu,
+        LAGVEContext.menus.insertConditionMenu,
+        LAGVEContext.menus.help
+    ],
+}
     
     /**
      *    LAGVE.deleteItem
@@ -1468,48 +1425,48 @@ LAGVEContext.items = {
      *    - workspace node is found
      *    - body tag is found
      */
-    LAGVEContext.deleteItem = function(node) {
-        // limit/safety stop case
-        if (LAGVEContext._isWorkspace(node) || node.get('tagName') === 'body') {
-            return
-        }
-        
-        if (node.hasClass('deletable')) {
-            var parent = node.get('parentNode');
+    LAGVEContext.deleteItem = function() {
+        if (confirm('Are you sure you want to delete this ' + LAGVEContext.context.getName() + '?')) {
+            var parent = LAGVEContext.context.get('parentNode');
             
-            // Do work
-            if (confirm('Are you sure you want to delete this ' + node.getName() + '?')) {
-                node.remove();
-                parent.resize('context delete');
-                LAGVE.select(parent);
-            }
+            LAGVEContext.context.remove();
             
-        } else {
-            // Recurse
-            LAGVEContext.deleteItem(node.get('parentNode'));
+            parent.resize('context delete');            
         }
     }
+    
+    LAGVEContext.show = function(contextNode, x, y) {
+        LAGVEContext.context = contextNode;
         
-     Y.on('contextmenu', function(e) {
-        LAGVEContext.context = e.target;
-        //if (LAGVEContext.context.ancestor(LAGVEContext._isWorkspace)) {
-        //    LAGVEContext.menu.setStyles({
+        for ( var ii = 0; ii < contextNode.contextMenuItems.length; ii++ ) {
+            contextNode.contextMenuItems[ii].addClass('valid-menu');
+        }
         
-            Y.one('#VE-menu').setStyles({
-                left:       e.clientX + 'px',
-                top:        e.clientY + 'px',
-                visibility: 'visible',
-            });
-            e.preventDefault();
-        //}
+        Y.one('#VE-menu').addClass('valid-menu');
+        
+        Y.one('#VE-menu').setStyles({
+            left: x + 'px',
+            top:  y + 'px',
+        });
+    }
+    
+    LAGVEContext.hide = function() {    
+            Y.all('.valid-menu').removeClass('valid-menu');
+    }
+        
+    Y.delegate('contextmenu', function(e) {        
+        LAGVEContext.show(e.currentTarget, e.clientX, e.clientY);        
+        e.preventDefault();            
+    }, Y.one('#peal'), '.statement-container');
+    
+    Y.on('click', function(e) {
+        // hide when when left click except when
+        // a button opening a submenu is clicked
+        if ( !e.target.hasClass('yui-menu-label') ) {
+            LAGVEContext.hide();
+        }
     });
     
-    Y.on('click', function() {
-        //LAGVEContext.menu
-        //Y.one('#VE-menu').setStyle('visibility','hidden');
-    });
-    
-    //Y.on("contentready", LAGVEContext._init,"body");
 
     
 /* VISUAL EDITOR */
