@@ -500,8 +500,8 @@ LAGVEIf = new Object();
         ifThenElse.arrows.append(               ifThenElse.arrowheadLeft        );
         ifThenElse.arrows.append(               ifThenElse.arrowheadRight       );
         ifThenElse.conditionPositioning.append( ifThenElse.arrows               );
-        ifThenElse.conditionPositioning.append( ifThenElse.rhombus         );
-        ifThenElse.conditionPositioning.append( ifThenElse.rhombusSelected );
+        ifThenElse.conditionPositioning.append( ifThenElse.rhombus              );
+        ifThenElse.conditionPositioning.append( ifThenElse.rhombusSelected      );
         ifThenElse.conditionPositioning.append( ifThenElse.conditionContainer   );
         ifThenElse.append(                      ifThenElse.thenAndElse          );
         ifThenElse.thenAndElse.append(          ifThenElse.thenBlock            );
@@ -612,10 +612,7 @@ LAGVEIf = new Object();
         // .while.statement
         newWhile.statementList = LAGVEStmt.newStatement();
         newWhile.statementList.addClass('while');
-        
-        // .while.statementListPositioning  
-        
-        
+                
         newWhile._LAGVEName   = 'For Each Concept';
         newWhile.getName      = function() { return this._LAGVEName; }
         
@@ -653,7 +650,11 @@ LAGVEIf = new Object();
         newWhile.conditionPositioning.append( newWhile.rhombus              );
         newWhile.conditionPositioning.append( newWhile.rhombusSelected      );
         newWhile.conditionPositioning.append( newWhile.conditionContainer   );
-                
+        
+        newWhile.LAGVEInsert = function(child) {
+            newWhile.statementList.LAGVEInsert(child);
+        };
+        
         newWhile.conditionContainer.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {
                 if (!this.hasChildNodes()) {            
@@ -906,7 +907,9 @@ LAGVE.Condition = new Object();
                 <option value=""></option>\
                 <option value="==">==</option>\
                 <option value="&gt;">&gt;</option>\
+                <option value="&gt;=">&gt;=</option>\
                 <option value="&lt;">&lt;</option>\
+                <option value="&lt;=">&lt;=</option>\
             </select>\
         ');
         
@@ -1698,199 +1701,290 @@ LAGVE.oneIndentation = '  ';
         // and replacing all the code in the editor.
         var code = editor.mirror.getCode();
         editor.mirror.setCode(code);
-        
+
+        //editor.mirror.reindent();
     }
-        
-    // this is called to create an action function that goes on the action 
-    // stack. It is always called so we have to check the global (in the 
-    // browser window, not the CodeMirror iframe) variable 'convertingToVisual'
-    //
-    // this can be separated out into individual functions, but it's
-    // easier to edit as a switch with all the actions together.
-    LAGVE.ToVisual.action = function(command, tokenValue) {
+    
+                /*if ( LAGVE.ToVisual.stack.length > 0 &&
+                     typeof(LAGVE.ToVisual.stack[LAGVE.ToVisual.stack.length - 1])==='undefined')
+                    alert("undefined top of stack");*/    
+                    
+    // Parser action stack functions to build visual elements
+    LAGVE.ToVisual.actions = new Object();
+
+    LAGVE.ToVisual.actions.startInitialization = function startInitialization() {
         if (LAGVE.ToVisual.converting) {
-            return function() {
-                Y.log('found ' + command);
-                switch (command) {
-                    case 'start init':
-                        // initialization always exists so don't create it. 
-                        // Just find it and put it on the stack so we can 
-                        // insert its contents
-                        LAGVE.ToVisual.stack.push(LAGVE.initialization);
-                        // init should now be at top of stack. We're ready 
-                        // to insert its contents so empty it.
-                        LAGVE.ToVisual.stack.peek().empty();
-                        break;
-                    case 'finish init':
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'start impl':
-                        // implementation always exists so don't create it. 
-                        // Just find it and put it on the stack so we can 
-                        // insert its contents
-                        LAGVE.ToVisual.stack.push(LAGVE.implementation);
-                        // init should now be at top of stack. We're ready 
-                        // to insert its contents so empty it.
-                        LAGVE.ToVisual.stack.peek().empty();
-                        break;
-                    case 'finish impl':
-                        LAGVE.ToVisual.stack.pop();
-                        // We're not adding anything after implementation so
-                        // stop trying to convert things to visual until 
-                        // told otherwise
-                        LAGVE.ToVisual.converting = false;
-                        break;
-                    case 'start if':
-                        // create new if-then-else
-                        var newIf = LAGVEIf.newIf();
-                        // insert to top of stack
-                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newIf);
-                        // put it at top of stack so we can insert to it
-                        LAGVE.ToVisual.stack.push(newIf);
-                        break;
-                    case 'start condition':
-                        // push the condition of the thing at top of stack
-                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().conditionContainer);
-                        break;
-                    case 'finish condition':
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'start then':
-                        // push the Then block of the thing at top of stack
-                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().thenStatementBlock);
-                        break;
-                    case 'finish then':
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'start else':
-                        // push the Else block of the thing at top of stack
-                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().elseStatementBlock);
-                        break;
-                    case 'finish else':
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'finish if':
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'boolean':
-                        // target node is whatever's on top of LAGVE.ToVisual.stack
-                        var newBoolean = LAGVE.Attr.newBoolean(tokenValue, LAGVE.ToVisual.stack.peek());
-                        break;
-                    case 'start assignment':
-                        // create new assignment
-                        // target node is whatever's on top of LAGVE.ToVisual.stack
-                        var newAssignment = LAGVE.Assignment.newAssignment(LAGVE.ToVisual.stack.peek());
-                        // push new assignment onto LAGVE.ToVisual.stack so we can find it
-                        LAGVE.ToVisual.stack.push(newAssignment);
-                        // push new assignment's attribute container onto LAGVE.ToVisual.stack
-                        // because we're expecting an attribute that we'll want to insert.
-                        LAGVE.ToVisual.stack.push(newAssignment.attributeContainer);
-                        break;
-                    case 'operator':
-                        // pop the assignment attribute container off of LAGVE.ToVisual.stack
-                        LAGVE.ToVisual.stack.pop();
-                        // set the operator of the assignement statement 
-                        // at the top of LAGVE.ToVisual.stack to the operator token value
-                        LAGVE.ToVisual.stack.peek().setOperator(tokenValue);
-                        // push the assignment value container onto LAGVE.ToVisual.stack
-                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().valueContainer);
-                        break;
-                    case 'finish assignment':
-                        // pop the value container off
-                        LAGVE.ToVisual.stack.pop();
-                        // pop the assignment off
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'start attribute':
-                        var target = LAGVE.ToVisual.stack.peek();
-                        if (target.setValue) {
-                            target.setValue('');
-                        } else {
-                            // Start with empty value - upcoming Model tokens will modify its value
-                            // target node is whatever's on top of LAGVE.ToVisual.stack
-                            var newAttribute = LAGVE.Attr.insertNewAttr('', target);
-                            // push the new Attribute to the 
-                            LAGVE.ToVisual.stack.push(newAttribute);
-                        }
-                        break;
-                    case 'finish attribute':
-                        // finished the attribute (not adding anything more to it)
-                        // so pop it off.
-                        // Check whether the top of stack really is an attribute box
-                        // because things like Enough take the value token but don't build an
-                        // attribute/value visual element for it.
-                        if (LAGVE.ToVisual.stack.peek().hasClass('attr_box'))
-                            LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'model':
-                        // get value of attribute on top of LAGVE.ToVisual.stack
-                        var currentValue = LAGVE.ToVisual.stack.peek().getValue();
-                        // don't prepend a '.' to the first Model
-                        var newValue = ((currentValue === '') ? '' : currentValue + '.') + tokenValue;
-                        // update value
-                        LAGVE.ToVisual.stack.peek().setValue(newValue);
-                        break;
-                    case 'start enough':
-                        // make a new Enough
-                        var newEnough = LAGVE.Condition.newEnough();
-                        // insert to the thing at the top of LAGVE.ToVisual.stack
-                        LAGVE.ToVisual.stack.peek().LAGVEInsert(newEnough);
-                        // push onto LAGVE.ToVisual.stack
-                        LAGVE.ToVisual.stack.push(newEnough.getCondition());
-                        break;
-                    case 'start enough threshold':
-                        // Get the new Enough from the top of LAGVE.ToVisual.stack,
-                        // get its threshold container and push that 
-                        // to LAGVE.ToVisual.stack.
-                        LAGVE.ToVisual.stack.push(
-                            LAGVE.ToVisual.stack.peek().getThreshold()
-                        );
-                        break;
-                    case 'finish enough threshold':
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    case 'start comparison':
-                        // create new comparison target node is whatever's on top of LAGVE.ToVisual.stack.
-                        // getCondition() at the end because conditions except booleans 
-                        // are currently wrapped in a conditionWrapper.
-                        var newComparison = LAGVE.Condition.newComparison(LAGVE.ToVisual.stack.peek()).getCondition();
-                        // push new assignment onto LAGVE.ToVisual.stack so we can find it
-                        LAGVE.ToVisual.stack.push(newComparison);
-                        // push new assignment's comparison container onto LAGVE.ToVisual.stack
-                        // because we're expecting an comparison that we'll want to insert.
-                        LAGVE.ToVisual.stack.push(newComparison.attributeContainer);
-                        break;
-                    case 'comparator':
-                        // pop the comparison attribute container off of LAGVE.ToVisual.stack
-                        LAGVE.ToVisual.stack.pop();
-                        // set the comparator of the comparison 
-                        // at the top of LAGVE.ToVisual.stack to the comparator token value
-                        LAGVE.ToVisual.stack.peek().setComparator(tokenValue);
-                        // push the assignment value container onto LAGVE.ToVisual.stack
-                        LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().valueContainer);
-                        break;
-                    case 'finish comparison':
-                        // pop the value container off
-                        LAGVE.ToVisual.stack.pop();
-                        // pop the comparison off
-                        LAGVE.ToVisual.stack.pop();
-                        break;
-                    default:
-                        Y.log('nothing to do for \'' + command + '\'');
-                        break;
-                }
-            }
-        } else { 
-            // this has to return some function as an action, even noop.
-            // the alternative is to make Parser's push() ignore non-functions.
-            // can't decide which is more correct right now.
-            return noop
+            // initialization always exists so don't create it. 
+            // Just find it and put it on the stack so we can 
+            // insert its contents
+            LAGVE.ToVisual.stack.push(LAGVE.initialization);
+            // init should now be at top of stack. We're ready 
+            // to insert its contents so empty it.
+            LAGVE.ToVisual.stack.peek().empty();
         }
     }
-     
-    // my 'no operation' function.
-    // could do with being placed in a safer namespace.
-    function noop() {}
+
+    LAGVE.ToVisual.actions.finishInitialization = function finishInitialization() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.startImplementation = function startImplementation() {
+        if (LAGVE.ToVisual.converting) {
+            // implementation always exists so don't create it. 
+            // Just find it and put it on the stack so we can 
+            // insert its contents
+            LAGVE.ToVisual.stack.push(LAGVE.implementation);
+            // init should now be at top of stack. We're ready 
+            // to insert its contents so empty it.
+            LAGVE.ToVisual.stack.peek().empty();
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishImplementation = function finishImplementation() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+            // We're not adding anything after implementation so
+            // stop trying to convert things to visual until 
+            // told otherwise
+            LAGVE.ToVisual.converting = false;
+        }
+    }
+
+    LAGVE.ToVisual.actions.startCondition = function startCondition() {
+        if (LAGVE.ToVisual.converting) {
+            // push the condition of the thing at top of stack
+            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().conditionContainer);
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishCondition = function finishCondition() {
+        if (LAGVE.ToVisual.converting) {
+            // pop conditionContainer
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.startWhile = function startWhile() {
+        if (LAGVE.ToVisual.converting) {
+            // create new if-then-else
+            var newWhile = LAGVE.Elements.newWhile();
+            // insert to top of stack
+            LAGVE.ToVisual.stack.peek().LAGVEInsert(newWhile);
+            // put it at top of stack so we can insert to it
+            LAGVE.ToVisual.stack.push(newWhile);
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishWhile = function finishWhile() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.startIf = function startIf() {
+        if (LAGVE.ToVisual.converting) {
+            // create new if-then-else
+            var newIf = LAGVEIf.newIf();
+            // insert to top of stack
+            LAGVE.ToVisual.stack.peek().LAGVEInsert(newIf);
+            // put it at top of stack so we can insert to it
+            LAGVE.ToVisual.stack.push(newIf);
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishIf = function finishIf() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.startThen = function startThen() {
+        if (LAGVE.ToVisual.converting) {
+            // push the Then block of the thing at top of stack
+            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().thenStatementBlock);
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishThen = function finishThen() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.startElse = function startElse() {
+        if (LAGVE.ToVisual.converting) {
+            // push the Else block of the thing at top of stack
+            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().elseStatementBlock);
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishElse = function finishElse() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.bool = function(tokenValue) {
+        return function bool() {
+            if (LAGVE.ToVisual.converting) {
+                // target node is whatever's on top of LAGVE.ToVisual.stack
+                var newBoolean = LAGVE.Attr.newBoolean(tokenValue, LAGVE.ToVisual.stack.peek());
+            }
+        }
+    }
+
+    LAGVE.ToVisual.actions.startAssignment = function startAssignment() {
+        if (LAGVE.ToVisual.converting) {
+            // create new assignment
+            // target node is whatever's on top of LAGVE.ToVisual.stack
+            var newAssignment = LAGVE.Assignment.newAssignment(LAGVE.ToVisual.stack.peek());
+            // push new assignment onto LAGVE.ToVisual.stack so we can find it
+            LAGVE.ToVisual.stack.push(newAssignment);
+            // push new assignment's attribute container onto LAGVE.ToVisual.stack
+            // because we're expecting an attribute that we'll want to insert.
+            LAGVE.ToVisual.stack.push(newAssignment.attributeContainer);
+        }
+    }
+
+    LAGVE.ToVisual.actions.operator = function(tokenValue) {
+        if (LAGVE.ToVisual.converting) {
+            return function operator() {
+                // pop the assignment attribute container off of LAGVE.ToVisual.stack
+                LAGVE.ToVisual.stack.pop();
+                // set the operator of the assignement statement 
+                // at the top of LAGVE.ToVisual.stack to the operator token value
+                LAGVE.ToVisual.stack.peek().setOperator(tokenValue);
+                // push the assignment value container onto LAGVE.ToVisual.stack
+                LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().valueContainer);
+            }
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishAssignment = function finishAssignment() {
+        if (LAGVE.ToVisual.converting) {
+            // pop the value container off
+            LAGVE.ToVisual.stack.pop();
+            // pop the assignment off
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.startAttribute = function startAttribute() {
+        if (LAGVE.ToVisual.converting) {
+            var target = LAGVE.ToVisual.stack.peek();
+            if (target.setValue) {
+                target.setValue('');
+            } else {
+                // Start with empty value - upcoming Model tokens will modify its value
+                // target node is whatever's on top of LAGVE.ToVisual.stack
+                var newAttribute = LAGVE.Attr.insertNewAttr('', target);
+                // push the new Attribute to the 
+                LAGVE.ToVisual.stack.push(newAttribute);
+            }
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishAttribute = function finishAttribute() {
+        if (LAGVE.ToVisual.converting) {
+            // finished the attribute (not adding anything more to it)
+            // so pop it off.
+            // Check whether the top of stack really is an attribute box
+            // because things like Enough take the value token but don't build an
+            // attribute/value visual element for it.
+            if (LAGVE.ToVisual.stack.peek().hasClass('attr_box'))
+                LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.model = function(tokenValue) {
+        if (LAGVE.ToVisual.converting) {
+            return function model() {
+                // get value of attribute on top of LAGVE.ToVisual.stack
+                var currentValue = LAGVE.ToVisual.stack.peek().getValue();
+                // don't prepend a '.' to the first Model
+                var newValue = ((currentValue === '') ? '' : currentValue + '.') + tokenValue;
+                // update value
+                LAGVE.ToVisual.stack.peek().setValue(newValue);
+            }
+        }
+    }
+
+    LAGVE.ToVisual.actions.startEnough = function startEnough() {
+        if (LAGVE.ToVisual.converting) {
+            // make a new Enough
+            var newEnough = LAGVE.Condition.newEnough();
+            // insert to the thing at the top of LAGVE.ToVisual.stack
+            LAGVE.ToVisual.stack.peek().LAGVEInsert(newEnough);
+            // push onto LAGVE.ToVisual.stack
+            LAGVE.ToVisual.stack.push(newEnough.getCondition());
+        }
+    }
+
+    LAGVE.ToVisual.actions.startEnoughThreshold = function startEnoughThreshold() {
+        if (LAGVE.ToVisual.converting) {
+            // Get the new Enough from the top of LAGVE.ToVisual.stack,
+            // get its threshold container and push that 
+            // to LAGVE.ToVisual.stack.
+            LAGVE.ToVisual.stack.push(
+                LAGVE.ToVisual.stack.peek().getThreshold()
+            );
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishEnoughThreshold = function finishEnoughThreshold() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishEnough = function finishEnough() {
+        if (LAGVE.ToVisual.converting) {
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    LAGVE.ToVisual.actions.startComparison = function startComparison() {
+        if (LAGVE.ToVisual.converting) {
+            // create new comparison target node is whatever's on top of LAGVE.ToVisual.stack.
+            // getCondition() at the end because conditions except booleans 
+            // are currently wrapped in a conditionWrapper.
+            var newComparison = LAGVE.Condition.newComparison(LAGVE.ToVisual.stack.peek()).getCondition();
+            // push new assignment onto LAGVE.ToVisual.stack so we can find it
+            LAGVE.ToVisual.stack.push(newComparison);
+            // push new assignment's comparison container onto LAGVE.ToVisual.stack
+            // because we're expecting an comparison that we'll want to insert.
+            LAGVE.ToVisual.stack.push(newComparison.attributeContainer);
+        }
+    }
+
+    LAGVE.ToVisual.actions.comparator = function(tokenValue) {
+        return function comparator() {
+            if (LAGVE.ToVisual.converting) {
+                // pop the comparison attribute container off of LAGVE.ToVisual.stack
+                LAGVE.ToVisual.stack.pop();
+                // set the comparator of the comparison 
+                // at the top of LAGVE.ToVisual.stack to the comparator token value
+                LAGVE.ToVisual.stack.peek().setComparator(tokenValue);
+                // push the assignment value container onto LAGVE.ToVisual.stack
+                LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().valueContainer);
+            }
+        }
+    }
+
+    LAGVE.ToVisual.actions.finishComparison = function finishComparison() {
+        if (LAGVE.ToVisual.converting) {
+            // pop the value container off
+            LAGVE.ToVisual.stack.pop();
+            // pop the comparison off
+            LAGVE.ToVisual.stack.pop();
+        }
+    }
+
+    for (var action in LAGVE.ToVisual.actions) {
+        LAGVE.ToVisual.actions[action].visual = true;
+    }
     
     // Subscribe to event "io:complete", and pass an array
     // as an argument to the event handler "complete", since

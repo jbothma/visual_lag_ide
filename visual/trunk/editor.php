@@ -525,6 +525,7 @@
                             var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
                             
                             editor.mirror.setCode(LAG);
+                            editor.mirror.reindent();
                         }
                     });
                     

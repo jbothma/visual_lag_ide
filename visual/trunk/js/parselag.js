@@ -92,9 +92,11 @@ var LAGParser = Editor.Parser = (function () {
             // Start by performing any 'lexical' actions (adjusting the
             // lexical variable), or the operations below will be working
             // with the wrong lexical state.
+            // Also perform any 'visual' actions.
             // JB - in effect this loop just removes things off the stack which are: pushlex() and poplex()      
-            while (cc.length && cc[cc.length - 1].lex) {
-                cc.pop()();
+            while (cc.length && cc[cc.length - 1].lex || cc[cc.length - 1].visual) {
+                var action = cc.pop();
+                action();
             }
 
             // Fetch a token.
@@ -167,7 +169,8 @@ var LAGParser = Editor.Parser = (function () {
         // stack in reverse order.
         function push(fs) {
             for (var i = fs.length - 1; i >= 0; i--) {
-                cc.push(fs[i]);
+                if (typeof(fs[i]) === 'function')
+                    cc.push(fs[i]);
             }
         }
         
@@ -247,7 +250,7 @@ var LAGParser = Editor.Parser = (function () {
         /**
          *  Creates an action that will log to the FireBug console, if it exists
          */
-        function logAction(logmsg) {
+        /*function logAction(logmsg) {
             return function() {
                 if (typeof(console) !== 'undefined' && typeof(console.log) === 'function') {
                     console.log(logmsg);
@@ -258,7 +261,7 @@ var LAGParser = Editor.Parser = (function () {
             if (typeof(console) !== 'undefined' && typeof(console.log) === 'function') {
                 console.log(logmsg);
             }
-        }
+        }*/
         
         function prog(type) {
             //return pass(initImpl, statements);
@@ -272,13 +275,13 @@ var LAGParser = Editor.Parser = (function () {
             if (type == "init") {
                 cont(
                     pushlex("init"),
-                    ToVisual.action('start init'),
+                    ToVisual.actions.startInitialization,
                     expect("("),
                     pushlex(")"),
                     multistatements,
                     poplex,
                     expect(")"),
-                    ToVisual.action('finish init'),
+                    ToVisual.actions.finishInitialization,
                     poplex
                 );
             } else {
@@ -292,13 +295,13 @@ var LAGParser = Editor.Parser = (function () {
             if (type == "impl") { 
                 cont(
                     pushlex("impl"), 
-                    ToVisual.action('start impl'), 
+                    ToVisual.actions.startImplementation, 
                     expect("("), 
                     pushlex(")"), 
                     multistatements, 
                     poplex, 
                     expect(")"), 
-                    ToVisual.action('finish impl'), 
+                    ToVisual.actions.finishImplementation, 
                     poplex, 
                     expect("EOF")
                 );
@@ -325,7 +328,7 @@ var LAGParser = Editor.Parser = (function () {
         function expect(wanted) {
             return function expecting (type, tokenValue) {
                 if (type == wanted) {
-                    ToVisual.action('found expected ' + wanted, tokenValue);
+                    //ToVisual.actions.('found expected ' + wanted, tokenValue);
                     cont();
                 } else {
                     markError();
@@ -340,16 +343,16 @@ var LAGParser = Editor.Parser = (function () {
         function statement(type, tokenValue) {
             if (type == "if") {
                 cont(
-                    ToVisual.action('start if'),
+                    ToVisual.actions.startIf,
                     condition,
                     pushlex("form"),
                     then,
                     /*poplex,*/
-                    ToVisual.action('finish if')
+                    ToVisual.actions.finishIf
                 );
             } else if (type == "while" && withinLexType("init")) {
                 cont(
-                    ToVisual.action('make while'),
+                    ToVisual.actions.startWhile,
                     pushlex("form"),
                     condition,
                     expect("("),
@@ -358,16 +361,16 @@ var LAGParser = Editor.Parser = (function () {
                     expect(")"),
                     poplex,
                     poplex,
-                    ToVisual.action('finish while')
+                    ToVisual.actions.finishWhile
                 );
             } else if (type == "for") {
                 cont(
-                    ToVisual.action('make for'),
+                    //ToVisual.actions.('make for'),
                     pushlex("form"),
                     range,
                     dostat,
-                    poplex,
-                    ToVisual.action('finish for')
+                    poplex//,
+                    //ToVisual.actions.('finish for')
                 );
             } else if (type == "break") {   
                 cont(pushlex("form"), sourcelabel, poplex);
@@ -383,13 +386,13 @@ var LAGParser = Editor.Parser = (function () {
                 );*/
             } else if (type == "model") { // assignment: attribute operator value
                 pass(
-                    ToVisual.action('start assignment'),
+                    ToVisual.actions.startAssignment,
                     pushlex("form"),
                     attribute(),
                     operator,
                     value,
                     poplex,
-                    ToVisual.action('finish assignment')
+                    ToVisual.actions.finishAssignment
                 );
             } else {
                 markError();
@@ -407,37 +410,38 @@ var LAGParser = Editor.Parser = (function () {
         function condition(type, tokenValue) {
             if (type == "model") { // comparison: attribute comparator value
                 pass(
-                    ToVisual.action('start condition'),
-                    ToVisual.action('start comparison'),
+                    ToVisual.actions.startCondition,
+                    ToVisual.actions.startComparison,
                     pushlex("stat"),
                     attribute(),
                     comparator,
                     value,
                     poplex,
-                    ToVisual.action('finish comparison'),
-                    ToVisual.action('finish condition')
+                    ToVisual.actions.finishComparison,
+                    ToVisual.actions.finishCondition
                 );
             } else if (type == "enough") {
                 cont(
-                    ToVisual.action('start condition'),
+                    ToVisual.actions.startCondition,
                     pushlex("stat"),
-                    ToVisual.action('start enough'),
+                    ToVisual.actions.startEnough,
                     expect("("),
                     pushlex(")"),
                     setOfCondition,
-                    ToVisual.action('start enough threshold'),
+                    ToVisual.actions.startEnoughThreshold,
                     value,
-                    ToVisual.action('finish enough threshold'),
+                    ToVisual.actions.finishEnoughThreshold,
                     expect(")"),
                     poplex,
+                    ToVisual.actions.finishEnough,
                     poplex,
-                    ToVisual.action('finish condition')
+                    ToVisual.actions.finishCondition
                 );
             } else if (type == "boolean") {
                 cont(
-                    ToVisual.action('start condition'),
-                    ToVisual.action('boolean', tokenValue),
-                    ToVisual.action('finish condition')
+                    ToVisual.actions.startCondition,
+                    ToVisual.actions.bool(tokenValue),
+                    ToVisual.actions.finishCondition
                 );
             } else if (type == "(") {
                 cont( pushlex("stat"), condition, expect(")"), poplex ); // allows braces around conditions
@@ -454,7 +458,7 @@ var LAGParser = Editor.Parser = (function () {
         function then(type) {
             if (type == "then") {
                 cont(
-                    ToVisual.action('start then'),
+                    ToVisual.actions.startThen,
                     /*pushlex("form"), */
                     expect("("), 
                     pushlex(")"), 
@@ -462,7 +466,7 @@ var LAGParser = Editor.Parser = (function () {
                     expect(")"), 
                     poplex, 
                     poplex, 
-                    ToVisual.action('finish then'),
+                    ToVisual.actions.finishThen,
                     posselse
                 );
             } else {
@@ -475,7 +479,7 @@ var LAGParser = Editor.Parser = (function () {
         function posselse(type) {
             if (type == "else") {
                 cont(
-                    ToVisual.action('start else'), 
+                    ToVisual.actions.startElse, 
                     pushlex("form"), 
                     expect("("), 
                     pushlex(")"), 
@@ -483,7 +487,7 @@ var LAGParser = Editor.Parser = (function () {
                     expect(")"), 
                     poplex, 
                     poplex, 
-                    ToVisual.action('finish else')
+                    ToVisual.actions.finishElse
                 );
             } else {
                 // The 'else' block is optional so if the token isn't an else, 
@@ -530,8 +534,8 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         function model(type, tokenValue) {
-            if (type == "model") cont(ToVisual.action('model', tokenValue));
-            else if (type == "variable") cont(ToVisual.action('model', tokenValue));
+            if (type == "model") cont(ToVisual.actions.model(tokenValue));
+            else if (type == "variable") cont(ToVisual.actions.model(tokenValue));
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>DM, GM, UM, PM, Concept, variable</b>");
@@ -544,9 +548,9 @@ var LAGParser = Editor.Parser = (function () {
             return function(type) {
                 if (type == "model") {
                     pass(
-                        ToVisual.action('start attribute'), 
+                        ToVisual.actions.startAttribute, 
                         dotsep(model),
-                        ToVisual.action('finish attribute')
+                        ToVisual.actions.finishAttribute
                     );
                 } else {
                     markError();
@@ -579,7 +583,7 @@ var LAGParser = Editor.Parser = (function () {
 
         // If it is a comparator carry on, otherwise colour it red
         function comparator(type, tokenValue) {
-            if (type == "comparator") cont(ToVisual.action('comparator', tokenValue));
+            if (type == "comparator") cont(ToVisual.actions.comparator(tokenValue));
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>&lt;, &gt;, ==, !=, in</b>");
@@ -588,7 +592,7 @@ var LAGParser = Editor.Parser = (function () {
         }
 
         function operator(type, tokenValue) {
-            if (type == "operator") cont(ToVisual.action('operator', tokenValue));
+            if (type == "operator") cont(ToVisual.actions.operator(tokenValue));
             else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>=, .=, +=, -=</b>");
@@ -601,21 +605,21 @@ var LAGParser = Editor.Parser = (function () {
             if (type == "variable") {
                 cont(
                     // variables are currently Attribute visual elements
-                    ToVisual.action('start attribute'), 
-                    ToVisual.action('model', tokenValue),
-                    ToVisual.action('finish attribute')
+                    ToVisual.actions.startAttribute,
+                    ToVisual.actions.model(tokenValue),
+                    ToVisual.actions.finishAttribute
                 );
             } else if (type == "model") { 
                 pass(attribute());
             } else if (type == "number") { 
                 cont(
                     // variables are currently Attribute visual elements
-                    ToVisual.action('start attribute'), 
-                    ToVisual.action('model', tokenValue),
-                    ToVisual.action('finish attribute')
+                    ToVisual.actions.startAttribute,
+                    ToVisual.actions.model(tokenValue),
+                    ToVisual.actions.finishAttribute
                 );
             } else if (type == "boolean") {
-                cont(ToVisual.action('boolean', tokenValue));
+                cont(ToVisual.actions.bool(tokenValue));
             } else {
                 markError();
                 error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>variable, true, false, number, DM, UM, GM, PM, Concept</b>");
