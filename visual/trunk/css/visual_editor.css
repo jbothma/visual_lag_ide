@@ -521,6 +521,8 @@ SPAN.while.multiple-documents-symbol {
     position:   absolute;
     top:        8px;
     width:      106px;
+    left:       0px;
+    text-align: left;
 }
 .while.arrowline.multidocs-to-rhombus {
     position:   absolute;

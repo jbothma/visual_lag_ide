@@ -172,9 +172,6 @@ YUI({
         assignment._LAGVEName     = 'Assignment';
         assignment.getName        = function() { return this._LAGVEName };
         
-        assignment.contextMenuItems = LAGVEContext.items.visualElement;
-        assignment.on('contextmenu', LAGVEContext.contextMenuHandler);
-        
         //////    ATTRIBUTE CONTAINER    //////
         assignment.attributeContainer               = Y.Node.create('\
             <div    class="assignment-attribute-container assignment-child-container selectable" \
@@ -345,8 +342,6 @@ LAGVEIf = new Object();
         var ifThenElse          = Y.Node.create('<div class="ifthenelse statement-list-child"></div>');
         ifThenElse._LAGVEName   = 'If-Then-Else block';
         ifThenElse.getName      = function() { return this._LAGVEName; }
-        ifThenElse.contextMenuItems = LAGVEContext.items.visualElement;
-        ifThenElse.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         /**
          *
@@ -631,8 +626,6 @@ LAGVEIf = new Object();
                 
         newWhile._LAGVEName   = 'For Each Concept';
         newWhile.getName      = function() { return this._LAGVEName; }
-        newWhile.contextMenuItems = LAGVEContext.items.visualElement;
-        newWhile.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         newWhile.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -818,6 +811,8 @@ LAGVE.Condition = new Object();
      */
     LAGVE.Condition.wrapCondition = function(child) {
         var conditionWrapper = Y.Node.create( '<div class="condition deletable wrapper"></div>' );
+        conditionWrapper.contextMenuItems = LAGVEContext.items.visualElement;
+        conditionWrapper.on('contextmenu', LAGVEContext.contextMenuHandler);
     
         var conditionWrapperDD = new Y.DD.Drag({
             groups:    ['condition'],
@@ -870,8 +865,6 @@ LAGVE.Condition = new Object();
         comparison.getName      = function() {
             return this._LAGVEName
         };
-        comparison.contextMenuItems = LAGVEContext.items.visualElement;
-        comparison.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         comparison._resize = function(reason) {
             //Y.log('comparison._resize by ' + reason);
@@ -1303,6 +1296,8 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
             
             return LAG;
         }
+        childContainer.contextMenuItems = LAGVEContext.items.visualElement;
+        childContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
 
         childContainer.append(child);
         childContainer.parentChanged();
