@@ -415,8 +415,8 @@ DIV.selected {
 
 
 
-/* STATEMENT LIST */
-.statement-list-wrapper {
+/* STATEMENT */
+.statement {
     min-width:          200px;
     min-height:         30px;
     position:           relative;

@@ -289,10 +289,10 @@
                                                                             <div class="yui-menu-content">
                                                                                 <ul> 
                                                                                     <li class="yui-menuitem">
-                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM.Concept.label', LAGVEContext.context)">label</a>
+                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('GM.Concept.label', LAGVEContext.context)">label</a>
                                                                                     </li>
                                                                                     <li class="yui-menuitem"><!-- Bounding box -->
-                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr(['GM.Concept.weight', LAGVEContext.context)">weight</a>
+                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('GM.Concept.weight', LAGVEContext.context)">weight</a>
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
@@ -498,7 +498,7 @@
             }
 
             var editor = new MirrorFrame(CodeMirror.replace(textarea), {
-                height: "200px",
+                height: "350px",
                 width: "85%",
                 content: textarea.value,
                 parserfile: ["tokenizelag.js", "parselag.js"],

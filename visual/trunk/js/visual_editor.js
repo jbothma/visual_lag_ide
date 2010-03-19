@@ -70,6 +70,9 @@ YUI({
         newAttribute.getName = function() { return this._LAGVEName }        
         newAttribute.setName = function(newName) { this._LAGVEName = newName }
 
+        newAttribute.contextMenuItems = LAGVEContext.items.visualElement;
+        newAttribute.on('contextmenu', LAGVEContext.contextMenuHandler);
+        
         newAttribute.resize = function(reason) {
             //Y.log('newAttribute.resize triggered by ' + reason);
             // Setup
@@ -169,6 +172,9 @@ YUI({
         assignment._LAGVEName     = 'Assignment';
         assignment.getName        = function() { return this._LAGVEName };
         
+        assignment.contextMenuItems = LAGVEContext.items.visualElement;
+        assignment.on('contextmenu', LAGVEContext.contextMenuHandler);
+        
         //////    ATTRIBUTE CONTAINER    //////
         assignment.attributeContainer               = Y.Node.create('\
             <div    class="assignment-attribute-container assignment-child-container selectable" \
@@ -190,6 +196,9 @@ YUI({
             node:        assignment.attributeContainer,
             groups:        ['attribute'],
         });
+        
+        assignment.attributeContainer.contextMenuItems = LAGVEContext.items.attributeContainer;
+        assignment.attributeContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         
         //////    VALUE CONTAINER    //////
@@ -214,6 +223,8 @@ YUI({
         };
         assignment.valueContainer.getName       = function() { return this._LAGVEName };
         
+        assignment.valueContainer.contextMenuItems = LAGVEContext.items.valueContainer;
+        assignment.valueContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         //////    OPERATOR CONTAINER    //////
         assignment.operatorContainer    = Y.Node.create('\
@@ -334,7 +345,8 @@ LAGVEIf = new Object();
         var ifThenElse          = Y.Node.create('<div class="ifthenelse statement-list-child"></div>');
         ifThenElse._LAGVEName   = 'If-Then-Else block';
         ifThenElse.getName      = function() { return this._LAGVEName; }
-        ifThenElse.contextMenuItems = LAGVEContext.items.statement;
+        ifThenElse.contextMenuItems = LAGVEContext.items.visualElement;
+        ifThenElse.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         /**
          *
@@ -420,6 +432,8 @@ LAGVEIf = new Object();
             this.get('parentNode').resize('child assignment.resize | ' + reason);
         }
         
+        ifThenElse.conditionPositioning.contextMenuItems = LAGVEContext.items.conditionContainer;
+        ifThenElse.conditionPositioning.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         
         ifThenElse.arrows           = Y.Node.create('<div class="ifthenelse-arrows"></div>');
@@ -457,6 +471,7 @@ LAGVEIf = new Object();
                 }
             }
         }
+        
                 
         ///////    THEN and ELSE    ///////
         ifThenElse.thenAndElse = Y.Node.create('<div class="ifthenelse-thenelse"></div>');
@@ -464,7 +479,7 @@ LAGVEIf = new Object();
         
         ///////    THEN    ////////
         ifThenElse.thenBlock = Y.Node.create('<div class="ifthenelse-then"></div>');
-        ifThenElse.thenStatementBlock = LAGVEStmt.newStatementList();
+        ifThenElse.thenStatementBlock = LAGVEStmt.newStatement();
         ifThenElse.thenStatementBlock.addClass('ifthenelse-then-statement');
         ifThenElse.thenStatementBlock.removeClass('deletable');
         ifThenElse.thenStatementBlock.resize = ifThenElse.resize;    // replace statement's resize()
@@ -474,7 +489,7 @@ LAGVEIf = new Object();
         
         ///////    ELSE    ////////
         ifThenElse.elseBlock = Y.Node.create('<div class="ifthenelse-else"></div>');
-        ifThenElse.elseStatementBlock = LAGVEStmt.newStatementList();
+        ifThenElse.elseStatementBlock = LAGVEStmt.newStatement();
         ifThenElse.elseStatementBlock.addClass('ifthenelse-else-statement');
         ifThenElse.elseStatementBlock.removeClass('deletable');
         ifThenElse.elseStatementBlock.resize = ifThenElse.resize;    // replace statement's resize()
@@ -611,11 +626,13 @@ LAGVEIf = new Object();
                   class="while arrowhead-into-statements">');
                   
         // .while.statement
-        newWhile.statementList = LAGVEStmt.newStatementList();
+        newWhile.statementList = LAGVEStmt.newStatement();
         newWhile.statementList.addClass('while');
                 
         newWhile._LAGVEName   = 'For Each Concept';
         newWhile.getName      = function() { return this._LAGVEName; }
+        newWhile.contextMenuItems = LAGVEContext.items.visualElement;
+        newWhile.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         newWhile.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -678,6 +695,9 @@ LAGVEIf = new Object();
             newWhile.rhombus.setStyle('visibility','visible');
             newWhile.rhombusSelected.setStyle('visibility','hidden');
         };
+        
+        newWhile.conditionPositioning.contextMenuItems = LAGVEContext.items.conditionContainer;
+        newWhile.conditionPositioning.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         newWhile.conditionContainer.toLAG = function() {
             if (this.hasChildNodes()) {
@@ -850,6 +870,8 @@ LAGVE.Condition = new Object();
         comparison.getName      = function() {
             return this._LAGVEName
         };
+        comparison.contextMenuItems = LAGVEContext.items.visualElement;
+        comparison.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         comparison._resize = function(reason) {
             //Y.log('comparison._resize by ' + reason);
@@ -897,6 +919,8 @@ LAGVE.Condition = new Object();
             comparison.resize('child comparison.attributeContainer.resize | ' + reason)
         };
         
+        comparison.attributeContainer.contextMenuItems = LAGVEContext.items.attributeContainer;
+        comparison.attributeContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         //////    COMPARATOR    //////
         comparison.comparatorContainer = Y.Node.create('\
@@ -954,6 +978,8 @@ LAGVE.Condition = new Object();
         comparison.valueContainer.select        = LAGVE._genericSelect;
         comparison.valueContainer.deSelect      = LAGVE._genericDeSelect;
         
+        comparison.valueContainer.contextMenuItems = LAGVEContext.items.valueContainer;
+        comparison.valueContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         //////    BUILD, INSERT/RETURN    //////
         comparison.append( comparison.attributeContainer );
@@ -1038,7 +1064,8 @@ LAGVE.Condition = new Object();
             return this.get('value');
         }
         
-        
+        enough.contextMenuItems = LAGVEContext.items.visualElement;
+        enough.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         enough._resize       = function() {}
         
@@ -1073,6 +1100,9 @@ LAGVE.Condition = new Object();
         enough.conditionList.select        = LAGVE._genericSelect;
         enough.conditionList.deSelect      = LAGVE._genericDeSelect;
         enough.conditionContainer = enough.conditionList;
+        
+        enough.conditionContainer.contextMenuItems = LAGVEContext.items.conditionContainer;
+        enough.conditionContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
 
         enough.conditionList.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {          
@@ -1163,57 +1193,58 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     LAGVEStmt.lastY        = 0;
     
     /**
-     *    LAGVEStmt.newstatementList
+     *    LAGVEStmt.newStatement
      *
      *    Creates a new LAG STATEMENT block.
      *  Returns the statement.
      */
-    LAGVEStmt.newStatementList = function(targetNode) {
+    LAGVEStmt.newStatement = function(targetNode) {
     
         //////    STATEMENT BLOCK   ///////
-        var statementList = Y.Node.create( '<div class="statement-list-wrapperselectable statement-container"></div>' );
+        var statement = Y.Node.create( '<div class="statement selectable statement-container"></div>' );
         
-        statementList.resize = function(reason) {    
+        statement.resize = function(reason) {    
             // "bubble up"
             this.get('parentNode').resize('child statement.resize | ' + reason);
         }
         
-        statementList._LAGVEName    = 'Statement Block';
-        statementList.getName       = function() {return this._LAGVEName};
-        statementList.select        = LAGVE._genericSelect;
-        statementList.deSelect      = LAGVE._genericDeSelect;
-        statementList.contextMenuItems = LAGVEContext.items.statementContainer;
+        statement._LAGVEName    = 'Statement Block';
+        statement.getName       = function() {return this._LAGVEName};
+        statement.select        = LAGVE._genericSelect;
+        statement.deSelect      = LAGVE._genericDeSelect;
+        statement.contextMenuItems = LAGVEContext.items.statementContainer;
+        statement.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         /**
          * Function to insert nodes asked to be inserted.
          */
-        statementList.LAGVEInsert = function(node) {
+        statement.LAGVEInsert = function(node) {
             if (node.hasClass('statement-list-child')) {
                 var newChildContainer = LAGVEStmt._newStatementChildContainer(node)
-                statementList.LAGVEUL.append(newChildContainer);
+                statement.LAGVEUL.append(newChildContainer);
                 newChildContainer.parentChanged();
-                node.resize('statementList.LAGVEInsert');
+                node.resize('statement.LAGVEInsert');
             } else {
-                Y.log(node.getName() + ' can not be inserted into ' + statementList.getName() + '.');
+                Y.log(node.getName() + ' can not be inserted into ' + statement.getName() + '.');
             }
         }
         
         //////    LIST   ///////
-        statementList.LAGVEUL = Y.Node.create( '<div class="statement-list"></div>' );
-        statementList.LAGVEUL.resize = function(reason) { statementList.resize(reason) };
-        statementList.LAGVEUL.plug(
+        statement.LAGVEUL = Y.Node.create( '<div class="statement-list"></div>' );
+        statement.LAGVEUL.resize = function(reason) { statement.resize(reason) };
+        statement.LAGVEUL.plug(
             Y.Plugin.Drop,
             {
-                node:   statementList.LAGVEUL,
+                node:   statement.LAGVEUL,
                 groups: ['statement-list'],
             }
         );
-        statementList.append(statementList.LAGVEUL);
+        statement.append(statement.LAGVEUL);
         
-        statementList.toLAG = function() {
+        statement.toLAG = function() {
             var LAG = '';
             
-            statementList.LAGVEUL.get('children').each(function() {
+            statement.LAGVEUL.get('children').each(function() {
                 LAG += indentOne(this.toLAG()) + '\r\n';
             });
             
@@ -1222,7 +1253,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
             return LAG;
         }
         
-        statementList.empty = function() {
+        statement.empty = function() {
             while ( this.LAGVEUL.hasChildNodes() ) {
                 this.LAGVEUL.removeChild(this.LAGVEUL.get('firstChild'));
             }
@@ -1231,10 +1262,10 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         
         //////    INSERT/RETURN   ///////
         if (isset(targetNode)) {
-            targetNode.LAGVEInsert(statementList);
+            targetNode.LAGVEInsert(statement);
         }
         
-        return statementList;
+        return statement;
     };
     
     LAGVEStmt._newStatementChildContainer = function(child) {
@@ -1255,7 +1286,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         childContainer.parentChanged = function() {
             if (this.get('parentNode')) {
                 this.resize = this.get('parentNode').resize;
-                this.resize('statement-list-wrapperchild new parent');
+                this.resize('statement child new parent');
             }
             if (this._oldParent) {
                 this._oldParent.resize('statement child old parent.');
@@ -1455,15 +1486,10 @@ LAGVEContext.items = {
             Y.all('.valid-menu').removeClass('valid-menu');
     }
         
-    Y.delegate('contextmenu', function(e) {        
+    LAGVEContext.contextMenuHandler = function(e) {
         LAGVEContext.show(e.currentTarget, e.clientX, e.clientY);        
-        e.preventDefault();            
-    }, Y.one('#peal'), '.statement-container');
-    
-    Y.delegate('contextmenu', function(e) {        
-        LAGVEContext.show(e.currentTarget, e.clientX, e.clientY);        
-        e.preventDefault();            
-    }, Y.one('#peal'), '.statement');
+        e.halt();   
+    }
     
     Y.on('click', function(e) {
         // hide when when left click except when
@@ -1536,36 +1562,36 @@ LAGVE.oneIndentation = '  ';
         LAGVE.initialization.select     = LAGVE._genericSelect;
         LAGVE.initialization.deSelect   = LAGVE._genericDeSelect;
         LAGVE.initialization.toLAG      = function () {
-            var LAG = 'initialization (\r\n' + this.statementList.toLAG() + ')\r\n\r\n';
+            var LAG = 'initialization (\r\n' + this.statementBox.toLAG() + ')\r\n\r\n';
             
             return LAG;
         }
         
         var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
         
-        LAGVE.initialization.statementList = LAGVEStmt.newStatementList();
-        LAGVE.initialization.statementList.removeClass('deletable');
+        LAGVE.initialization.statementBox = LAGVEStmt.newStatement();
+        LAGVE.initialization.statementBox.removeClass('deletable');
         // It'd be ambiguious if Initialization statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness
         // is passed through to the statement block anyway.
-        LAGVE.initialization.statementList.removeClass('selectable');
-        LAGVE.initialization.statementList.setStyle('minWidth','400px');
-        LAGVE.initialization.statementList.setStyle('minHeight','150px');
+        LAGVE.initialization.statementBox.removeClass('selectable');
+        LAGVE.initialization.statementBox.setStyle('minWidth','400px');
+        LAGVE.initialization.statementBox.setStyle('minHeight','150px');
         
         LAGVE.initialization.append(title);
-        LAGVE.initialization.append(LAGVE.initialization.statementList);
+        LAGVE.initialization.append(LAGVE.initialization.statementBox);
         
         /**
-         *    Pass Initialization's LAGVEInsert to statementList's
+         *    Pass Initialization's LAGVEInsert to statementBox's
          */
         LAGVE.initialization.LAGVEInsert = function(node) {
-            LAGVE.initialization.statementList.LAGVEInsert(node);
+            LAGVE.initialization.statementBox.LAGVEInsert(node);
         }
         
         
         LAGVE.initialization.empty      = function() {            
-            this.statementList.empty();
+            this.statementBox.empty();
         }
         
         return LAGVE.initialization;
@@ -1579,36 +1605,36 @@ LAGVE.oneIndentation = '  ';
         LAGVE.implementation.select     = LAGVE._genericSelect;
         LAGVE.implementation.deSelect   = LAGVE._genericDeSelect;
         LAGVE.implementation.toLAG      = function () {
-            var LAG = 'implementation (\r\n' + this.statementList.toLAG() + ')\r\n';
+            var LAG = 'implementation (\r\n' + this.statementBox.toLAG() + ')\r\n';
             
             return LAG;
         }
         
         var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
         
-        LAGVE.implementation.statementList = LAGVEStmt.newStatementList();
-        LAGVE.implementation.statementList.removeClass('deletable');
+        LAGVE.implementation.statementBox = LAGVEStmt.newStatement();
+        LAGVE.implementation.statementBox.removeClass('deletable');
         // It'd be ambiguious if implementation statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness
         // is passed through to the statement block anyway.
-        LAGVE.implementation.statementList.removeClass('selectable');
-        LAGVE.implementation.statementList.setStyle('minWidth','400px');
-        LAGVE.implementation.statementList.setStyle('minHeight','150px');
+        LAGVE.implementation.statementBox.removeClass('selectable');
+        LAGVE.implementation.statementBox.setStyle('minWidth','400px');
+        LAGVE.implementation.statementBox.setStyle('minHeight','150px');
         
         LAGVE.implementation.append(title);
-        LAGVE.implementation.append(LAGVE.implementation.statementList);
+        LAGVE.implementation.append(LAGVE.implementation.statementBox);
         
         /**
-         *    Pass Initialization's LAGVEInsert to statementList's
+         *    Pass Initialization's LAGVEInsert to statementBox's
          */
         LAGVE.implementation.LAGVEInsert = function(node) {
-            LAGVE.implementation.statementList.LAGVEInsert(node);
+            LAGVE.implementation.statementBox.LAGVEInsert(node);
         }
         
         
         LAGVE.implementation.empty      = function() {            
-            this.statementList.empty();
+            this.statementBox.empty();
         }
         
         return LAGVE.implementation;
@@ -1620,17 +1646,17 @@ LAGVE.oneIndentation = '  ';
     */
     LAGVE.insertNewAttr = function(attributeLevelsArr, targetNode) {
         LAGVE.Attr.insertNewAttr(attributeLevelsArr, targetNode);
-        LAGVE._hideAttrMenu()
+        //LAGVE._hideAttrMenu()
     }
     
-    LAGVE.insertNewBoolean = function(value) {
-        LAGVE.Attr.newBoolean(value);
-        LAGVE._hideAttrMenu()
+    LAGVE.insertNewBoolean = function(value, targetNode) {
+        LAGVE.Attr.newBoolean(value, targetNode);
+        //LAGVE._hideAttrMenu()
     }
     
     LAGVE._hideAttrMenu = function() {
         LAGVE.attrMenu.addClass('yui-menu-hidden');
-        LAGVE.attrMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
+        //LAGVE.attrMenu.attrMenuLabel.removeClass('yui-menu-label-menuvisible');
     }
     
     /**
@@ -2020,7 +2046,6 @@ LAGVE.oneIndentation = '  ';
     Y.on('contentready', LAGVE._init, 'body');
     
     Y.on('click', function(e){
-        // only select on left click, don't select on right click.
         if (e.button === 1) {
             LAGVE.select(e.target);
         }
