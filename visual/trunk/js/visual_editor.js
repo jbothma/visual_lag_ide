@@ -1440,6 +1440,7 @@ LAGVEContext.items = {
     conditionContainer: [
         LAGVEContext.menus.insertMenu,
         LAGVEContext.menus.insertConditionMenu,
+        LAGVEContext.menus.insertBoolean,
         LAGVEContext.menus.help
     ],
 }
@@ -1710,8 +1711,6 @@ LAGVE.oneIndentation = '  ';
         Y.all('.VE-workspace').setStyle('height', (newHeight-200) + 'px');
         //Y.log('LAGVE Window height set to ' + newHeight);
     }
-    
-    
     
     
     // namespace for things relating to conversion from LAG to visual representation
