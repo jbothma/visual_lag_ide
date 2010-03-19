@@ -571,6 +571,7 @@
                                                         
                             editor.mirror.setCode(LAG);
                             editor.mirror.reindent();
+                            document.getElementById("cc").innerHTML = "&nbsp;";
                         }
                         
                         if (tabContents.hasClass('visualeditor')) {                        
