@@ -21,7 +21,7 @@
         
         <!--<link rel="stylesheet" type="text/css" href="http://yui.yahooapis.com/combo?3.0.0/build/widget/assets/skins/sam/widget.css&3.0.0/build/console/assets/skins/sam/console.css&3.0.0/build/node-menunav/assets/skins/sam/node-menunav.css">-->
         <link rel="stylesheet" type="text/css" href="css/docs.css"/>
-        <link rel="stylesheet" type="text/css" href="css/peal.css"/>
+        <!--<link rel="stylesheet" type="text/css" href="css/peal.css"/>-->
         <link rel="stylesheet" type="text/css" href="css/visual_editor.css"/>
 
     </head>
@@ -363,7 +363,7 @@
                                                                             <div class="yui-menu-content">
                                                                                 <ul> 
                                                                                     <li class="yui-menuitem">
-                                                                                        <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr('UM.Concept.' + document.getElementById('UM-Concept-custom').value, LAGVEContext.context);return false" title="Replace the text with out custom value and press Enter to finish">
+                                                                                        <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr('UM.Concept.' + document.getElementById('UM-Concept-custom').value, LAGVEContext.context);LAGVEContext.hide();return false" title="Replace the text with out custom value and press Enter to finish">
                                                                                             <div><input id="UM-Concept-custom" class="menu-form-input" value="custom" type="text" /></div>
                                                                                         </form>
                                                                                     </li>
@@ -372,7 +372,7 @@
                                                                         </div> <!-- end UM.Concept -->
                                                                     </li>
                                                                     <li class="yui-menuitem">
-                                                                        <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr('UM.' + document.getElementById('UM-custom').value, LAGVEContext.context);return false" title="Replace the text with out custom value and press Enter to finish">
+                                                                        <form action="#" class="yui-menuitem-content" onsubmit="LAGVE.insertNewAttr('UM.' + document.getElementById('UM-custom').value, LAGVEContext.context);LAGVEContext.hide();return false" title="Replace the text with out custom value and press Enter to finish">
                                                                             <div><input id="UM-custom" class="menu-form-input" value="custom" type="text" /></div>
                                                                         </form>
                                                                     </li>
@@ -444,7 +444,7 @@
                                         <form   id="context-menu-value"
                                                 action="#" 
                                                 class="yui-menuitem-content hidden-by-default-menu" 
-                                                onsubmit="LAGVE.insertNewAttr(document.getElementById('custom').value, LAGVEContext.context);return false" 
+                                                onsubmit="LAGVE.insertNewAttr(document.getElementById('custom').value, LAGVEContext.context);LAGVEContext.hide();return false" 
                                                 title="Replace the text with out custom value and press Enter to finish">
                                             <div><input id="custom" class="menu-form-input" value="value" type="text" /><submit value="Insert"></div>
                                         </form>

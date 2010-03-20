@@ -1490,7 +1490,8 @@ LAGVEContext.items = {
     Y.on('click', function(e) {
         // hide when when left click except when
         // a button opening a submenu is clicked
-        if ( !e.target.hasClass('yui-menu-label') ) {
+        if ( !e.target.hasClass('yui-menu-label')  && 
+             !e.target.hasClass('menu-form-input') ) {
             LAGVEContext.hide();
         }
     });
