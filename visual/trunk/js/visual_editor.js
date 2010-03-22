@@ -1745,6 +1745,14 @@ LAGVE.oneIndentation = '  ';
         // allow conversion - unset by implementation handler
         LAGVE.ToVisual.converting = true;
         
+        // Make it really, really unlikely that parsing will pause and restart
+        // to try and ensure a single full pass. Stopping and starting means
+        // reparsing a line which is bad when converting to visual because the 
+        // visual element on top of the stack doesn't make sense to the 
+        // visual conversion code if we reparse a line.
+        editor.mirror.options.passDelay = 0;
+        editor.mirror.options.linesPerPass = 10000;
+        
         // hackedly force full parse by copying
         // and replacing all the code in the editor.
         var code = editor.mirror.getCode();
@@ -1795,6 +1803,10 @@ LAGVE.oneIndentation = '  ';
             // stop trying to convert things to visual until 
             // told otherwise
             LAGVE.ToVisual.converting = false;
+            
+            // revert to defaults
+            editor.mirror.options.passDelay = 200;
+            editor.mirror.options.linesPerPass = 20;
         }
     }
 
