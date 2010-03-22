@@ -235,14 +235,14 @@ div.logout {
 #texteditor-tab {
     background-color:   #AAAAEE;
 }
-#texteditor {
+#texteditor-tab-content {
     background-color:   white;
     border:             14px solid #AAAAEE;
 }
-.visualeditor-tab{
+.visualeditor-tab {
     background-color:   #99CCFF;
 }
-.visualeditor-tab.tabview-active{
+.visualeditor-tab.tabview-active {
     background-color:   #CCCCFF;
 }
 .visualeditor {
@@ -255,10 +255,10 @@ div.logout {
 #strategy-description-tab.strategy-description-ok {
     background-color:   green;
 }
-#strategy-description {
+#strategy-description-tab-content {
     border:             14px solid red;
 }
-#strategy-description.strategy-description-ok {
+#strategy-description-tab-content.strategy-description-ok {
     border-color:       green;
 }
 #strategy-description-editor {

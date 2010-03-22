@@ -121,23 +121,23 @@
             </form>
             <div class="tabview" id="peal">
                 <ul class="tabview-tabs"> 
-                    <li id="strategy-description-tab" class="strategy-description-indicator" ><a href="#strategy-description">Description</a></li>
-                    <li class="visualeditor-tab"><a href="#init-editor">Initialization</a></li> 
-                    <li class="visualeditor-tab"><a href="#impl-editor">Implementation</a></li> 
-                    <li id="texteditor-tab"><a href="#texteditor">Text Editor</a></li>
+                    <li id="strategy-description-tab" class="strategy-description-indicator" ><a href="javascript:void(0)">Description</a></li>
+                    <li id="initialization-tab" class="visualeditor-tab"><a href="javascript:void(0)">Initialization</a></li> 
+                    <li id="implementation-tab" class="visualeditor-tab"><a href="javascript:void(0)">Implementation</a></li> 
+                    <li id="texteditor-tab"><a href="javascript:void(0)">Text Editor</a></li>
                 </ul>
                 <div class="tabview-content"> 
-                    <div id="strategy-description" class="tabview-hidden strategy-description-indicator">
+                    <div id="strategy-description-tab-content" class="tabview-hidden strategy-description-indicator">
                         <p>Description of strategy for the lay person</p>
                         <textarea id="strategy-description-editor" rows="10" cols="80"></textarea>
                     </div>
-                    <div id="init-editor" class="visualeditor tabview-hidden">
+                    <div id="initialization-tab-content" class="visualeditor tabview-hidden">
                         <div class="initialization VE-workspace select-propagation-stop"></div>
                     </div>
-                    <div id="impl-editor" class="visualeditor tabview-hidden"> 
+                    <div id="implementation-tab-content" class="visualeditor tabview-hidden"> 
                         <div class="implementation VE-workspace select-propagation-stop"></div>
                     </div>
-                    <div id="texteditor">
+                    <div id="texteditor-tab-content">
                         <!-- CodeMirror will be given #code. CodeMirror will turn #code into an iframe and make it an interactive LAG editor. -->
                         <textarea id="code" cols="120" rows="40"></textarea>
                         
@@ -550,8 +550,8 @@
                             tabs        = tabview.all('.tabview-tabs li'), 
                             contents    = tabview.all('.tabview-content > *'), 
                             tab         = e.currentTarget.get('parentNode'),
-                            tabHash     = e.currentTarget.get('hash'),
-                            tabContents = Y.one(tabHash);
+                            tabId       = tab.get('id'),
+                            tabContent = Y.one('#' + tabId + '-content');
                  
                         // hide all tab contents
                         contents.addClass('tabview-hidden');
@@ -560,10 +560,9 @@
                         // make selected tab active
                         tab.addClass('tabview-active')
                         // unhide active tab's contents
-                        tabContents.removeClass('tabview-hidden');
+                        tabContent.removeClass('tabview-hidden');
                         
-                        if (tabHash === '#texteditor') {
-                            hideVEMenu();
+                        if (tabId === 'texteditor-tab') {
                             
                             var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
                             
@@ -571,16 +570,15 @@
                                                         
                             editor.mirror.setCode(LAG);
                             editor.mirror.reindent();
+                            // clear errors after converting to LAG
                             document.getElementById("cc").innerHTML = "&nbsp;";
                         }
                         
-                        if (tabContents.hasClass('visualeditor')) {                        
-                            showVEMenu();
+                        if (tabContent.hasClass('visualeditor')) {
                             LAGVE.ToVisual.convert();
                         }
                         
-                        if (tabHash === '#strategy-description') {
-                            hideVEMenu();
+                        if (tabId === 'strategy-description-tab') {
                             setDescriptionTabDescription( getDescriptionFromCode() );
                         }
                         
