@@ -469,6 +469,12 @@
             <div id="VE-help-container"></div>
         </div>
         
+        <div id="updating-visual-message-centering">
+            <div id="updating-visual-message">
+                Updating visual representation...
+            </div>
+        </div>
+        
         <!-- CodeMirror -->
         <script src="js/codemirror.js"  type="text/javascript"></script>
         <script src="js/mirrorframe.js" type="text/javascript"></script>
@@ -567,6 +573,7 @@
                             var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
                             
                             LAGVE.ToVisual.converting = false;
+                            Y.one('#updating-visual-message').setStyle('display', '');
                                                         
                             editor.mirror.setCode(LAG);
                             editor.mirror.reindent();

@@ -1745,6 +1745,8 @@ LAGVE.oneIndentation = '  ';
         // allow conversion - unset by implementation handler
         LAGVE.ToVisual.converting = true;
         
+        Y.one('#updating-visual-message').setStyle('display', 'block');
+        
         // Make it really, really unlikely that parsing will pause and restart
         // to try and ensure a single full pass. Stopping and starting means
         // reparsing a line which is bad when converting to visual because the 
@@ -1803,6 +1805,8 @@ LAGVE.oneIndentation = '  ';
             // stop trying to convert things to visual until 
             // told otherwise
             LAGVE.ToVisual.converting = false;
+
+            Y.one('#updating-visual-message').setStyle('display', '');
             
             // revert to defaults
             editor.mirror.options.passDelay = 200;

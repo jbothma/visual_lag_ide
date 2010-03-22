@@ -588,3 +588,21 @@ SPAN.while.multiple-documents-symbol {
 .valid-menu {
     display:    block !important;
 }
+
+#updating-visual-message {
+    display:    none;
+    border:     1px solid black;
+    position:   relative;
+    left:       -50%;
+    float:      left;
+    background-color:   #ffff88;
+    line-height: 3em;
+    padding:    8px;
+}
+#updating-visual-message-centering {
+    position:   fixed;
+    left:       50%;
+    top:        80px;
+    float:      left;
+    z-index:    10000;
+}
