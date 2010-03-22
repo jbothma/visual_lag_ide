@@ -156,6 +156,9 @@ div.logout {
 	width: 18px;
 	background-image: url('../close.gif');
 }
+#fragmentList {
+    width: 100%;
+}
 .CodeMirror-line-numbers {
 	width: 1.7em;
 	background-color: #eee;

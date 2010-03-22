@@ -89,7 +89,7 @@ var CodeMirror = (function(){
 	  frags.appendChild(document.createElement("BR"));
 	  frags.appendChild(fragInsert);
 	  
-	  fragViewer.innerHTML = document.createTextNode("&nbsp;");
+	  fragViewer.appendChild = document.createTextNode("&nbsp;");
 	  fragViewer.id = "fragmentViewer";
 	  fragViewer.style.fontSize = "smaller";
 	  
