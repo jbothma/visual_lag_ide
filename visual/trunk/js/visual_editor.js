@@ -1056,10 +1056,7 @@ LAGVE.Condition = new Object();
         enough.threshold.getValue = function() {
             return this.get('value');
         }
-        
-        enough.contextMenuItems = LAGVEContext.items.visualElement;
-        enough.on('contextmenu', LAGVEContext.contextMenuHandler);
-        
+                
         enough._resize       = function() {}
         
         enough.select        = function() { 

@@ -3,10 +3,10 @@
     background-color:       white;
     /*position:                absolute;*/
     border:                 1px solid black;
-    -moz-border-radius:     14px;
-    -webkit-border-radius:  14px;
-    border-radius:          14px;
-    height:                 57px;
+    -moz-border-radius:     10px;
+    -webkit-border-radius:  10px;
+    border-radius:          10px;
+    height:                 42px;
 }
 
 .sub_level_container {
@@ -14,8 +14,8 @@
 }
 
 .attr_box_value {
-    font-size:  22px;
-    margin:     14px;
+    font-size:  17px;
+    margin:     10px;
     float:      left;
 }
 
@@ -193,7 +193,7 @@ DIV.selected {
     top:                0px;
     left:               0px;
     border:             1px solid black;
-    height:             65px;
+    height:             51px;
     background-color:   white;
 }
 /*.assignment-child {
@@ -210,12 +210,12 @@ DIV.selected {
 }
 .assignment-attribute-container {
     min-width:  50px;
-    min-height: 50px;
-    height:     59px;
+    min-height: 44px;
+    height:     44px;
 }
 .assignment-operator-container {
     position:   relative;
-    top:        16px;    /* we know the height of of attributes so we know what height to expect an assignment block to be.*/
+    top:        8px;    /* we know the height of of attributes so we know what height to expect an assignment block to be.*/
 }
 .operator-select {
     font-size:  22px;            
@@ -344,7 +344,7 @@ DIV.selected {
     top:                    0px;
     /*left:                   0px;*/
     border:                 1px solid black;
-    height:                 65px;
+    height:                 50px;
     background-color:       white;
     -moz-border-radius:     14px;
     -webkit-border-radius:  14px;
@@ -363,12 +363,12 @@ DIV.selected {
 }
 .comparison-attribute-container {
     min-width:  50px;
-    min-height: 50px;
-    height:     59px;
+    min-height: 44px;
+    height:     44px;
 }
 .comparison-comparator-container {
     position:   relative;
-    top:        16px;
+    top:        8px;
 }
 .comparator-select {
     font-size:  22px;            
