@@ -146,7 +146,7 @@ div.logout {
 	margin-top: -15pt;
 	height: 18px;
 	width: 18px;
-	background-image: url('../close.gif');
+	background-image: url('../images/close.gif');
 }
 #fileclosebutton {
 	cursor: pointer;
@@ -154,7 +154,7 @@ div.logout {
 	margin-top: -15pt;
 	height: 18px;
 	width: 18px;
-	background-image: url('../close.gif');
+	background-image: url('../images/close.gif');
 }
 #fragmentList {
     width: 100%;
