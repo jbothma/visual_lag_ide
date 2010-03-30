@@ -669,6 +669,14 @@ LAGVEIf = new Object();
         // .while.statement
         newWhile.statementList = LAGVEStmt.newStatement();
         newWhile.statementList.addClass('while');
+        
+        newWhile.lockDrops = function() {
+            this.statementList.lockDrops();
+        }
+        
+        newWhile.unlockDrops = function() {
+            this.statementList.unlockDrops();
+        }
                 
         newWhile._LAGVEName   = 'For Each Concept';
         newWhile.getName      = function() { return this._LAGVEName; }
