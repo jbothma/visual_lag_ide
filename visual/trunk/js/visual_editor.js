@@ -28,12 +28,40 @@ function indentOne(code) {
     return code.replace(/\r\n/g,'\r\n' + LAGVE.oneIndentation);
 }
 
-
+/**
+*   Define functions within Raphael for use in PEAL
+*/
+Raphael.fn.PEAL = {
+    /**
+    *   Raphael.PEAL.arrowhead
+    *   An arrowhead with original length and width of 20.
+    *   Arrowhead points upwards by default, and is rotated 
+    *   about its tip by angle degrees.
+    *   
+    *   tipX, tipY - The X and Y coords of the tip of the arrowhead.
+    *   angle - the rotation of the arrowhead in degrees.
+    */
+    arrowhead: function(tipX, tipY, angle) {
+        var pathData = 
+            "M" + tipX + " " + tipY +           // start point
+            "L" + (tipX+10) + " " + (tipY+20) + // draw first line
+            "L" + (tipX-10) + " " + (tipY+20) + // draw second line
+            "Z";                                // close path
+        var head = this.path(pathData);
+        head.attr("fill", "black");
+        
+        if (angle)
+            head.rotate(angle, tipX, tipY);
+            
+        return head;
+    }
+    
+}
 
 LAGVE.Attr = new Object();
 
 YUI({
-    //filter:     'raw',
+    filter:     'raw',
     //combine:    true,
 }).use(
     'console',
@@ -99,8 +127,7 @@ YUI({
         //can be inserted in context.
         /*attributeDD.plug(    Y.Plugin.DDConstrained,
                             { constrain2node: Y.one('body') } );*/
-                                                                                
-        newAttribute.addClass('deletable');
+                                             
         newAttribute.addClass('assignment-child');
         newAttribute.addClass('comparison-child');
         
@@ -476,7 +503,6 @@ LAGVEIf = new Object();
         ifThenElse.thenBlock = Y.Node.create('<div class="ifthenelse-then"></div>');
         ifThenElse.thenStatementBlock = LAGVEStmt.newStatement();
         ifThenElse.thenStatementBlock.addClass('ifthenelse-then-statement');
-        ifThenElse.thenStatementBlock.removeClass('deletable');
         ifThenElse.thenStatementBlock.resize = ifThenElse.resize;    // replace statement's resize()
         ifThenElse.thenBlock.append(ifThenElse.thenStatementBlock);
         ifThenElse.thenBlockTitle = Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
@@ -486,7 +512,6 @@ LAGVEIf = new Object();
         ifThenElse.elseBlock = Y.Node.create('<div class="ifthenelse-else"></div>');
         ifThenElse.elseStatementBlock = LAGVEStmt.newStatement();
         ifThenElse.elseStatementBlock.addClass('ifthenelse-else-statement');
-        ifThenElse.elseStatementBlock.removeClass('deletable');
         ifThenElse.elseStatementBlock.resize = ifThenElse.resize;    // replace statement's resize()
         ifThenElse.elseBlock.append(ifThenElse.elseStatementBlock);
         ifThenElse.elseBlockTitle = Y.Node.create('<div class="ifthenelse-else-title">ELSE</div>');    
@@ -494,13 +519,13 @@ LAGVEIf = new Object();
         /*    Node structure:
             
         ifThenElse
-                ifThenElse.conditionPositioning
-                    arrows
-                        arrowhead left
-                        arrowhead right
-                    rhombus
-                    rhombusSelected
-                    conditionContainer
+            conditionPositioning
+                arrows
+                    arrowhead left
+                    arrowhead right
+                rhombus
+                rhombusSelected
+                conditionContainer
             thenAndElse
                 thenBlock
                     thenBlockTitle
@@ -519,6 +544,17 @@ LAGVEIf = new Object();
         ifThenElse.thenBlock.append(            ifThenElse.thenBlockTitle       );
         ifThenElse.thenAndElse.append(          ifThenElse.elseBlock            );
         ifThenElse.elseBlock.append(            ifThenElse.elseBlockTitle       );
+
+        ifThenElse.raphael = Raphael(Y.Node.getDOMNode(ifThenElse), 320, 200);
+        
+        ifThenElse.canvas = Y.one(ifThenElse.raphael.canvas);
+        
+        ifThenElse.canvas.setStyles({
+            position:   'absolute',
+            top:        '0px',
+            left:       '0px',
+        });
+        
 
         ifThenElse.toLAG = function() {
             var LAG = 
@@ -549,11 +585,21 @@ LAGVEIf = new Object();
             return LAG;
         }
         
+        ifThenElse.lockDrops = function() {
+            this.elseStatementBlock.lockDrops();
+            this.thenStatementBlock.lockDrops();
+        }
+        
+        ifThenElse.unlockDrops = function() {
+            this.elseStatementBlock.unlockDrops();
+            this.thenStatementBlock.unlockDrops();
+        }
+        
         if (isset(targetNode)) {
             targetNode.LAGVEInsert(ifThenElse);
             //ifThenElse.resize('new ifthenelse');
         }
-        
+                
         return ifThenElse;
     }
     
@@ -810,7 +856,7 @@ LAGVE.Condition = new Object();
      *    Parameters:    condition
      */
     LAGVE.Condition.wrapCondition = function(child) {
-        var conditionWrapper = Y.Node.create( '<div class="condition deletable wrapper"></div>' );
+        var conditionWrapper = Y.Node.create( '<div class="condition wrapper"></div>' );
         conditionWrapper.contextMenuItems = LAGVEContext.items.visualElement;
         conditionWrapper.on('contextmenu', LAGVEContext.contextMenuHandler);
     
@@ -1231,6 +1277,15 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         );
         statement.append(statement.LAGVEUL);
         
+        statement.lockDrops = function() {
+            this.LAGVEUL.drop.set('lock', true);
+        }
+        
+        
+        statement.unlockDrops = function() {
+            this.LAGVEUL.drop.set('lock', false);
+        }
+        
         statement.toLAG = function() {
             var LAG = '';
             
@@ -1259,7 +1314,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     };
     
     LAGVEStmt._newStatementChildContainer = function(child) {
-        var childContainer      = Y.Node.create( '<div class="statement-list-child-container deletable"></div>' );
+        var childContainer      = Y.Node.create( '<div class="statement-list-child-container"></div>' );
     
         var childContainerDrag  = new Y.DD.Drag({
             node:        childContainer,
@@ -1307,19 +1362,20 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         if (topOfDropStack) {
             //Y.log('Top of stack is ' + topOfDropStack.get('id'));
             
+            //Get a reference to out drag and drop nodes
+            var dragNode = e.drag.get('node'),
+                dropNode = topOfDropStack;
+            
             // Optimisation to prevent running through all this code for each containing
             // ancestor statement block ancestor. Each of these will fire the drag:over event 
             // but, using the LAGVE.dropStack, each will insert to the top statement block (correctly)
             // therefore we don't need to do it again for all of them on each move. The timestamp will
             // probably be the same for most if not all events fired for a given move.
             var currentTime = new Date().getTime();
-            if (currentTime !== LAGVEStmt.overHandledTimestamp) {
+            if (currentTime !== LAGVEStmt.overHandledTimestamp &&
+                !dropNode.hasClass('yui-dd-drop-locked')) {
                 LAGVEStmt.overHandledTimestamp = currentTime;
-                
-                //Get a reference to out drag and drop nodes
-                var dragNode = e.drag.get('node'),
-                    dropNode = topOfDropStack;
-                
+                                
                 //Are we dropping on a li node?
                 if (dropNode.hasClass('statement-list-child-container')) {
                     //Are we going down? (not going up)
@@ -1330,8 +1386,10 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
                             dropNode = nextSibling 
                             dropNode.get('parentNode').insertBefore(dragNode, dropNode);
                         } else {
-                            dropNode.get('parentNode').append(dragNode);
-                            dragNode.parentChanged();
+                            if (!dropNode.contains(dragNode)) {
+                                dropNode.get('parentNode').append(dragNode);
+                                dragNode.parentChanged();
+                            }
                         }
                     } else {
                         dropNode.get('parentNode').insertBefore(dragNode, dropNode);
@@ -1364,30 +1422,43 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
 
     Y.DD.DDM.on('drag:start', function(e) {
         //Get our drag object
-        var drag = e.target;
+        var dragNode = e.target.get('node');
         
-        drag.get('node').setStyles({
-            opacity:    '.25'
+        dragNode.setStyles({
+            opacity:    '.5'
         });
         
-        drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
+        var statement = dragNode.get('firstChild');
+        if (statement.hasClass('ifthenelse') || statement.hasClass('while')) {
+            statement.lockDrops();
+        }
+        
+        //drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
         
         // make dragNode's style match node but at 50% opacity
-        drag.get('dragNode').setStyles({
+        /*drag.get('dragNode').setStyles({
             opacity:            '.5',
             borderColor:        drag.get('node').getStyle('borderColor'),
             backgroundColor:    drag.get('node').getStyle('backgroundColor')
-        });
+        });*/
     });
 
     Y.DD.DDM.on('drag:end', function(e) {        
         var dragNode = e.target.get('node');
 
         dragNode.setStyles({
+            top: '',
+            left: '',
+            position: '',
             visibility: '',
             opacity: '1',
             filter: 'alpha(opacity = 100)'
         });
+        
+        var statement = dragNode.get('firstChild');
+        if (statement.hasClass('ifthenelse') || statement.hasClass('while')) {
+            statement.unlockDrops();
+        }
     });
 
 
@@ -1442,14 +1513,7 @@ LAGVEContext.items = {
     ],
 }
     
-    /**
-     *    LAGVE.deleteItem
-     *
-     *    Recursively search ancestors of given node until:
-     *    - node with class 'deletable' is found and removed
-     *    - workspace node is found
-     *    - body tag is found
-     */
+
     LAGVEContext.deleteItem = function() {
         if (confirm('Are you sure you want to delete this ' + LAGVEContext.context.getName() + '?')) {
             var parent = LAGVEContext.context.get('parentNode');
@@ -1564,7 +1628,6 @@ LAGVE.oneIndentation = '  ';
         var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
         
         LAGVE.initialization.statementBox = LAGVEStmt.newStatement();
-        LAGVE.initialization.statementBox.removeClass('deletable');
         // It'd be ambiguious if Initialization statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness
@@ -1607,7 +1670,6 @@ LAGVE.oneIndentation = '  ';
         var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
         
         LAGVE.implementation.statementBox = LAGVEStmt.newStatement();
-        LAGVE.implementation.statementBox.removeClass('deletable');
         // It'd be ambiguious if implementation statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness

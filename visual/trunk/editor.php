@@ -474,7 +474,9 @@
                 Updating visual representation...
             </div>
         </div>
-        
+        <!-- Raphael -->
+        <script type="text/javascript" src="js/raphael-min.js"></script>
+    
         <!-- CodeMirror -->
         <script src="js/codemirror.js"  type="text/javascript"></script>
         <script src="js/mirrorframe.js" type="text/javascript"></script>
@@ -482,7 +484,7 @@
         <!-- YUI -->
         <!-- YUI base can be used with the loader (YUI.get()) to get any needed modules dynamically -->
         <!--<script src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js" type="text/javascript"></script>-->
-        <script src="/lib/yui/yui/yui-min.js" type="text/javascript"></script>
+        <script src="/lib/yui/yui/yui.js" type="text/javascript"></script>
         <!-- a single minimised combination of all the yui javascript library modules used is the quickest way to load them locally -->
         <!--<script src="js/yuistatic.js" type="text/javascript"></script>-->
         
