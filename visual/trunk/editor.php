@@ -241,20 +241,6 @@
                     </form>
                 </div>
             </div>
-            <div id="licences" style="">
-                <br/>
-                PEAL is licensed by <a href="http://ww.ukarumpa.co.uk">Jon Bevan</a> 
-                under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>.<br/>
-
-                The icons are licensed by <a href="http://www.famfamfam.com/lab/icons/silk/">Mark James</a> 
-                under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>.<br/>
-
-                CodeMirror is licensed by <a href="http://marijn.haverbeke.nl/codemirror/">Marijn Haverbeke</a> 
-                under a <a href="http://marijn.haverbeke.nl/codemirror/LICENSE">BSD-style license</a>.<br/>
-
-                The Yahoo User Interface Library is licensed by <a href="http://developer.yahoo.com/yui/">Yahoo! Inc.</a> 
-                and its components are provided free of charge under a <a href="http://developer.yahoo.com/yui/license.html">liberal BSD license</a>.
-            </div>
         </div>
        
         

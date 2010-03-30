@@ -1372,8 +1372,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
             // therefore we don't need to do it again for all of them on each move. The timestamp will
             // probably be the same for most if not all events fired for a given move.
             var currentTime = new Date().getTime();
-            if (currentTime !== LAGVEStmt.overHandledTimestamp &&
-                !dropNode.hasClass('yui-dd-drop-locked')) {
+            if (currentTime !== LAGVEStmt.overHandledTimestamp) {
                 LAGVEStmt.overHandledTimestamp = currentTime;
                                 
                 //Are we dropping on a li node?
@@ -1420,18 +1419,19 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         LAGVEStmt.lastY = y;
     });
 
-    Y.DD.DDM.on('drag:start', function(e) {
-        //Get our drag object
-        var dragNode = e.target.get('node');
+    Y.DD.DDM.on('ddm:start', function(e) {
         
-        dragNode.setStyles({
-            opacity:    '.5'
-        });
+        var statement = this.activeDrag.get('node').get('firstChild');
         
-        var statement = dragNode.get('firstChild');
-        if (statement.hasClass('ifthenelse') || statement.hasClass('while')) {
+        if ( statement.hasClass('ifthenelse') || statement.hasClass('while') ) {
             statement.lockDrops();
         }
+    });
+    
+    Y.DD.DDM.on('drag:start', function(e) {
+        e.target.get('node').setStyles({
+            opacity:    '.5'
+        });
         
         //drag.get('dragNode').set('innerHTML', drag.get('node').get('innerHTML'));
         
@@ -1460,10 +1460,8 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
             statement.unlockDrops();
         }
     });
-
-
-
-
+    
+    
 
 /* CONTEXT MENU */
 LAGVEContext = new Object();
@@ -1605,7 +1603,7 @@ LAGVE.oneIndentation = '  ';
     LAGVE._setupWorkspace   = function() {
         //create initialization
         var initialization = LAGVE._createInitialization();
-        LAGVE.select(initialization);
+        //LAGVE.select(initialization);
         Y.all('.initialization.VE-workspace').append(initialization);
         
         //create implementation
@@ -1768,7 +1766,7 @@ LAGVE.oneIndentation = '  ';
     };
     
     LAGVE.sizeWindow = function(newHeight) {
-        Y.all('.VE-workspace').setStyle('height', (newHeight-200) + 'px');
+        Y.all('.VE-workspace').setStyle('height', (newHeight-130) + 'px');
         //Y.log('LAGVE Window height set to ' + newHeight);
     }
     
@@ -2115,11 +2113,11 @@ LAGVE.oneIndentation = '  ';
     
     Y.on('contentready', LAGVE._init, 'body');
     
-    Y.on('click', function(e){
+    /*Y.on('click', function(e){
         if (e.button === 1) {
             LAGVE.select(e.target);
         }
-    });
+    });*/
     
     Y.DD.DDM.on('drop:enter', function(e) {
         LAGVE.dropStack.push(e.drop.get('node'));

@@ -232,6 +232,10 @@ DIV.selected {
     clear:      both;
     text-align: center;
 }
+.ifthenelse.statement-list-child {
+    border:             1px solid black;
+    background-color:   white;
+}
 .ifthenelse-condition-positioning {
     position:   relative;
     float:      left;
@@ -605,4 +609,8 @@ SPAN.while.multiple-documents-symbol {
     top:        80px;
     float:      left;
     z-index:    10000;
+}
+
+.yui-dd-drop-active-valid {
+    background-color:   #95FC97;
 }
