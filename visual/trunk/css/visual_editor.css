@@ -379,9 +379,9 @@ DIV.selected {
 }
 .enough.primary {
     border:                 1px solid black;
-    -moz-border-radius:     50%;
-    -webkit-border-radius:  50%;
-    border-radius:          50%;
+    -moz-border-radius:     10px;
+    -webkit-border-radius:  10px;
+    border-radius:          10px;
     height:                 40px;
     width:                  40px;
     line-height:            40px;
@@ -389,19 +389,10 @@ DIV.selected {
     margin:                 auto;
     background-color:       white;
 }
-.enough.diagonal-container{
-    position:               absolute;
-    bottom:                 40px;
-    left:                   18px;
-    width:                  47px;
-    height:                 63px;
-    background-image:       url("../images/diagonal_up_75x100.png");
-    background-position:    left bottom;
-}
 .enough.condition-list {
     position:               absolute;
-    bottom:                 55px;
-    left:                   65px;
+    top:                    35px;
+    left:                   4px;
     border:                 1px solid black;
     min-height:             55px;
     min-width:              100px;

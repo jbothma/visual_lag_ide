@@ -390,12 +390,12 @@ LAGVEIf = new Object();
                 Then block right side must be at least 100px to the right of the If block 
                 but its left side no less than 100px to the left of the right side of the If block.
             */
-            var ifHeight        = conditionHeight * 2.2;
-            var ifWidth         = conditionWidth * 1.6;
+            var ifHeight        = conditionHeight * 2;
+            var ifWidth         = conditionWidth * 2;
             
-            if (ifWidth < ifHeight*2) {
+            /*if (ifWidth < ifHeight*2) {
                 ifWidth = ifHeight * 2;
-            }
+            }*/
             
             var ifLeft          = thenWidth + thenHMargins - ifWidth/2;
             
@@ -1074,16 +1074,15 @@ LAGVE.Condition = new Object();
      */ 
     LAGVE.Condition.newEnough = function(options) {        
         var enough = Y.Node.create('\
-            <div class="enough primary selectable">ENOUGH</div>\
+            <div class="enough primary selectable">ENOUGH&nbsp;</div>\
         ');
-        
-        enough.threshold = Y.Node.create('\
-            <input type="text" class="enough threshold" value="0">\
-        ');
-        
-        enough.append(enough.threshold);
         
         enough._LAGVEName = 'Enough';
+ 
+        enough.getName       = function() {
+            return this._LAGVEName;
+        }
+        
         enough.toLAG = function() {
             var LAG = 'enough(';
             
@@ -1096,22 +1095,21 @@ LAGVE.Condition = new Object();
             return LAG;
         }
  
-        enough.getName       = function() {
-            return this._LAGVEName;
+        enough._resize = function() {
+            // Setup
+            var conditionListWidth = parseInt(this.conditionList.getComputedStyle('width'));
+            var conditionListHeight = parseInt(this.conditionList.getComputedStyle('height'));
+            
+            // Output
+            this.setStyle('width', conditionListWidth + 10 + 'px');
+            this.setStyle('height', conditionListHeight + 40 + 'px');
         }
         
-        enough.getThreshold = function() { 
-            return this.threshold;
+        enough.resize = function( reason){
+            this._resize('comparison.resize');
+            
+            this.get('parentNode').resize('enough.resize');
         }
-        
-        enough.threshold.setValue = function(newValue) {
-            this.set('value', newValue);
-        }
-        enough.threshold.getValue = function() {
-            return this.get('value');
-        }
-                
-        enough._resize       = function() {}
         
         enough.select        = function() { 
             this.addClass('selected');
@@ -1127,9 +1125,22 @@ LAGVE.Condition = new Object();
             enough.conditionList.LAGVEInsert(child);
         }
         
-        enough.diagonal = Y.Node.create('\
-            <div class="enough diagonal-container"></div>\
-        ')
+        enough.getThreshold = function() { 
+            return this.threshold;
+        }
+        
+        enough.threshold = Y.Node.create('\
+            <input type="text" class="enough threshold" value="0">\
+        ');
+        
+        enough.append(enough.threshold);
+        
+        enough.threshold.setValue = function(newValue) {
+            this.set('value', newValue);
+        }
+        enough.threshold.getValue = function() {
+            return this.get('value');
+        }
         
         enough.conditionList = Y.Node.create('\
             <div class="enough condition-list selectable"></div>\
@@ -1140,9 +1151,12 @@ LAGVE.Condition = new Object();
                 groups:    ['condition'],
             }
         )     
-        enough.conditionList.resize        = function() {}
+        enough.conditionList.resize        = function() {
+            enough.resize();
+        }
         enough.conditionList.select        = LAGVE._genericSelect;
         enough.conditionList.deSelect      = LAGVE._genericDeSelect;
+        
         enough.conditionContainer = enough.conditionList;
         
         enough.conditionContainer.contextMenuItems = LAGVEContext.items.conditionContainer;
