@@ -484,30 +484,34 @@
         //<![CDATA[
             // CDATA line is commented because IE can only use xhmtl pages by acting like it's HTML.
             
-            var textarea = document.getElementById('code');
+            // define the editor global
+            var editor = null;
             
-            var editorChangeTimestamp = 0;
-            var editorChangeHandler = function() {
-                editorChangeTimestamp = new Date().getTime();
-            }
-
-            var editor = new MirrorFrame(CodeMirror.replace(textarea), {
-                height: "350px",
-                width: "85%",
-                content: textarea.value,
-                parserfile: ["tokenizelag.js", "parselag.js"],
-                stylesheet: "css/lagcolors.css",
-                path: "js/",
-                lineNumbers: true,
-                autoMatchParens: true,
-                saveFunction: saveStrategy,
-                onChange: editorChangeHandler,
-            });
-          
             var Y = new YUI({combine: true}).use('dd-drag','node', 'node-event-simulate', 'event', function(Y) {
                 
                 Y.on('contentready', function(){
+                
+                    var textarea = document.getElementById('code');
+            
+
+                    editor = new MirrorFrame(CodeMirror.replace(textarea), {
+                        height:         "350px",
+                        width:          "85%",
+                        content:        textarea.value,
+                        parserfile:     ["tokenizelag.js", "parselag.js"],
+                        stylesheet:     "css/lagcolors.css",
+                        path:           "js/",
+                        lineNumbers:    true,
+                        autoMatchParens: true,
+                        saveFunction:   saveStrategy,
+                        content:        LAGVE.strategyTemplate,
+                    });
                     
+                    // The createMenus() call is for the Wizard
+                    createMenus();
+                    // Get the list of fragments available...
+                    getFragments();
+            
                     // Make the wizard dragable.
                     var d1 = new Y.DD.Drag({
                         node:       '#wizard',
@@ -652,11 +656,6 @@
                     
                 }, 'body');
             });
-            
-            // The createMenus() call is for the Wizard
-            createMenus();
-            // Get the list of fragments available...
-            getFragments();
         
         //]]>
         </script>

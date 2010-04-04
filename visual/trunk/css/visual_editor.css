@@ -225,116 +225,24 @@ DIV.selected {
 
 
 /* IF-THEN-ELSE */
-.ifthenelse {
-    min-width:  200px;
-    position:   relative;
-    float:      left;
-    clear:      both;
-    text-align: center;
-}
+
 .ifthenelse.statement-list-child {
     border:             1px solid black;
     background-color:   white;
-}
-.ifthenelse-condition-positioning {
-    position:   relative;
-    float:      left;
-    z-index:    9;
-}
-.ifthenelse-arrows {
-    position:       absolute;
-    top:            50%;
-    left:           -2px;
-    height:         50%;
-    width:          100%;
-    border-left:    2px solid black;
-    border-right:   2px solid black;
-    z-index:        1;
-}
-.ifthenelse-arrowhead-left {
-    position:           absolute;
-    left:               -9px;
-    bottom:             0px;
-    width:              16px;
-    height:             16px;
-    background-image:   url('../images/arrowhead_down.png');
-}
-.ifthenelse-arrowhead-right {
-    position:           absolute;
-    right:              -9px;
-    bottom:             0px;
-    width:              16px;
-    height:             16px;
-    background-image:   url('../images/arrowhead_down.png');
-}
-.ifthenelse.condition-container {
     position:           relative;
-    min-height:         50px;
-    min-width:          100px;
-    list-style-type:    none;
-    padding:            0px;
-    float:              left;
-    clear:              both;
-    z-index:            2;
-}
-.ifthenelse-rhombus-image {
-    position:   absolute;
-    left:       0px;
-    top:        0px;
-    width:      100%;
-    height:     100%;
-}
-.ifthenelse-rhombus-image-selected {
-    position:   absolute;
-    left:       0px;
-    top:        0px;
-    width:      100%;
-    height:     100%;
-    visibility: hidden;
-}
-.ifthenelse-thenelse {
-    clear:  both;
-    float:  left;
-}
-.ifthenelse-then {
-    border:             1px solid black;
-    margin:             2px;
-    position:           relative;
-    float:              left;
-    min-width:          150px;
-    min-height:         50px;
-    background-color:   white;
-    padding-top:        0.5em;
-    margin-right:       10px;
-}
-.ifthenelse-else {
-    border:             1px solid black;
-    margin:             2px;
-    position:           relative;
-    float:              right;
-    min-width:          150px;
-    min-height:         50px;
-    background-color:   white;
-    padding-top:        0.5em;
-    margin-left:        10px;
-}
-.ifthenelse-then-title {
-    background-color:   white;
-    position:           absolute;
-    top:                -0.5em;
-    font-size:          1em;
-    line-height:        1em;
-    left:               5px;
-}
-.ifthenelse-else-title {
-    background-color:   white;
-    position:           absolute;
-    top:                -0.5em;
-    font-size:          1em;
-    line-height:        1em;
-    right:              5px;
 }
 
+.ifthenelse.condition-container {
+    position:   absolute;
+    min-height: 40px;
+    min-width:  40px;
+}
+.ifthenelse.statement-list {
+    border:     1px solid black;
+    min-height: 50px;
+    min-width:  100px;
+    position:   absolute;
+}
 
 
 
@@ -411,7 +319,7 @@ DIV.selected {
 
 
 /* STATEMENT */
-.statement {
+.statement-list {
     min-width:          200px;
     min-height:         30px;
     position:           relative;
@@ -427,14 +335,14 @@ DIV.selected {
     clear:              both;
     margin:             3px;
 }
-.statement-list {
+/*.statement-list {
     min-height:         inherit;
     list-style-type:    none;
     margin:             0px;
     padding:            3px;
     width:              98%;
     float:              left;
-}
+}*/
 
 
 

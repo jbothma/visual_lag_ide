@@ -1,6 +1,8 @@
 
 LAGVE = new Object();
 
+LAGVE.strategyTemplate = '// DESCRIPTION\n//\n//\n\n// VARS\n//\n//\n\ninitialization (\n\n)\n\nimplementation (\n\n)';
+
 /* UTILITY */
 function isset(variable)
 {
@@ -54,8 +56,40 @@ Raphael.fn.PEAL = {
             head.rotate(angle, tipX, tipY);
             
         return head;
-    }
-    
+    },
+    /**
+    *   paper.PEAL.rhombus()
+    *
+    *   Draw a rhombus of width 3 and height 3.
+    *
+    *   Use PEAL.scaleTLRhombus() to scale to required size.
+    */
+    rhombus: function() {
+        var rhombus = this.path('M 0 1 L 1 0 L 2 1 L 1 2 Z');
+        
+        rhombus.translatedH = 0;
+        rhombus.translatedV = 0;
+            
+        return rhombus;
+    },
+    scaleTLRhombus: function( rhombus, width, height ) {
+        // adjust for the fact that the initial rhombus isn't really unit width.
+        // If we dont adjust, we end up with a rhombus twice as wide as width etc.
+        width = width/2;
+        height = height/2;
+        
+        rhombus.scale(width, height);
+        
+        // return to starting position
+        rhombus.translate(-rhombus.translatedH, -rhombus.translatedV);
+        
+        // translate to correct for scaling
+        rhombus.translate(width, height);
+        
+        // store translation coords
+        rhombus.translatedH = width;
+        rhombus.translatedV = height;
+    },    
 }
 
 LAGVE.Attr = new Object();
@@ -370,109 +404,111 @@ LAGVEIf = new Object();
         ifThenElse._LAGVEName   = 'If-Then-Else block';
         ifThenElse.getName      = function() { return this._LAGVEName; }
         
-        /**
-         *
-         */
         ifThenElse.resize = function(reason) {
-            // Setup
-            var conditionWidth  = parseInt(ifThenElse.conditionContainer.getComputedStyle('width'));
-            var conditionHeight = parseInt(ifThenElse.conditionContainer.getComputedStyle('height'));
-            var thenWidth       = parseInt(ifThenElse.thenBlock.getComputedStyle('width'));
-            var thenHMargins    = parseInt(ifThenElse.thenBlock.getStyle('marginLeft')) + 
-                                    parseInt(ifThenElse.thenBlock.getStyle('marginRight'));
-            var elseWidth       = parseInt(ifThenElse.elseBlock.getComputedStyle('width'));
-            var elseHMargins    = parseInt(ifThenElse.elseBlock.getStyle('marginLeft')) + 
-                                    parseInt(ifThenElse.elseBlock.getStyle('marginRight'));
+            // Setup //
             
-            // Compute
-            /*    If block left side must be at least 100px to the right of Then block left side.
-                If-Then-Else must be wider than the maximal of Then+Else and If
-                Then block right side must be at least 100px to the right of the If block 
-                but its left side no less than 100px to the left of the right side of the If block.
-            */
-            var ifHeight        = conditionHeight * 2;
-            var ifWidth         = conditionWidth * 2;
+            var conditionContainerWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
+            var conditionContainerHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
             
-            /*if (ifWidth < ifHeight*2) {
-                ifWidth = ifHeight * 2;
-            }*/
+            var thenWidth  = parseInt(this.thenStatementList.getComputedStyle('width'));                                    
+            var elseWidth  = parseInt(this.elseStatementList.getComputedStyle('width'));
             
-            var ifLeft          = thenWidth + thenHMargins - ifWidth/2;
+            var thenHeight = parseInt(this.thenStatementList.getComputedStyle('height'));                                    
+            var elseHeight = parseInt(this.elseStatementList.getComputedStyle('height'));                                    
             
-            var conditionLeft   = (ifWidth - conditionWidth)/2;
-            var conditionTop    = (ifHeight - conditionHeight)/2;
             
-            if (ifLeft < 100) {
-                ifLeft = 100;
-            }
+            // Compute //
             
-            var elseLeft        = ifLeft + ifWidth - 100 - thenWidth - 15;
+            var rhombusWidth    = conditionContainerWidth * 2;
+            var rhombusHeight   = conditionContainerHeight * 2;
             
-            var ifThenElseWidth = Math.max((thenWidth + elseLeft + elseWidth + 43), (ifLeft + ifWidth + 100 + 15));
+            var conditionContainerLeft = conditionContainerWidth/2;
+            var conditionContainerTop  = conditionContainerHeight/2;
             
-            // Output
-            ifThenElse.conditionPositioning.setStyle('width', ifWidth + 'px');
-            ifThenElse.conditionPositioning.setStyle('height', ifHeight + 'px');
-            ifThenElse.conditionPositioning.setStyle('left', ifLeft + 'px');
+            var thenLeft = rhombusWidth + 80;
+            var elseLeft = rhombusWidth + 80;
             
-            ifThenElse.conditionContainer.setStyle('left', conditionLeft + 'px');
-            ifThenElse.conditionContainer.setStyle('top', conditionTop + 'px');
+            var thenTop = rhombusHeight / 2 - 10;
+            var elseTop = thenTop + thenHeight + 10;
             
-            ifThenElse.elseBlock.setStyle('left', elseLeft + 'px');
-            ifThenElse.setStyle('width', ifThenElseWidth + 'px');
+            var ifThenElseWidth  = Math.max( (thenLeft + thenWidth), (elseLeft + elseWidth) ) + 10;
+            var ifThenElseHeight = Math.max( (elseTop + elseHeight), (rhombusHeight) ) + 10;
+            
+            
+            // Output //
+
+            this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
+            this.conditionContainer.setStyle('top', conditionContainerTop + 'px');
+
+            this.raphael.PEAL.scaleTLRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
+            
+            this.thenArrowHead.remove();
+            this.thenArrowHead = this.raphael.PEAL.arrowhead(thenLeft, thenTop + 10, 90);
+            this.elseArrowHead.remove()
+            this.elseArrowHead = this.raphael.PEAL.arrowhead(elseLeft, elseTop + 10, 90);
+            
+            this.thenArrowStroke.remove();
+            this.thenArrowStroke = this.raphael.path(
+                'M' + rhombusWidth + ',' + (thenTop + 10) + // start at RHS corner of rhombus
+                'L' + thenLeft + ',' + (thenTop + 10)       // Horizontal line to LHS edge of thenStatementList
+            );
+            
+            this.elseArrowStroke.remove();
+            this.elseArrowStroke = this.raphael.path(
+                'M' + (rhombusWidth / 2) + ',' + rhombusHeight +    // start at bottom corner of rhombus
+                'L' + (rhombusWidth / 2) + ',' + (elseTop + 10) +   // Vertical line until level with elseArrowHead
+                'L' + elseLeft + ',' + (elseTop + 10)               // Horizontal line to LHS edge of elseStatementList
+            );
+            
+            this.thenStatementList.setStyles({ 
+                top:    thenTop + 'px', 
+                left:   thenLeft + 'px',
+            });
+            
+            this.elseStatementList.setStyles({ 
+                top:    elseTop + 'px', 
+                left:   elseLeft + 'px',
+            });
+            
+			// SVG canvas width
+            this.raphael.setSize( ifThenElseWidth, ifThenElseHeight );
+
+			// entire visual element width
+            this.setStyles({ 
+                width:  ifThenElseWidth + 'px', 
+                height: ifThenElseHeight + 'px',
+            });
+            
+            
             
             // Bubble
-            ifThenElse.get('parentNode').resize('ifThenElse.resize | ' + reason);
-        }
+            this.get('parentNode').resize('ifThenElse.resize | ' + reason);
+        };
         
         
+        /////// SVG canvas ////////
+        ifThenElse.raphael = Raphael( Y.Node.getDOMNode(ifThenElse), 1, 1 );
+        ifThenElse.canvas = Y.one( ifThenElse.raphael.canvas );
+        
+        ifThenElse.canvas.setStyles({
+            position:   'absolute',
+            top:        '0px',
+            left:       '0px',
+        });
+        
+        // just make them so they're there to delete upon the first ifThenElse.resize()
+        ifThenElse.thenArrowHead = ifThenElse.raphael.PEAL.arrowhead(0, 0, 90);
+        ifThenElse.elseArrowHead = ifThenElse.raphael.PEAL.arrowhead(0, 0, 90);
+        ifThenElse.thenArrowStroke = ifThenElse.raphael.path('M 0 0');
+        ifThenElse.elseArrowStroke = ifThenElse.raphael.path('M 0 0');
+
+
         ///////    IF    ////////
-        ifThenElse.conditionPositioning         = Y.Node.create('<div class="ifthenelse-condition-positioning selectable"></div>');
-        ifThenElse.conditionPositioning.select  = function() {
-            ifThenElse.rhombus.setStyle('visibility','hidden');
-            ifThenElse.rhombusSelected.setStyle('visibility','visible');
-        };
-        ifThenElse.conditionPositioning.deSelect    = function() {
-            ifThenElse.rhombusSelected.setStyle('visibility','hidden');
-            ifThenElse.rhombus.setStyle('visibility','visible');
-        };
-        ifThenElse.conditionPositioning.LAGVEInsert = function(child) {
-            ifThenElse.conditionContainer.LAGVEInsert(child);
-        };
-        ifThenElse.conditionPositioning.resize = function(reason) {
-            Y.log('ifThenElse.conditionPositioning.resize triggered by ' + reason);
-            // Setup
-            var attributeContainerWidth = parseInt(ifThenElse.conditionContainer.getComputedStyle('width'));
-                        
-            // Compute
-            conditionPositioningWidth   = attributeContainerWidth * 1.5;
-            
-            // Output
-            this.setStyle('width', conditionPositioningWidth + 'px');
-            
-            // Bubble
-            this.get('parentNode').resize('child assignment.resize | ' + reason);
-        }
-        
-        ifThenElse.conditionPositioning.contextMenuItems = LAGVEContext.items.conditionContainer;
-        ifThenElse.conditionPositioning.on('contextmenu', LAGVEContext.contextMenuHandler);
-        
-        
-        ifThenElse.arrows           = Y.Node.create('<div class="ifthenelse-arrows"></div>');
-        ifThenElse.arrowheadLeft    = Y.Node.create('<div class="ifthenelse-arrowhead-left"></div>');
-        ifThenElse.arrowheadRight   = Y.Node.create('<div class="ifthenelse-arrowhead-right"></div>');
-        ifThenElse.rhombus          = Y.Node.create(
-            '<img alt="condition rhombus shape" \
-                  class="ifthenelse-rhombus-image" \
-                  src="images/ifthenelse_rhombus.png" >'
-        );    
-        ifThenElse.rhombusSelected  = Y.Node.create(
-            '<img alt="condition rhombus shape selected" \
-                 class="ifthenelse-rhombus-image-selected" \
-                 src="images/ifthenelse_rhombus_selected.png" >'
-        );
-        
-        ifThenElse.conditionContainer   = Y.Node.create('\
+
+        ifThenElse.SVGRhombus = ifThenElse.raphael.PEAL.rhombus();
+        ifThenElse.SVGRhombus.attr("fill", "white");
+
+        ifThenElse.conditionContainer = Y.Node.create('\
             <div class="ifthenelse condition-container"></div>\
         ');
         ifThenElse.conditionContainer.plug(
@@ -481,88 +517,53 @@ LAGVEIf = new Object();
                 groups:    ['condition'],
             }
         );        
-        ifThenElse.conditionContainer.resize        = function(reason) {
+        ifThenElse.conditionContainer.resize = function(reason) {
             ifThenElse.resize('ifThenElse.conditionContainer.resize | ' + reason);
         };
-        ifThenElse.conditionContainer.LAGVEInsert   = function(child) {
+        ifThenElse.conditionContainer.LAGVEInsert = function(child) {
             if (child.hasClass('condition')) {
-                if (!ifThenElse.conditionContainer.hasChildNodes()) {            
-                    ifThenElse.conditionContainer.append(child);
+                if (!this.hasChildNodes()) {            
+                    this.append(child);
                     child.parentChanged();
                     child.resize('ifThenElse.conditionContainer.LAGVEInsert');
                 }
             }
         }
         
+        ifThenElse.conditionContainer.contextMenuItems = LAGVEContext.items.conditionContainer;
+        ifThenElse.conditionContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
                 
-        ///////    THEN and ELSE    ///////
-        ifThenElse.thenAndElse = Y.Node.create('<div class="ifthenelse-thenelse"></div>');
-        
-        
+
         ///////    THEN    ////////
-        ifThenElse.thenBlock = Y.Node.create('<div class="ifthenelse-then"></div>');
-        ifThenElse.thenStatementBlock = LAGVEStmt.newStatement();
-        ifThenElse.thenStatementBlock.addClass('ifthenelse-then-statement');
-        ifThenElse.thenStatementBlock.resize = ifThenElse.resize;    // replace statement's resize()
-        ifThenElse.thenBlock.append(ifThenElse.thenStatementBlock);
-        ifThenElse.thenBlockTitle = Y.Node.create('<div class="ifthenelse-then-title">THEN</div>');
+        ifThenElse.thenStatementList = LAGVEStmt.newStatementList();
+        ifThenElse.thenStatementList.addClass('ifthenelse');
         
         
         ///////    ELSE    ////////
-        ifThenElse.elseBlock = Y.Node.create('<div class="ifthenelse-else"></div>');
-        ifThenElse.elseStatementBlock = LAGVEStmt.newStatement();
-        ifThenElse.elseStatementBlock.addClass('ifthenelse-else-statement');
-        ifThenElse.elseStatementBlock.resize = ifThenElse.resize;    // replace statement's resize()
-        ifThenElse.elseBlock.append(ifThenElse.elseStatementBlock);
-        ifThenElse.elseBlockTitle = Y.Node.create('<div class="ifthenelse-else-title">ELSE</div>');    
+        ifThenElse.elseStatementList = LAGVEStmt.newStatementList();
+        ifThenElse.elseStatementList.addClass('ifthenelse');
                 
         /*    Node structure:
             
         ifThenElse
-            conditionPositioning
-                arrows
-                    arrowhead left
-                    arrowhead right
-                rhombus
-                rhombusSelected
-                conditionContainer
-            thenAndElse
-                thenBlock
-                    thenBlockTitle
-                elseBlock
-                    elseBlockTitle
+            raphaeljs canvas
+            conditionContainer
+            thenStatementList
+            elseStatementList
         */
-        ifThenElse.append(                      ifThenElse.conditionPositioning );
-        ifThenElse.arrows.append(               ifThenElse.arrowheadLeft        );
-        ifThenElse.arrows.append(               ifThenElse.arrowheadRight       );
-        ifThenElse.conditionPositioning.append( ifThenElse.arrows               );
-        ifThenElse.conditionPositioning.append( ifThenElse.rhombus              );
-        ifThenElse.conditionPositioning.append( ifThenElse.rhombusSelected      );
-        ifThenElse.conditionPositioning.append( ifThenElse.conditionContainer   );
-        ifThenElse.append(                      ifThenElse.thenAndElse          );
-        ifThenElse.thenAndElse.append(          ifThenElse.thenBlock            );
-        ifThenElse.thenBlock.append(            ifThenElse.thenBlockTitle       );
-        ifThenElse.thenAndElse.append(          ifThenElse.elseBlock            );
-        ifThenElse.elseBlock.append(            ifThenElse.elseBlockTitle       );
+        ifThenElse.append( ifThenElse.conditionContainer );
+        ifThenElse.append( ifThenElse.thenStatementList );
+        ifThenElse.append( ifThenElse.elseStatementList ); 
 
-        ifThenElse.raphael = Raphael(Y.Node.getDOMNode(ifThenElse), 320, 200);
-        
-        ifThenElse.canvas = Y.one(ifThenElse.raphael.canvas);
-        
-        ifThenElse.canvas.setStyles({
-            position:   'absolute',
-            top:        '0px',
-            left:       '0px',
-        });
         
 
         ifThenElse.toLAG = function() {
             var LAG = 
                 'if ' + ifThenElse.conditionContainer.toLAG() + ' then (\r\n' + 
-                ifThenElse.thenBlock.toLAG() + ')';
+                ifThenElse.thenStatementList.toLAG() + ')';
                 
             // Else is optional
-            var elseLAG = ifThenElse.elseBlock.toLAG();
+            var elseLAG = ifThenElse.elseStatementList.toLAG();
             if (elseLAG !== '')
                 LAG += ' else (\r\n' + elseLAG + ')';
             
@@ -574,25 +575,15 @@ LAGVEIf = new Object();
             }
             return '';
         }
-        ifThenElse.thenBlock.toLAG = function() {
-            var LAG = this.get('firstChild').toLAG();
-            
-            return LAG;
-        }
-        ifThenElse.elseBlock.toLAG = function() {
-            var LAG = this.get('firstChild').toLAG();
-            
-            return LAG;
-        }
         
         ifThenElse.lockDrops = function() {
-            this.elseStatementBlock.lockDrops();
-            this.thenStatementBlock.lockDrops();
+            this.elseStatementList.lockDrops();
+            this.thenStatementList.lockDrops();
         }
         
         ifThenElse.unlockDrops = function() {
-            this.elseStatementBlock.unlockDrops();
-            this.thenStatementBlock.unlockDrops();
+            this.elseStatementList.unlockDrops();
+            this.thenStatementList.unlockDrops();
         }
         
         if (isset(targetNode)) {
@@ -667,7 +658,7 @@ LAGVEIf = new Object();
                   class="while arrowhead-into-statements">');
                   
         // .while.statement
-        newWhile.statementList = LAGVEStmt.newStatement();
+        newWhile.statementList = LAGVEStmt.newStatementList();
         newWhile.statementList.addClass('while');
         
         newWhile.lockDrops = function() {
@@ -1251,68 +1242,64 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     LAGVEStmt.lastY        = 0;
     
     /**
-     *    LAGVEStmt.newStatement
+     *  LAGVEStmt.newStatementList
      *
-     *    Creates a new LAG STATEMENT block.
-     *  Returns the statement.
+     *  reates a new LAG STATEMENT list.
+     *  Returns the statement list.
      */
-    LAGVEStmt.newStatement = function(targetNode) {
+    LAGVEStmt.newStatementList = function(targetNode) {
     
-        //////    STATEMENT BLOCK   ///////
-        var statement = Y.Node.create( '<div class="statement selectable statement-container"></div>' );
+        //////    STATEMENT LIST   ///////
+        var statementList = Y.Node.create( '<div class="statement-list selectable statement-container"></div>' );
         
-        statement.resize = function(reason) {    
+        statementList.resize = function(reason) {    
             // "bubble up"
-            this.get('parentNode').resize('child statement.resize | ' + reason);
+            this.get('parentNode').resize('child statement-list.resize | ' + reason);
         }
         
-        statement._LAGVEName    = 'Statement Block';
-        statement.getName       = function() {return this._LAGVEName};
-        statement.select        = LAGVE._genericSelect;
-        statement.deSelect      = LAGVE._genericDeSelect;
-        statement.contextMenuItems = LAGVEContext.items.statementContainer;
-        statement.on('contextmenu', LAGVEContext.contextMenuHandler);
+        statementList._LAGVEName    = 'Statement List';
+        statementList.getName       = function() {return this._LAGVEName};
+        statementList.select        = LAGVE._genericSelect;
+        statementList.deSelect      = LAGVE._genericDeSelect;
+        statementList.contextMenuItems = LAGVEContext.items.statementContainer;
+        statementList.on('contextmenu', LAGVEContext.contextMenuHandler);
         
         /**
          * Function to insert nodes asked to be inserted.
          */
-        statement.LAGVEInsert = function(node) {
+        statementList.LAGVEInsert = function(node) {
             if (node.hasClass('statement-list-child')) {
                 var newChildContainer = LAGVEStmt._newStatementChildContainer(node)
-                statement.LAGVEUL.append(newChildContainer);
+                statementList.append(newChildContainer);
                 newChildContainer.parentChanged();
-                node.resize('statement.LAGVEInsert');
+                node.resize('statementList.LAGVEInsert');
             } else {
-                Y.log(node.getName() + ' can not be inserted into ' + statement.getName() + '.');
+                Y.log(node.getName() + ' can not be inserted into ' + statementList.getName() + '.');
             }
         }
         
         //////    LIST   ///////
-        statement.LAGVEUL = Y.Node.create( '<div class="statement-list"></div>' );
-        statement.LAGVEUL.resize = function(reason) { statement.resize(reason) };
-        statement.LAGVEUL.plug(
+        statementList.plug(
             Y.Plugin.Drop,
             {
-                node:   statement.LAGVEUL,
                 groups: ['statement-list'],
             }
         );
-        statement.append(statement.LAGVEUL);
         
-        statement.lockDrops = function() {
-            this.LAGVEUL.drop.set('lock', true);
+        statementList.lockDrops = function() {
+            this.drop.set('lock', true);
         }
         
         
-        statement.unlockDrops = function() {
-            this.LAGVEUL.drop.set('lock', false);
+        statementList.unlockDrops = function() {
+            this.drop.set('lock', false);
         }
         
-        statement.toLAG = function() {
+        statementList.toLAG = function() {
             var LAG = '';
             
-            statement.LAGVEUL.get('children').each(function() {
-                LAG += indentOne(this.toLAG()) + '\r\n';
+            statementList.get('children').each(function() {
+                LAG += this.toLAG() + '\r\n';
             });
             
             LAG += '';
@@ -1320,19 +1307,19 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
             return LAG;
         }
         
-        statement.empty = function() {
-            while ( this.LAGVEUL.hasChildNodes() ) {
-                this.LAGVEUL.removeChild(this.LAGVEUL.get('firstChild'));
+        statementList.empty = function() {
+            while ( this.hasChildNodes() ) {
+                this.removeChild(this.get('firstChild'));
             }
         }
 
         
         //////    INSERT/RETURN   ///////
         if (isset(targetNode)) {
-            targetNode.LAGVEInsert(statement);
+            targetNode.LAGVEInsert(statementList);
         }
         
-        return statement;
+        return statementList;
     };
     
     LAGVEStmt._newStatementChildContainer = function(child) {
@@ -1389,8 +1376,8 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
                 dropNode = topOfDropStack;
             
             // Optimisation to prevent running through all this code for each containing
-            // ancestor statement block ancestor. Each of these will fire the drag:over event 
-            // but, using the LAGVE.dropStack, each will insert to the top statement block (correctly)
+            // ancestor statement list ancestor. Each of these will fire the drag:over event 
+            // but, using the LAGVE.dropStack, each will insert to the top statement list (correctly)
             // therefore we don't need to do it again for all of them on each move. The timestamp will
             // probably be the same for most if not all events fired for a given move.
             var currentTime = new Date().getTime();
@@ -1640,35 +1627,35 @@ LAGVE.oneIndentation = '  ';
         LAGVE.initialization.select     = LAGVE._genericSelect;
         LAGVE.initialization.deSelect   = LAGVE._genericDeSelect;
         LAGVE.initialization.toLAG      = function () {
-            var LAG = 'initialization (\r\n' + this.statementBox.toLAG() + ')\r\n\r\n';
+            var LAG = 'initialization (\r\n' + this.statementList.toLAG() + ')\r\n\r\n';
             
             return LAG;
         }
         
         var title = Y.Node.create( '<div id="initialization-title">INITIALIZATION</div>' );
         
-        LAGVE.initialization.statementBox = LAGVEStmt.newStatement();
+        LAGVE.initialization.statementList = LAGVEStmt.newStatementList();
         // It'd be ambiguious if Initialization statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness
         // is passed through to the statement block anyway.
-        LAGVE.initialization.statementBox.removeClass('selectable');
-        LAGVE.initialization.statementBox.setStyle('minWidth','400px');
-        LAGVE.initialization.statementBox.setStyle('minHeight','150px');
+        LAGVE.initialization.statementList.removeClass('selectable');
+        LAGVE.initialization.statementList.setStyle('minWidth','400px');
+        LAGVE.initialization.statementList.setStyle('minHeight','150px');
         
         LAGVE.initialization.append(title);
-        LAGVE.initialization.append(LAGVE.initialization.statementBox);
+        LAGVE.initialization.append(LAGVE.initialization.statementList);
         
         /**
-         *    Pass Initialization's LAGVEInsert to statementBox's
+         *    Pass Initialization's LAGVEInsert to statementList's
          */
         LAGVE.initialization.LAGVEInsert = function(node) {
-            LAGVE.initialization.statementBox.LAGVEInsert(node);
+            LAGVE.initialization.statementList.LAGVEInsert(node);
         }
         
         
         LAGVE.initialization.empty      = function() {            
-            this.statementBox.empty();
+            this.statementList.empty();
         }
         
         return LAGVE.initialization;
@@ -1682,35 +1669,35 @@ LAGVE.oneIndentation = '  ';
         LAGVE.implementation.select     = LAGVE._genericSelect;
         LAGVE.implementation.deSelect   = LAGVE._genericDeSelect;
         LAGVE.implementation.toLAG      = function () {
-            var LAG = 'implementation (\r\n' + this.statementBox.toLAG() + ')\r\n';
+            var LAG = 'implementation (\r\n' + this.statementList.toLAG() + ')\r\n';
             
             return LAG;
         }
         
         var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
         
-        LAGVE.implementation.statementBox = LAGVEStmt.newStatement();
+        LAGVE.implementation.statementList = LAGVEStmt.newStatementList();
         // It'd be ambiguious if implementation statement
         // block could be selected because it's prettier
         // if Init is selectable and Init's selectedness
         // is passed through to the statement block anyway.
-        LAGVE.implementation.statementBox.removeClass('selectable');
-        LAGVE.implementation.statementBox.setStyle('minWidth','400px');
-        LAGVE.implementation.statementBox.setStyle('minHeight','150px');
+        LAGVE.implementation.statementList.removeClass('selectable');
+        LAGVE.implementation.statementList.setStyle('minWidth','400px');
+        LAGVE.implementation.statementList.setStyle('minHeight','150px');
         
         LAGVE.implementation.append(title);
-        LAGVE.implementation.append(LAGVE.implementation.statementBox);
+        LAGVE.implementation.append(LAGVE.implementation.statementList);
         
         /**
-         *    Pass Initialization's LAGVEInsert to statementBox's
+         *    Pass Initialization's LAGVEInsert to statementList's
          */
         LAGVE.implementation.LAGVEInsert = function(node) {
-            LAGVE.implementation.statementBox.LAGVEInsert(node);
+            LAGVE.implementation.statementList.LAGVEInsert(node);
         }
         
         
         LAGVE.implementation.empty      = function() {            
-            this.statementBox.empty();
+            this.statementList.empty();
         }
         
         return LAGVE.implementation;
@@ -1809,17 +1796,17 @@ LAGVE.oneIndentation = '  ';
     // the last editor onChange timestamp converted to visual representation
     LAGVE.ToVisual.lastEditorChange = 0;
     
-    LAGVE.ToVisual.convertIfCodeChanged = function(editorChangeTimestamp) {
+    /*LAGVE.ToVisual.convertIfCodeChanged = function(editorChangeTimestamp) {
         if ( editorChangeTimestamp > LAGVE.ToVisual.lastEditorChange ) {
             LAGVE.ToVisual.convert();
         }
-    }
+    }*/
     
     LAGVE.ToVisual.convert = function() {
         LAGVE.ToVisual.stack = new Array();
         
         // update last code change converted to visual
-        LAGVE.ToVisual.lastEditorChange = editorChangeTimestamp;
+        //LAGVE.ToVisual.lastEditorChange = editorChangeTimestamp;
         
         // allow conversion - unset by implementation handler
         LAGVE.ToVisual.converting = true;
@@ -1944,7 +1931,7 @@ LAGVE.oneIndentation = '  ';
     LAGVE.ToVisual.actions.startThen = function startThen() {
         if (LAGVE.ToVisual.converting) {
             // push the Then block of the thing at top of stack
-            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().thenStatementBlock);
+            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().thenStatementList);
         }
     }
 
@@ -1957,7 +1944,7 @@ LAGVE.oneIndentation = '  ';
     LAGVE.ToVisual.actions.startElse = function startElse() {
         if (LAGVE.ToVisual.converting) {
             // push the Else block of the thing at top of stack
-            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().elseStatementBlock);
+            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().elseStatementList);
         }
     }
 
