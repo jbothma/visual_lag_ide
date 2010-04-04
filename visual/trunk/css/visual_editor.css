@@ -513,3 +513,7 @@ SPAN.while.multiple-documents-symbol {
 .yui-dd-drop-active-valid {
     background-color:   #95FC97;
 }
+
+.context-menu-node {
+    cursor: help
+}

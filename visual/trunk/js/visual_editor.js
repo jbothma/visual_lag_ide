@@ -131,9 +131,11 @@ YUI({
         newAttribute._LAGVEName = 'Attribute/Value';
         newAttribute.getName = function() { return this._LAGVEName }        
         newAttribute.setName = function(newName) { this._LAGVEName = newName }
-
-        newAttribute.contextMenuItems = LAGVEContext.items.visualElement;
-        newAttribute.on('contextmenu', LAGVEContext.contextMenuHandler);
+        
+        LAGVEContext.applyContextMenu(
+            newAttribute, 
+            LAGVEContext.items.visualElement
+        )
         
         newAttribute.resize = function(reason) {
             //Y.log('newAttribute.resize triggered by ' + reason);
@@ -255,8 +257,11 @@ YUI({
             groups:        ['attribute'],
         });
         
-        assignment.attributeContainer.contextMenuItems = LAGVEContext.items.attributeContainer;
-        assignment.attributeContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
+        LAGVEContext.applyContextMenu(
+            assignment.attributeContainer, 
+            LAGVEContext.items.attributeContainer
+        )
+
         
         
         //////    VALUE CONTAINER    //////
@@ -281,8 +286,10 @@ YUI({
         };
         assignment.valueContainer.getName       = function() { return this._LAGVEName };
         
-        assignment.valueContainer.contextMenuItems = LAGVEContext.items.valueContainer;
-        assignment.valueContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
+        LAGVEContext.applyContextMenu(
+            assignment.valueContainer, 
+            LAGVEContext.items.valueContainer
+        )
         
         //////    OPERATOR CONTAINER    //////
         assignment.operatorContainer    = Y.Node.create('\
@@ -529,9 +536,11 @@ LAGVEIf = new Object();
                 }
             }
         }
-        
-        ifThenElse.conditionContainer.contextMenuItems = LAGVEContext.items.conditionContainer;
-        ifThenElse.conditionContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
+                
+        LAGVEContext.applyContextMenu(
+            ifThenElse.conditionContainer,
+            LAGVEContext.items.conditionContainer
+        );
                 
 
         ///////    THEN    ////////
@@ -733,9 +742,11 @@ LAGVEIf = new Object();
             newWhile.rhombus.setStyle('visibility','visible');
             newWhile.rhombusSelected.setStyle('visibility','hidden');
         };
-        
-        newWhile.conditionPositioning.contextMenuItems = LAGVEContext.items.conditionContainer;
-        newWhile.conditionPositioning.on('contextmenu', LAGVEContext.contextMenuHandler);
+                
+        LAGVEContext.applyContextMenu(
+            newWhile.conditionContainer, 
+            LAGVEContext.items.conditionContainer
+        )
         
         newWhile.conditionContainer.toLAG = function() {
             if (this.hasChildNodes()) {
@@ -856,8 +867,11 @@ LAGVE.Condition = new Object();
      */
     LAGVE.Condition.wrapCondition = function(child) {
         var conditionWrapper = Y.Node.create( '<div class="condition wrapper"></div>' );
-        conditionWrapper.contextMenuItems = LAGVEContext.items.visualElement;
-        conditionWrapper.on('contextmenu', LAGVEContext.contextMenuHandler);
+
+        LAGVEContext.applyContextMenu(
+            conditionWrapper, 
+            LAGVEContext.items.visualElement
+        )
     
         var conditionWrapperDD = new Y.DD.Drag({
             groups:    ['condition'],
@@ -957,8 +971,10 @@ LAGVE.Condition = new Object();
             comparison.resize('child comparison.attributeContainer.resize | ' + reason)
         };
         
-        comparison.attributeContainer.contextMenuItems = LAGVEContext.items.attributeContainer;
-        comparison.attributeContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
+        LAGVEContext.applyContextMenu(
+            comparison.attributeContainer, 
+            LAGVEContext.items.attributeContainer
+        )
         
         //////    COMPARATOR    //////
         comparison.comparatorContainer = Y.Node.create('\
@@ -1015,9 +1031,11 @@ LAGVE.Condition = new Object();
         };
         comparison.valueContainer.select        = LAGVE._genericSelect;
         comparison.valueContainer.deSelect      = LAGVE._genericDeSelect;
-        
-        comparison.valueContainer.contextMenuItems = LAGVEContext.items.valueContainer;
-        comparison.valueContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
+
+        LAGVEContext.applyContextMenu(
+            comparison.valueContainer, 
+            LAGVEContext.items.valueContainer
+        )
         
         //////    BUILD, INSERT/RETURN    //////
         comparison.append( comparison.attributeContainer );
@@ -1150,8 +1168,10 @@ LAGVE.Condition = new Object();
         
         enough.conditionContainer = enough.conditionList;
         
-        enough.conditionContainer.contextMenuItems = LAGVEContext.items.conditionContainer;
-        enough.conditionContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
+        LAGVEContext.applyContextMenu(
+            enough.conditionContainer, 
+            LAGVEContext.items.conditionContainer
+        )
 
         enough.conditionList.LAGVEInsert   = function(child) {
             if (child.hasClass('condition')) {          
@@ -1261,8 +1281,11 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         statementList.getName       = function() {return this._LAGVEName};
         statementList.select        = LAGVE._genericSelect;
         statementList.deSelect      = LAGVE._genericDeSelect;
-        statementList.contextMenuItems = LAGVEContext.items.statementContainer;
-        statementList.on('contextmenu', LAGVEContext.contextMenuHandler);
+        
+        LAGVEContext.applyContextMenu(
+            statementList, 
+            LAGVEContext.items.statementContainer
+        )
         
         /**
          * Function to insert nodes asked to be inserted.
@@ -1357,8 +1380,11 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
             
             return LAG;
         }
-        childContainer.contextMenuItems = LAGVEContext.items.visualElement;
-        childContainer.on('contextmenu', LAGVEContext.contextMenuHandler);
+        
+        LAGVEContext.applyContextMenu(
+            childContainer, 
+            LAGVEContext.items.visualElement
+        )
 
         childContainer.append(child);
         childContainer.parentChanged();
@@ -1519,8 +1545,20 @@ LAGVEContext.items = {
         LAGVEContext.menus.help
     ],
 }
-    
-
+        
+    LAGVEContext.applyContextMenu = function ( contextNode, contextMenuItems ) {
+        // Mark the relevant context menu items on the node
+        contextNode.contextMenuItems = contextMenuItems;
+        
+        // register an event handler for the context menu on the node
+        contextNode.on('contextmenu', LAGVEContext.contextMenuHandler);
+        
+        // Add CSS class to the node that has a context menu so that 
+        // we can do CSS style stuff with it.
+        contextNode.addClass('context-menu-node');
+    }
+        
+        
     LAGVEContext.deleteItem = function() {
         if (confirm('Are you sure you want to delete this ' + LAGVEContext.context.getName() + '?')) {
             var parent = LAGVEContext.context.get('parentNode');
