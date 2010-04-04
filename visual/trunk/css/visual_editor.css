@@ -510,7 +510,8 @@ SPAN.while.multiple-documents-symbol {
     z-index:    10000;
 }
 
-.yui-dd-drop-active-valid {
+.yui-dd-drop-active-valid
+.yui-dd-drop-active-valid.condition-list {
     background-color:   #95FC97;
 }
 
