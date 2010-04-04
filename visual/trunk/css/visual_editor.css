@@ -471,7 +471,7 @@ SPAN.while.multiple-documents-symbol {
     width:      9px;
     height:     12px;
 }
-.while.statement {
+.while.statement-list {
     position:   absolute;
     top:        97px;
     left:       222px;
@@ -510,7 +510,7 @@ SPAN.while.multiple-documents-symbol {
     z-index:    10000;
 }
 
-.yui-dd-drop-active-valid
+.yui-dd-drop-active-valid,
 .yui-dd-drop-active-valid.condition-list {
     background-color:   #95FC97;
 }

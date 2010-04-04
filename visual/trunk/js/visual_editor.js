@@ -767,13 +767,9 @@ LAGVEIf = new Object();
             var statementListWidth = parseInt(this.statementList.getComputedStyle('width'));
             
             // Calculations
-            var rhombusHeight        = conditionHeight * 2.2;
-            var rhombusWidth         = conditionWidth * 1.6;
-            
-            if (rhombusWidth < rhombusHeight*2) {
-                rhombusWidth = rhombusHeight * 2;
-            }
-            
+            var rhombusHeight        = conditionHeight * 2;
+            var rhombusWidth         = conditionWidth * 2;
+                        
             var conditionLeft   = (rhombusWidth - conditionWidth)/2;
             var conditionTop    = (rhombusHeight - conditionHeight)/2;
             
