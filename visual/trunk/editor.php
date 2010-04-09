@@ -124,7 +124,7 @@
                     <li id="strategy-description-tab" class="strategy-description-indicator" ><a href="javascript:void(0)">Description</a></li>
                     <li id="initialization-tab" class="visualeditor-tab"><a href="javascript:void(0)">Initialization</a></li> 
                     <li id="implementation-tab" class="visualeditor-tab"><a href="javascript:void(0)">Implementation</a></li> 
-                    <li id="texteditor-tab"><a href="javascript:void(0)">Text Editor</a></li>
+                    <li id="texteditor-tab" class="tabview-active"><a href="javascript:void(0)">Text Editor</a></li>
                 </ul>
                 <div class="tabview-content"> 
                     <div id="strategy-description-tab-content" class="tabview-hidden strategy-description-indicator">
@@ -549,8 +549,21 @@
                             contents    = tabview.all('.tabview-content > *'), 
                             tab         = e.currentTarget.get('parentNode'),
                             tabId       = tab.get('id'),
-                            tabContent = Y.one('#' + tabId + '-content');
-                 
+                            tabContent  = Y.one('#' + tabId + '-content');
+                        var oldTabId    = tabs.filter('.tabview-active').item(0).get('id');
+                        
+                        // hide all tab contents
+                        contents.addClass('tabview-hidden');
+                        // make all tabs inactive
+                        tabs.removeClass('tabview-active');
+                        contents.removeClass('tabview-active');
+                        // make selected tab active
+                        tab.addClass('tabview-active');
+                        tabContent.addClass('tabview-active');
+                        // unhide active tab's contents
+                        tabContent.removeClass('tabview-hidden');
+                        
+                        
                         /*
                             short of checking exactly what every change affects and updating
                             tabs appropriately, or making a list of things which are to be updated,
@@ -570,43 +583,55 @@
                                 LAG tab
                                     all tabs
 
-                            */
+                        */
                         
-                        // hide all tab contents
-                        contents.addClass('tabview-hidden');
-                        // make all tabs inactive
-                        tabs.removeClass('tabview-active');
-                        contents.removeClass('tabview-active');
-                        // make selected tab active
-                        tab.addClass('tabview-active');
-                        tabContent.addClass('tabview-active');
-                        // unhide active tab's contents
-                        tabContent.removeClass('tabview-hidden');
-                        
-                        if (tabId === 'texteditor-tab') {
-                            
-                            var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
-                            
-                            LAGVE.ToVisual.converting = false;
-                            Y.one('#updating-visual-message').setStyle('display', '');
-                                                        
-                            editor.mirror.setCode(LAG);
-                            editor.mirror.reindent();
-                            // clear errors after converting to LAG
-                            document.getElementById("cc").innerHTML = "&nbsp;";
+                        switch (oldTabId) {
+                            case 'strategy-description-tab' :
+                                // update LAG tab
+                                updateLAGTab();
+                                break;
+                            case 'initialization-tab' :
+                                // update LAG tab
+                                updateLAGTab();
+                                break;
+                            case 'implementation-tab':
+                                // update LAG tab
+                                updateLAGTab();
+                                break;
+                            case 'texteditor-tab':
+                                // update Description tab
+                                setDescriptionTabDescription( getDescriptionFromCode() );
+                                evaluateDescription();
+                                
+                                // update Implementation tab
+                                // update Initialization tab
+                                LAGVE.ToVisual.convert();
+                                break;
+                            default:
                         }
                         
-                        if (tabContent.hasClass('visualeditor')) {
-                            LAGVE.ToVisual.convert();
-                        }
                         
-                        if (tabId === 'strategy-description-tab') {
-                            setDescriptionTabDescription( getDescriptionFromCode() );
+                        if ( tab.hasClass('visualeditor') && oldTabId !== 'texteditor-tab') { 
+                            resizeVisual();
                         }
+                    }
+                    
+                    resizeVisual = function() {
+                        // do the conversion again since
+                        // that's currently the only way to force a resize.
+                        LAGVE.ToVisual.convert();
+                    }
+                    
+                    function updateLAGTab() {    
+                        var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
                         
-                        // We can check and colour description
-                        // each time we change tabs
-                        evaluateDescription();
+                        LAGVE.ToVisual.converting = false;
+                        Y.one('#updating-visual-message').setStyle('display', '');
+                                                    
+                        editor.mirror.setCode(LAG);
+                        editor.mirror.reindent();
+                        // clear errors after converting to LAG
+                        document.getElementById("cc").innerHTML = "&nbsp;";
                     }
                     
                     function hideVEMenu() {
