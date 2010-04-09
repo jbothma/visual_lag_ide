@@ -226,8 +226,6 @@ div.logout {
 .tabview-content {
     color:                  black;
     background:             white;
-    /*padding:                14px 10px;*/
-    /*border:                 1px solid black;*/
 }
 .tabview-content .tabview-hidden {
     display:                none;

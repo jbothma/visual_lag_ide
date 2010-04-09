@@ -461,7 +461,7 @@
             </div>
         </div>
         <!-- Raphael -->
-        <script type="text/javascript" src="js/raphael-min.js"></script>
+        <script type="text/javascript" src="js/raphael.js"></script>
     
         <!-- CodeMirror -->
         <script src="js/codemirror.js"  type="text/javascript"></script>
@@ -551,12 +551,35 @@
                             tabId       = tab.get('id'),
                             tabContent = Y.one('#' + tabId + '-content');
                  
+                        /*
+                            short of checking exactly what every change affects and updating
+                            tabs appropriately, or making a list of things which are to be updated,
+                            the only way to ensure everything remains up to date is to update everything
+                            that could be affected by the change.
+                            that means that what gets updated depends on the tab we're moving 
+                            away from and not the tab we're choosing.
+                            
+                            What to update when the last tab was:
+                            
+                                description tab
+                                    LAG tab
+                                initialization tab
+                                    LAG tab
+                                implementation tab
+                                    LAG tab
+                                LAG tab
+                                    all tabs
+
+                            */
+                        
                         // hide all tab contents
                         contents.addClass('tabview-hidden');
                         // make all tabs inactive
                         tabs.removeClass('tabview-active');
+                        contents.removeClass('tabview-active');
                         // make selected tab active
-                        tab.addClass('tabview-active')
+                        tab.addClass('tabview-active');
+                        tabContent.addClass('tabview-active');
                         // unhide active tab's contents
                         tabContent.removeClass('tabview-hidden');
                         
@@ -643,6 +666,24 @@
                             Y.all('.strategy-description-indicator').removeClass('strategy-description-ok');
                         }
                     }
+                    
+                    // Monitor description box for typing.
+                    // When typing stops for 300ms, run evaluateDescription.
+                    //
+                    // http://www.webdeveloper.com/forum/showthread.php?t=216417
+                    // user mcru
+                    Y.one('#strategy-description-editor').on('keyup', function(event) {   
+                        if ( undefined === window.typingTimer )
+                        {
+                            typingTimer = setTimeout(evaluateDescription, 300);
+                        }
+                        else
+                        {
+                            clearTimeout(typingTimer);
+                            typingTimer = setTimeout(evaluateDescription, 300);
+                        }
+                        
+                    });
                     
                     catchCtrlS = function(e) {
                         if ((e.ctrlKey || e.metaKey) && (e.keyCode === 83)) { // ctrl+s

@@ -46,8 +46,8 @@ Raphael.fn.PEAL = {
     arrowhead: function(tipX, tipY, angle) {
         var pathData = 
             "M" + tipX + " " + tipY +           // start point
-            "L" + (tipX+10) + " " + (tipY+20) + // draw first line
-            "L" + (tipX-10) + " " + (tipY+20) + // draw second line
+            "L" + (tipX+5) + " " + (tipY+10) + // draw first line
+            "L" + (tipX-5) + " " + (tipY+10) + // draw second line
             "Z";                                // close path
         var head = this.path(pathData);
         head.attr("fill", "black");
@@ -411,81 +411,94 @@ LAGVEIf = new Object();
         ifThenElse._LAGVEName   = 'If-Then-Else block';
         ifThenElse.getName      = function() { return this._LAGVEName; }
         
-        ifThenElse.resize = function(reason) {
-            // Setup //
-            
-            var conditionContainerWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
-            var conditionContainerHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
-            
-            var thenWidth  = parseInt(this.thenStatementList.getComputedStyle('width'));                                    
-            var elseWidth  = parseInt(this.elseStatementList.getComputedStyle('width'));
-            
-            var thenHeight = parseInt(this.thenStatementList.getComputedStyle('height'));                                    
-            var elseHeight = parseInt(this.elseStatementList.getComputedStyle('height'));                                    
-            
-            
-            // Compute //
-            
-            var rhombusWidth    = conditionContainerWidth * 2;
-            var rhombusHeight   = conditionContainerHeight * 2;
-            
-            var conditionContainerLeft = conditionContainerWidth/2;
-            var conditionContainerTop  = conditionContainerHeight/2;
-            
-            var thenLeft = rhombusWidth + 80;
-            var elseLeft = rhombusWidth + 80;
-            
-            var thenTop = rhombusHeight / 2 - 10;
-            var elseTop = thenTop + thenHeight + 10;
-            
-            var ifThenElseWidth  = Math.max( (thenLeft + thenWidth), (elseLeft + elseWidth) ) + 10;
-            var ifThenElseHeight = Math.max( (elseTop + elseHeight), (rhombusHeight) ) + 10;
-            
-            
-            // Output //
+        ifThenElse.resize = function(reason) {        
+            if ( !this.ancestor('.tabview-hidden') ) {
+                // Setup //
+                
+                var conditionContainerWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
+                var conditionContainerHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
+                
+                var thenWidth  = parseInt(this.thenStatementList.getComputedStyle('width'));                                    
+                var elseWidth  = parseInt(this.elseStatementList.getComputedStyle('width'));
+                
+                var thenHeight = parseInt(this.thenStatementList.getComputedStyle('height'));                                    
+                var elseHeight = parseInt(this.elseStatementList.getComputedStyle('height'));                                    
+                
+                
+                // Compute //
+                
+                var rhombusWidth    = conditionContainerWidth * 2;
+                var rhombusHeight   = conditionContainerHeight * 2;
+                
+                var conditionContainerLeft = conditionContainerWidth/2;
+                var conditionContainerTop  = conditionContainerHeight/2;
+                
+                var thenLeft = rhombusWidth + 80;
+                var elseLeft = rhombusWidth + 80;
+                
+                var thenTop = rhombusHeight / 2 - 10;
+                var elseTop = thenTop + thenHeight + 10;
+                
+                var ifThenElseWidth  = Math.max( (thenLeft + thenWidth), (elseLeft + elseWidth) ) + 10;
+                var ifThenElseHeight = Math.max( (elseTop + elseHeight), (rhombusHeight) ) + 10;
+                
+                
+                // Output //
 
-            this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
-            this.conditionContainer.setStyle('top', conditionContainerTop + 'px');
+                this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
+                this.conditionContainer.setStyle('top', conditionContainerTop + 'px');
 
-            this.raphael.PEAL.scaleTLRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
-            
-            this.thenArrowHead.remove();
-            this.thenArrowHead = this.raphael.PEAL.arrowhead(thenLeft, thenTop + 10, 90);
-            this.elseArrowHead.remove()
-            this.elseArrowHead = this.raphael.PEAL.arrowhead(elseLeft, elseTop + 10, 90);
-            
-            this.thenArrowStroke.remove();
-            this.thenArrowStroke = this.raphael.path(
-                'M' + rhombusWidth + ',' + (thenTop + 10) + // start at RHS corner of rhombus
-                'L' + thenLeft + ',' + (thenTop + 10)       // Horizontal line to LHS edge of thenStatementList
-            );
-            
-            this.elseArrowStroke.remove();
-            this.elseArrowStroke = this.raphael.path(
-                'M' + (rhombusWidth / 2) + ',' + rhombusHeight +    // start at bottom corner of rhombus
-                'L' + (rhombusWidth / 2) + ',' + (elseTop + 10) +   // Vertical line until level with elseArrowHead
-                'L' + elseLeft + ',' + (elseTop + 10)               // Horizontal line to LHS edge of elseStatementList
-            );
-            
-            this.thenStatementList.setStyles({ 
-                top:    thenTop + 'px', 
-                left:   thenLeft + 'px',
-            });
-            
-            this.elseStatementList.setStyles({ 
-                top:    elseTop + 'px', 
-                left:   elseLeft + 'px',
-            });
-            
-			// SVG canvas width
-            this.raphael.setSize( ifThenElseWidth, ifThenElseHeight );
+                this.raphael.PEAL.scaleTLRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
+                
+                if (this.thenArrowHead) this.thenArrowHead.remove();
+                if (this.elseArrowHead) this.elseArrowHead.remove();
+                this.thenArrowHead = this.raphael.PEAL.arrowhead(thenLeft, thenTop + 10, 90);
+                this.elseArrowHead = this.raphael.PEAL.arrowhead(elseLeft, elseTop + 10, 90);
+                
+                if (this.thenArrowStroke) this.thenArrowStroke.remove();
+                if (this.elseArrowStroke) this.elseArrowStroke.remove();
+                
+                this.thenArrowStroke = this.raphael.path(
+                    'M' + rhombusWidth + ',' + (thenTop + 10) + // start at RHS corner of rhombus
+                    'L' + thenLeft + ',' + (thenTop + 10)       // Horizontal line to LHS edge of thenStatementList
+                );
+                
+                this.elseArrowStroke = this.raphael.path(
+                    'M' + (rhombusWidth / 2) + ',' + rhombusHeight +    // start at bottom corner of rhombus
+                    'L' + (rhombusWidth / 2) + ',' + (elseTop + 10) +   // Vertical line until level with elseArrowHead
+                    'L' + elseLeft + ',' + (elseTop + 10)               // Horizontal line to LHS edge of elseStatementList
+                );
+                
+                if (this.ifLabel)   this.ifLabel.remove();
+                if (this.elseLabel) this.thenLabel.remove();
+                if (this.elseLabel) this.elseLabel.remove();
+                
+                // catch exception from BUG 552549 in FF 3.6
+                try {
+                    this.ifLabel   = this.raphael.text( (conditionContainerWidth + 3), 10, 'IF');
+                    this.thenLabel = this.raphael.text( (thenLeft - 50), thenTop, 'THEN');
+                    this.elseLabel = this.raphael.text( (elseLeft - 50), elseTop, 'ELSE');
+                } catch(ex) {}
+                
+                this.thenStatementList.setStyles({ 
+                    top:    thenTop + 'px', 
+                    left:   thenLeft + 'px',
+                });
+                
+                this.elseStatementList.setStyles({ 
+                    top:    elseTop + 'px', 
+                    left:   elseLeft + 'px',
+                });
+                
+                // SVG canvas width
+                this.raphael.setSize( ifThenElseWidth, ifThenElseHeight );
 
-			// entire visual element width
-            this.setStyles({ 
-                width:  ifThenElseWidth + 'px', 
-                height: ifThenElseHeight + 'px',
-            });
-            
+                // entire visual element width
+                this.setStyles({ 
+                    width:  ifThenElseWidth + 'px', 
+                    height: ifThenElseHeight + 'px',
+                });
+            }
             
             
             // Bubble
@@ -502,12 +515,6 @@ LAGVEIf = new Object();
             top:        '0px',
             left:       '0px',
         });
-        
-        // just make them so they're there to delete upon the first ifThenElse.resize()
-        ifThenElse.thenArrowHead = ifThenElse.raphael.PEAL.arrowhead(0, 0, 90);
-        ifThenElse.elseArrowHead = ifThenElse.raphael.PEAL.arrowhead(0, 0, 90);
-        ifThenElse.thenArrowStroke = ifThenElse.raphael.path('M 0 0');
-        ifThenElse.elseArrowStroke = ifThenElse.raphael.path('M 0 0');
 
 
         ///////    IF    ////////
@@ -934,7 +941,7 @@ LAGVE.Condition = new Object();
             // Output
             this.setStyle('width', comparisonWidth + 'px');
             
-            //NEVER call parent's resize(), it's the containing parent that calls this to resize.
+            //NEVER call parent's resize(), it's this' container that calls this to resize.
         }
         
         comparison.resize = function( reason){
