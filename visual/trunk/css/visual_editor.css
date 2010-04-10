@@ -99,15 +99,8 @@ body {
     top:        30px;
     float:      left;
 }
+
 #initialization {
-    position:       relative;
-    border:         1px solid black;
-    float:          left;
-    clear:          both;
-    margin:         22px;
-    padding-top:    1em;
-}
-#implementation {
     position:       relative;
     border:         1px solid black;
     float:          left;
@@ -123,14 +116,49 @@ body {
     line-height:        1em;
     left:               5px;
 }
-#implementation-title {
-    background-color:   white;
-    position:           absolute;
-    top:                -0.5em;
-    font-size:          1em;
-    line-height:        1em;
-    left:               5px;
+
+
+#implementation {
+    position:       relative;
+    float:          left;
+    clear:          both;
+    width:          300px;
+    height:         300px;
 }
+DIV.implementation.multiple-documents-symbol {
+    position:   absolute;
+    left:       5px;
+    top:        65px;
+    height:     65px;
+    width:      127px;
+}
+IMG.implementation.multiple-documents-symbol {
+    position:   absolute;
+    top:        0px;
+    left:       0px;
+    width:      100%;
+    height:     100%;
+}
+SPAN.implementation.multiple-documents-symbol {
+    font-size:  14px;
+    padding:    5px;
+    position:   absolute;
+    top:        8px;
+    width:      106px;
+    left:       0px;
+    text-align: left;
+}
+#implementation > .statement-list {
+    border:     1px solid black;
+    position:   absolute;
+    left:       180px;
+    top:        5px;
+}
+#implementation>svg>text {
+    font-size:  14px !important;
+}
+
+
 DIV.selected {
     border :    3px solid #00F !important;
     z-index:    30;

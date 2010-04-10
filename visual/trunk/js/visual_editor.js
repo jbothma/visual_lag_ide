@@ -1657,7 +1657,9 @@ LAGVE.oneIndentation = '  ';
         Y.all('.initialization.VE-workspace').append(initialization);
         
         //create implementation
-        Y.all('.implementation.VE-workspace').append(LAGVE._createImplementation());
+        var implementation = LAGVE._createImplementation();
+        Y.all('.implementation.VE-workspace').append(implementation);
+        implementation.resize();
     }
     
     LAGVE._createInitialization = function() {
@@ -1703,9 +1705,63 @@ LAGVE.oneIndentation = '  ';
     }
     
     LAGVE._createImplementation = function() {
-        LAGVE.implementation            = Y.Node.create( '<div id="implementation" class="selectable"></div>' );
-        LAGVE.implementation.resize     = function( reason ) {
-            //Y.log('resize reached Implementation | ' + reason);
+        LAGVE.implementation = Y.Node.create( '<div id="implementation" class="selectable"></div>' );
+        
+        // .implementation.multiple-documents-symbol
+        LAGVE.implementation.multiDocsSymbol = Y.Node.create(
+            '<div class="implementation multiple-documents-symbol">\
+                <img alt="multiple-documents-symbol" \
+                     class="implementation multiple-documents-symbol" \
+                     src="images/multiple_documents.png">\
+                <span class="implementation multiple-documents-symbol">For each concept in the lesson</span>\
+            </div>');
+            
+        /////// SVG canvas ////////
+        LAGVE.implementation.raphael = Raphael( Y.Node.getDOMNode(LAGVE.implementation), 1, 1 );
+        LAGVE.implementation.canvas = Y.one( LAGVE.implementation.raphael.canvas );
+        
+        LAGVE.implementation.canvas.setStyles({
+            position:   'absolute',
+            top:        '0px',
+            left:       '0px',
+        });
+        
+        // "User access a Concept"
+        try { LAGVE.implementation.raphael.text(81, 20, 'User accesses\na Concept'); } catch(ex) {} // catch exception from BUG 552549 in FF 3.6
+        LAGVE.implementation.raphael.rect(20, 5, 120, 32, 16);
+        
+        // Arrow from Start State to MultiDocs        
+        LAGVE.implementation.raphael.path('M 81 37 L 81 65');
+        LAGVE.implementation.raphael.PEAL.arrowhead(81, 65, 180);
+        
+        // Arrow from multidocs to statementList
+        LAGVE.implementation.raphael.path('M 132 85 L 180 85');
+        LAGVE.implementation.raphael.PEAL.arrowhead(180, 85, 90);
+        
+        // Arrow from statementList to multidocs
+        LAGVE.implementation.raphael.path('M 180 100 L 132 100');
+        LAGVE.implementation.raphael.PEAL.arrowhead(132, 100, 270);
+        
+        LAGVE.implementation.resize = function( reason ) {            
+            // Setup
+            var statementListWidth = 
+                parseInt(this.statementList.getComputedStyle('width')) || 
+                parseInt(this.statementList.getStyle('minWidth'));          // make sure some size gotten before it's drawn
+            var statementListHeight = 
+                parseInt(this.statementList.getComputedStyle('height')) || 
+                parseInt(this.statementList.getStyle('minHeight'));         // make sure some size gotten before it's drawn
+                        
+            // Compute
+            implementationWidth     = 5 + 180 + statementListWidth + 5;
+            implementationHeight    = 5 + statementListHeight + 5;
+            
+            // Output
+            
+            // SVG canvas width
+            this.raphael.setSize( implementationWidth, implementationHeight );
+                
+            this.setStyle('width', implementationWidth + 'px');
+            this.setStyle('height', implementationHeight + 'px');
         };
         LAGVE.implementation.select     = LAGVE._genericSelect;
         LAGVE.implementation.deSelect   = LAGVE._genericDeSelect;
@@ -1715,7 +1771,6 @@ LAGVE.oneIndentation = '  ';
             return LAG;
         }
         
-        var title = Y.Node.create( '<div id="implementation-title">IMPLEMENTATION</div>' );
         
         LAGVE.implementation.statementList = LAGVEStmt.newStatementList();
         // It'd be ambiguious if implementation statement
@@ -1726,7 +1781,7 @@ LAGVE.oneIndentation = '  ';
         LAGVE.implementation.statementList.setStyle('minWidth','400px');
         LAGVE.implementation.statementList.setStyle('minHeight','150px');
         
-        LAGVE.implementation.append(title);
+        LAGVE.implementation.append(LAGVE.implementation.multiDocsSymbol);
         LAGVE.implementation.append(LAGVE.implementation.statementList);
         
         /**
@@ -1736,13 +1791,13 @@ LAGVE.oneIndentation = '  ';
             LAGVE.implementation.statementList.LAGVEInsert(node);
         }
         
-        
         LAGVE.implementation.empty      = function() {            
             this.statementList.empty();
         }
         
         return LAGVE.implementation;
     }
+    
     /**
     *    LAGVE.insertNewAttr
     *    
