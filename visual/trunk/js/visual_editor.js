@@ -58,38 +58,40 @@ Raphael.fn.PEAL = {
         return head;
     },
     /**
-    *   paper.PEAL.rhombus()
+    *   paper.PEAL.rhombus(top, left)
     *
     *   Draw a rhombus of width 3 and height 3.
     *
-    *   Use PEAL.scaleTLRhombus() to scale to required size.
+    *   Use PEAL.scaleRhombus() to scale to required size.
     */
-    rhombus: function() {
+    rhombus: function(top, left) {
         var rhombus = this.path('M 0 1 L 1 0 L 2 1 L 1 2 Z');
         
-        rhombus.translatedH = 0;
-        rhombus.translatedV = 0;
-            
+        rhombus.translate(top, left);
+        
         return rhombus;
     },
-    scaleTLRhombus: function( rhombus, width, height ) {
+    scaleRhombus: function( rhombus, width, height ) {
         // adjust for the fact that the initial rhombus isn't really unit width.
         // If we dont adjust, we end up with a rhombus twice as wide as width etc.
         width = width/2;
         height = height/2;
         
+        // store starting position
+        var bBox = rhombus.getBBox();
+        var left = Math.floor(bBox.x);
+        var top  = Math.floor(bBox.y);
+        
         rhombus.scale(width, height);
-        
-        // return to starting position
-        rhombus.translate(-rhombus.translatedH, -rhombus.translatedV);
-        
-        // translate to correct for scaling
         rhombus.translate(width, height);
         
-        // store translation coords
-        rhombus.translatedH = width;
-        rhombus.translatedV = height;
-    },    
+        // return to origin
+        var bBox = rhombus.getBBox();
+        rhombus.translate( -bBox.x, -bBox.y );
+        
+        // return to starting position
+        rhombus.translate( left, top );
+    },        
 }
 
 LAGVE.Attr = new Object();
@@ -448,7 +450,7 @@ LAGVEIf = new Object();
                 this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
                 this.conditionContainer.setStyle('top', conditionContainerTop + 'px');
 
-                this.raphael.PEAL.scaleTLRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
+                this.raphael.PEAL.scaleRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
                 
                 if (this.thenArrowHead) this.thenArrowHead.remove();
                 if (this.elseArrowHead) this.elseArrowHead.remove();
@@ -519,7 +521,7 @@ LAGVEIf = new Object();
 
         ///////    IF    ////////
 
-        ifThenElse.SVGRhombus = ifThenElse.raphael.PEAL.rhombus();
+        ifThenElse.SVGRhombus = ifThenElse.raphael.PEAL.rhombus(0,0);
         ifThenElse.SVGRhombus.attr("fill", "white");
 
         ifThenElse.conditionContainer = Y.Node.create('\
@@ -625,25 +627,20 @@ LAGVEIf = new Object();
     LAGVE.Elements.newWhile = function(targetNode) {
         // .while.statement-list-child
         var newWhile = Y.Node.create('<div class = "while statement-list-child"></div>');
-        // .while.condition-positioning
-        newWhile.conditionPositioning = Y.Node.create(
-            '<div class="while condition-positioning selectable"></div>');
-        // .while.condition-container
-        newWhile.conditionContainer   = Y.Node.create(
-            '<div class="while condition-container"></div>');
         
-        // .while.condition-rhombus
-        newWhile.rhombus = Y.Node.create(
-            '<img alt="condition rhombus shape" \
-                  class="while condition-rhombus" \
-                  src="images/ifthenelse_rhombus.png">');
-                  
-        // .while.condition-rhombus.selected
-        newWhile.rhombusSelected = Y.Node.create(
-            '<img alt="condition rhombus shape selected" \
-                  class="while condition-rhombus selected" \
-                  src="images/ifthenelse_rhombus_selected.png">');
-                  
+        /////// SVG canvas ////////
+        newWhile.raphael = Raphael( Y.Node.getDOMNode(newWhile), 1, 1 );
+        newWhile.canvas = Y.one( newWhile.raphael.canvas );
+        
+        newWhile.canvas.setStyles({
+            position:   'absolute',
+            top:        '0px',
+            left:       '0px',
+        });
+        
+        newWhile.SVGRhombus = newWhile.raphael.PEAL.rhombus(80, 20);
+        newWhile.SVGRhombus.attr("fill", "white");      
+        
         // .while.multiple-documents-symbol
         newWhile.multiDocsSymbol = Y.Node.create(
             '<div class="while multiple-documents-symbol">\
@@ -651,42 +648,16 @@ LAGVEIf = new Object();
                      class="while multiple-documents-symbol" \
                      src="images/multiple_documents.png">\
                 <span class="while multiple-documents-symbol">For each concept in the lesson</span>\
-            </div>');
-            
-        // .while.arrowline.multidocs-to-rhombus
-        newWhile.arrowlineMultidocsToRhombus = Y.Node.create(
-            '<div class="while arrowline multidocs-to-rhombus"></div>');
-        // .while.arrowline.rhombus-statements-multidocs
-        newWhile.arrowlineRhombusStatementsMultidocs = Y.Node.create(
-            '<div class="while arrowline rhombus-statements-multidocs"></div>');
+            </div>'
+        );
         
-        // .while.arrowhead-into-multidocs
-        newWhile.arrowheadIntoMultidocs = Y.Node.create(
-            '<img src="images/arrowhead_up.png" \
-                  class="while arrowhead-into-multidocs">');
-        // .while.arrowhead-into-rhombus
-        newWhile.arrowheadIntoRhombus = Y.Node.create(
-            '<img src="images/arrowhead_down.png" \
-                  class="while arrowhead-into-rhombus">');
-        // .while.arrowhead-into-statements
-        newWhile.arrowheadIntoStatements = Y.Node.create(
-            '<img src="images/arrowhead_down.png" \
-                  class="while arrowhead-into-statements">');
-                  
+        // .while.condition-container
+        newWhile.conditionContainer   = Y.Node.create(
+            '<div class="while condition-container"></div>');
+                    
         // .while.statement
         newWhile.statementList = LAGVEStmt.newStatementList();
         newWhile.statementList.addClass('while');
-        
-        newWhile.lockDrops = function() {
-            this.statementList.lockDrops();
-        }
-        
-        newWhile.unlockDrops = function() {
-            this.statementList.unlockDrops();
-        }
-                
-        newWhile._LAGVEName   = 'For Each Concept';
-        newWhile.getName      = function() { return this._LAGVEName; }
         
         newWhile.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -698,30 +669,31 @@ LAGVEIf = new Object();
         /*
             HTML elements in this order to overlap correctly.
             while
-                arrowlineMultidocsToRhombus
-                arrowlineRhombusStatementsMultidocs
-                statementList
-                arrowheadIntoMultidocs
-                arrowheadIntoRhombus
-                arrowheadIntoStatements
                 multiDocsSymbol
-                conditionPositioning
-                    rhombus
-                    rhombusSelected
-                    conditionContainer
+                raphaeljs canvas
+                    arrowlineMultidocsToRhombus
+                    arrowlineRhombusStatementsMultidocs
+                    arrowheadIntoMultidocs
+                    arrowheadIntoRhombus
+                    arrowheadIntoStatem
+                statementListents
+                conditionContainer
         */
         
-        newWhile.append( newWhile.arrowlineMultidocsToRhombus               );
-        newWhile.append( newWhile.arrowlineRhombusStatementsMultidocs       );
-        newWhile.append( newWhile.statementList                             );
-        newWhile.append( newWhile.arrowheadIntoMultidocs                    );
-        newWhile.append( newWhile.arrowheadIntoRhombus                      );
-        newWhile.append( newWhile.arrowheadIntoStatements                   );
-        newWhile.append( newWhile.multiDocsSymbol                           );
-        newWhile.append( newWhile.conditionPositioning                      );
-        newWhile.conditionPositioning.append( newWhile.rhombus              );
-        newWhile.conditionPositioning.append( newWhile.rhombusSelected      );
-        newWhile.conditionPositioning.append( newWhile.conditionContainer   );
+        newWhile.append( newWhile.statementList );
+        newWhile.append( newWhile.conditionContainer );
+        newWhile.insertBefore( newWhile.multiDocsSymbol, newWhile.canvas);
+        
+        newWhile.lockDrops = function() {
+            this.statementList.lockDrops();
+        }
+        
+        newWhile.unlockDrops = function() {
+            this.statementList.unlockDrops();
+        }
+                
+        newWhile._LAGVEName   = 'For Each Concept';
+        newWhile.getName      = function() { return this._LAGVEName; }
         
         newWhile.LAGVEInsert = function(child) {
             newWhile.statementList.LAGVEInsert(child);
@@ -737,19 +709,7 @@ LAGVEIf = new Object();
             }
         }
         
-        newWhile.conditionPositioning.LAGVEInsert = function(child) {
-            newWhile.conditionContainer.LAGVEInsert(child);
-        };
         
-        newWhile.conditionPositioning.select = function() {
-            newWhile.rhombus.setStyle('visibility','hidden');
-            newWhile.rhombusSelected.setStyle('visibility','visible');
-        };
-        newWhile.conditionPositioning.deSelect = function() {
-            newWhile.rhombus.setStyle('visibility','visible');
-            newWhile.rhombusSelected.setStyle('visibility','hidden');
-        };
-                
         LAGVEContext.applyContextMenu(
             newWhile.conditionContainer, 
             LAGVEContext.items.conditionContainer
@@ -762,42 +722,31 @@ LAGVEIf = new Object();
             return '';
         }
         newWhile.toLAG = function() {
-            return 'while ' + this.conditionContainer.toLAG() + '(\n' + this.statementList.toLAG() + ')\n';
+            return 'while ' + this.conditionContainer.toLAG() + ' (\n' + this.statementList.toLAG() + ')\n';
         };
         
         newWhile.resize = function() {
             // Setup
-            var conditionWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
-            var conditionHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
+            var conditionContainerWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
+            var conditionContainerHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
             
             var statementListHeight = parseInt(this.statementList.getComputedStyle('height'));
             var statementListWidth = parseInt(this.statementList.getComputedStyle('width'));
             
             // Calculations
-            var rhombusHeight        = conditionHeight * 2;
-            var rhombusWidth         = conditionWidth * 2;
+            var rhombusHeight        = conditionContainerHeight * 2;
+            var rhombusWidth         = conditionContainerWidth * 2;
                         
-            var conditionLeft   = (rhombusWidth - conditionWidth)/2;
-            var conditionTop    = (rhombusHeight - conditionHeight)/2;
+            var conditionContainerLeft   = 80 + rhombusWidth/4;
+            var conditionContainerTop    = 20 + rhombusHeight/4;
             
             // just below and to the right of the rhombus
-            var statementListTop = rhombusHeight * 0.75 + 30;            
-            var statementListLeft = rhombusWidth * 0.75 + 73;
+            var statementListTop    = 20 + 5 + rhombusHeight * 0.75;            
+            var statementListLeft   = 80 + 5 + rhombusWidth * 0.75;
             
             // this.multiDocsSymbol top is conditionPositioning height / 2 + offset
-            var multiDocsSymbTop = (rhombusHeight / 2) + 20;
+            var multiDocsSymbTop = 20 + (rhombusHeight / 2);
             
-            // rhombus horiz midpoint + rhombus left - arrowlines left
-            var arrowlineMultidocsToRhombusWidth = (rhombusWidth / 2) + 10;
-            
-            // bottom of div must be just below multidocs top
-            var arrowlineMultidocsToRhombusHeight = multiDocsSymbTop;
-            
-            // multidocs bottom
-            var arrowheadIntoMultidocsTop = multiDocsSymbTop + 65;
-            
-            // arrowlinesWidth + arrowlines left - half arrowhead width
-            var arrowheadIntoRhombusLeft = arrowlineMultidocsToRhombusWidth + 48;
             
             // rhombusWidth + rhombusLeft + offset
             var arrowlineRhombusStatementsMultidocsWidth = rhombusWidth + 63;
@@ -806,8 +755,6 @@ LAGVEIf = new Object();
             
             // statementListTop - arrowheadIntoStatements heigh
             var arrowheadIntoStatementsTop = statementListTop - 15;
-            // arrowlineRhombusStatementsMultidocsWidth + left
-            var arrowheadIntoStatementsLeft = arrowlineRhombusStatementsMultidocsWidth + 48;
             
             // this (the 'while' visual element container)
             // statementListTop + statementList height
@@ -817,38 +764,49 @@ LAGVEIf = new Object();
             
             // Output
             
-            this.conditionPositioning.setStyle('width', rhombusWidth + 'px');
-            this.conditionPositioning.setStyle('height', rhombusHeight + 'px');
             
-            this.conditionContainer.setStyle('left', conditionLeft + 'px');
-            this.conditionContainer.setStyle('top', conditionTop + 'px');
+            this.raphael.PEAL.scaleRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
+            this.SVGRhombus.toFront();
+            
+            this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
+            this.conditionContainer.setStyle('top', conditionContainerTop + 'px');
             
             this.multiDocsSymbol.setStyle('top', multiDocsSymbTop + 'px');
             
-            this.arrowlineMultidocsToRhombus.setStyle('width', arrowlineMultidocsToRhombusWidth + 'px');
-            this.arrowlineMultidocsToRhombus.setStyle('height', arrowlineMultidocsToRhombusHeight + 'px');
             
-            this.arrowheadIntoMultidocs.setStyle('top', arrowheadIntoMultidocsTop + 'px');
-            this.arrowheadIntoRhombus.setStyle('left', arrowheadIntoRhombusLeft + 'px');
-            
-            this.arrowlineRhombusStatementsMultidocs.
-                setStyle('width', arrowlineRhombusStatementsMultidocsWidth + 'px');
-            this.arrowlineRhombusStatementsMultidocs.
-                setStyle('top', arrowlineRhombusStatementsMultidocsTop + 'px');
-            this.arrowheadIntoStatements.
-                setStyle('left', arrowheadIntoStatementsLeft + 'px');
-            this.arrowheadIntoStatements.
-                setStyle('top', arrowheadIntoStatementsTop + 'px');
-                
             this.statementList.setStyle('top', statementListTop + 'px');
             this.statementList.setStyle('left', statementListLeft + 'px');
+            
+                    
+            // arrow line from multiDocs to Condition
+            if (this.arrowLineMultidocsToRhombus) this.arrowLineMultidocsToRhombus.remove();
+            
+            var arrlowLineData =
+                'M 65 ' + multiDocsSymbTop + ' C' +      // start curve at top middle of multidocs
+                '65 5,' +                               // first control point
+                (80 + (rhombusWidth / 2)) + ' -12,' +    // second control point
+                (80 + (rhombusWidth / 2)) + ' ' + 20;   // end curve at at top middle of rhombus
+            this.arrowLineMultidocsToRhombus = newWhile.raphael.path( arrlowLineData );
+            
+            if (this.arrowHeadMultidocsToRhombus) this.arrowHeadMultidocsToRhombus.remove();
+            this.arrowHeadMultidocsToRhombus = this.raphael.PEAL.arrowhead(( 80 + (rhombusWidth / 2) ), 20, 150);
+            
+                
+            // arrow line from condition to statementList
+            
+            
+            // arrow line from statementList to multidocs
+            
+            
+            // SVG canvas width
+            this.raphael.setSize( whileWidth, whileHeight );
             
             this.setStyle('height', whileHeight + 'px');
             this.setStyle('width', whileWidth + 'px');
         }
         
         newWhile.conditionContainer.resize = function(reason) {
-            newWhile.resize('newWhile.conditionContainer.resize | ' + reason);
+            newWhile.resize('while.conditionContainer.resize | ' + reason);
         };
                 
         if ( isset( targetNode )) {

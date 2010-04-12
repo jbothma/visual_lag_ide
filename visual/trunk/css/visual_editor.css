@@ -211,7 +211,6 @@ DIV.selected {
     background-color:   white;
     position:           relative;
 }
-
 .ifthenelse.condition-container {
     position:   absolute;
     min-height: 40px;
@@ -355,11 +354,9 @@ DIV.selected {
     width:      190px;
 }
 .while.condition-container {
-    left:       49px;
-    min-height: 44px;
-    min-width:  93px;
     position:   absolute;
-    top:        24px;
+    min-height: 40px;
+    min-width:  40px;
 }
 .while.condition-rhombus {
     position:   absolute;

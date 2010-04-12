@@ -611,7 +611,7 @@
                         }
                         
                         
-                        if ( tab.hasClass('visualeditor') && oldTabId !== 'texteditor-tab') { 
+                        if ( tab.hasClass('visualeditor-tab') && oldTabId !== 'texteditor-tab') { 
                             resizeVisual();
                         }
                     }
