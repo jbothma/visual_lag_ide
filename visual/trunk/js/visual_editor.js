@@ -46,8 +46,8 @@ Raphael.fn.PEAL = {
     arrowhead: function(tipX, tipY, angle) {
         var pathData = 
             "M" + tipX + " " + tipY +           // start point
-            "L" + (tipX+5) + " " + (tipY+10) + // draw first line
-            "L" + (tipX-5) + " " + (tipY+10) + // draw second line
+            "L" + (tipX+4) + " " + (tipY+10) + // draw first line
+            "L" + (tipX-4) + " " + (tipY+10) + // draw second line
             "Z";                                // close path
         var head = this.path(pathData);
         head.attr("fill", "black");
@@ -726,83 +726,137 @@ LAGVEIf = new Object();
         };
         
         newWhile.resize = function() {
-            // Setup
-            var conditionContainerWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
-            var conditionContainerHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
-            
-            var statementListHeight = parseInt(this.statementList.getComputedStyle('height'));
-            var statementListWidth = parseInt(this.statementList.getComputedStyle('width'));
-            
-            // Calculations
-            var rhombusHeight        = conditionContainerHeight * 2;
-            var rhombusWidth         = conditionContainerWidth * 2;
-                        
-            var conditionContainerLeft   = 80 + rhombusWidth/4;
-            var conditionContainerTop    = 20 + rhombusHeight/4;
-            
-            // just below and to the right of the rhombus
-            var statementListTop    = 20 + 5 + rhombusHeight * 0.75;            
-            var statementListLeft   = 80 + 5 + rhombusWidth * 0.75;
-            
-            // this.multiDocsSymbol top is conditionPositioning height / 2 + offset
-            var multiDocsSymbTop = 20 + (rhombusHeight / 2);
-            
-            
-            // rhombusWidth + rhombusLeft + offset
-            var arrowlineRhombusStatementsMultidocsWidth = rhombusWidth + 63;
-            // rhombusHeight/2 + rhombusTop
-            var arrowlineRhombusStatementsMultidocsTop = rhombusHeight/2 + 22;
-            
-            // statementListTop - arrowheadIntoStatements heigh
-            var arrowheadIntoStatementsTop = statementListTop - 15;
-            
-            // this (the 'while' visual element container)
-            // statementListTop + statementList height
-            var whileHeight = statementListTop + statementListHeight + 5;
-            var whileWidth = statementListLeft + statementListWidth + 5;
-            
-            
-            // Output
-            
-            
-            this.raphael.PEAL.scaleRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
-            this.SVGRhombus.toFront();
-            
-            this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
-            this.conditionContainer.setStyle('top', conditionContainerTop + 'px');
-            
-            this.multiDocsSymbol.setStyle('top', multiDocsSymbTop + 'px');
-            
-            
-            this.statementList.setStyle('top', statementListTop + 'px');
-            this.statementList.setStyle('left', statementListLeft + 'px');
-            
-                    
-            // arrow line from multiDocs to Condition
-            if (this.arrowLineMultidocsToRhombus) this.arrowLineMultidocsToRhombus.remove();
-            
-            var arrlowLineData =
-                'M 65 ' + multiDocsSymbTop + ' C' +      // start curve at top middle of multidocs
-                '65 5,' +                               // first control point
-                (80 + (rhombusWidth / 2)) + ' -12,' +    // second control point
-                (80 + (rhombusWidth / 2)) + ' ' + 20;   // end curve at at top middle of rhombus
-            this.arrowLineMultidocsToRhombus = newWhile.raphael.path( arrlowLineData );
-            
-            if (this.arrowHeadMultidocsToRhombus) this.arrowHeadMultidocsToRhombus.remove();
-            this.arrowHeadMultidocsToRhombus = this.raphael.PEAL.arrowhead(( 80 + (rhombusWidth / 2) ), 20, 150);
-            
+            if ( !this.ancestor('.tabview-hidden') ) {
+                // Setup //
                 
-            // arrow line from condition to statementList
-            
-            
-            // arrow line from statementList to multidocs
-            
-            
-            // SVG canvas width
-            this.raphael.setSize( whileWidth, whileHeight );
-            
-            this.setStyle('height', whileHeight + 'px');
-            this.setStyle('width', whileWidth + 'px');
+                var conditionContainerWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
+                var conditionContainerHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
+                
+                var statementListHeight = parseInt(this.statementList.getComputedStyle('height'));
+                var statementListWidth = parseInt(this.statementList.getComputedStyle('width'));
+                
+                // Calculations //
+                
+                var rhombusHeight        = conditionContainerHeight * 2;
+                var rhombusWidth         = conditionContainerWidth * 2;
+                            
+                var conditionContainerLeft   = 80 + rhombusWidth/4;
+                var conditionContainerTop    = 20 + rhombusHeight/4;
+                
+                // just below and to the right of the rhombus
+                var statementListTop    = 20 + 5 + rhombusHeight * 0.75;            
+                var statementListLeft   = 80 + 5 + rhombusWidth * 0.75;
+                
+                var multiDocsSymbTop = 20 + (rhombusHeight / 2);
+                
+                var arrowRhombusToStatementListStartLeft    = (80 + rhombusWidth);
+                var arrowRhombusToStatementListStartTop     = (20 + rhombusHeight/2);
+                var arrowRhombusToStatementListEndLeft      = (statementListLeft + statementListWidth/2);
+                
+                var arrowMultidocsToRhombusEndLeft          = (80 + (rhombusWidth / 2));
+                
+                var arrowStatementListToMultiDocsEndTop = (multiDocsSymbTop + 66);
+                var arrowStatementListToMultiDocsStartTop = Math.max( arrowStatementListToMultiDocsEndTop, (20 + rhombusHeight) ) + 10;
+                
+                // this (the 'while' visual element container)
+                // statementListTop + statementList height
+                var whileHeight = statementListTop + statementListHeight + 5;
+                var whileWidth = statementListLeft + statementListWidth + 5;
+                
+                
+                // Output //
+                
+                this.raphael.PEAL.scaleRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
+                this.SVGRhombus.toFront();
+                
+                this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
+                this.conditionContainer.setStyle('top', conditionContainerTop + 'px');
+                
+                this.multiDocsSymbol.setStyle('top', multiDocsSymbTop + 'px');
+                
+                this.statementList.setStyle('top', statementListTop + 'px');
+                this.statementList.setStyle('left', statementListLeft + 'px');
+                
+                        
+                // arrow from multiDocs to Condition
+                
+                if (this.arrowLineMultidocsToRhombus) this.arrowLineMultidocsToRhombus.remove();
+                if (this.arrowHeadMultidocsToRhombus) this.arrowHeadMultidocsToRhombus.remove();
+                
+                this.arrowLineMultidocsToRhombus = newWhile.raphael.path(
+                    'M 65 ' + multiDocsSymbTop + ' C' +     // start curve at top middle of multidocs
+                    '65 5,' +                               // first control point
+                    arrowMultidocsToRhombusEndLeft + ' -12,' +   // second control point
+                    arrowMultidocsToRhombusEndLeft + ' ' + 20   // end curve at at top middle of rhombus
+                );
+                
+                // get the angle of the arrow in the middle of the arrowhead
+                //   (here arrowhead is assumed to be 10)
+                var pathLengthAtHeadBase = ( this.arrowLineMultidocsToRhombus.getTotalLength() - 5 );
+                // not sure why but needs 90 degree offset
+                var headAngle = this.arrowLineMultidocsToRhombus.getPointAtLength( pathLengthAtHeadBase ).alpha - 90;
+                
+                this.arrowHeadMultidocsToRhombus = this.raphael.PEAL.arrowhead(arrowMultidocsToRhombusEndLeft, 20, headAngle);
+                
+                
+                // arrow from condition to statementList
+                
+                if (this.arrowLineRhombusToStatementList) this.arrowLineRhombusToStatementList.remove();
+                if (this.arrowHeadRhombusToStatementList) this.arrowHeadRhombusToStatementList.remove();
+                
+                var pathData = 
+                    // start curve at right middle corner of rhombus
+                    'M ' + arrowRhombusToStatementListStartLeft + ' ' + 
+                    arrowRhombusToStatementListStartTop + 
+                    // first control point
+                    ' C' + arrowRhombusToStatementListEndLeft + ' ' + 
+                    arrowRhombusToStatementListStartTop + ',' +
+                    // second control point
+                    arrowRhombusToStatementListEndLeft + ' ' + 
+                    arrowRhombusToStatementListStartTop + ',' +
+                    // end curve at at top middle of statementList
+                    arrowRhombusToStatementListEndLeft + ' ' + 
+                    statementListTop
+                this.arrowLineRhombusToStatementList = newWhile.raphael.path( pathData );
+
+                this.arrowHeadRhombusToStatementList = this.raphael.PEAL.arrowhead(
+                    arrowRhombusToStatementListEndLeft, 
+                    statementListTop, 
+                    180
+                );
+                
+                
+                // arrow from statementList to multidocs
+                
+                if (this.arrowLineStatementListToMultiDocs) this.arrowLineStatementListToMultiDocs.remove();
+                if (this.arrowHeadStatementListToMultiDocs) this.arrowHeadStatementListToMultiDocs.remove();
+                
+                this.arrowLineStatementListToMultiDocs = newWhile.raphael.path(
+                    'M' + statementListLeft + ' ' + arrowStatementListToMultiDocsStartTop + ' C' + // start curve at top middle of multidocs
+                    36 + ' ' + arrowStatementListToMultiDocsStartTop + ' ' + // first control point
+                    36 + ' ' + arrowStatementListToMultiDocsStartTop + ' ' +   // second control point
+                    36 + ' ' +  arrowStatementListToMultiDocsEndTop  // end curve at at top middle of rhombus
+                );
+                
+                // get the angle of the arrow in the middle of the arrowhead
+                //   (here arrowhead is assumed to be 10)
+                var pathLengthAtHeadBase = ( this.arrowLineStatementListToMultiDocs.getTotalLength() - 5 );
+                // not sure why but needs 90 degree offset
+                var headAngle = this.arrowLineStatementListToMultiDocs.getPointAtLength( pathLengthAtHeadBase ).alpha + 90;
+                
+                this.arrowHeadStatementListToMultiDocs = this.raphael.PEAL.arrowhead(
+                    36, 
+                    arrowStatementListToMultiDocsEndTop, 
+                    headAngle
+                );
+                
+                
+                // SVG canvas width
+                this.raphael.setSize( whileWidth, whileHeight );
+                
+                this.setStyle('height', whileHeight + 'px');
+                this.setStyle('width', whileWidth + 'px');
+            }
         }
         
         newWhile.conditionContainer.resize = function(reason) {
