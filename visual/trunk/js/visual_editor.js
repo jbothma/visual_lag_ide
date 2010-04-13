@@ -439,10 +439,10 @@ LAGVEIf = new Object();
                 var elseLeft = rhombusWidth + 80;
                 
                 var thenTop = rhombusHeight / 2 - 10;
-                var elseTop = thenTop + thenHeight + 10;
+                var elseTop = thenTop + thenHeight + 20 + 10;
                 
                 var ifThenElseWidth  = Math.max( (thenLeft + thenWidth), (elseLeft + elseWidth) ) + 10;
-                var ifThenElseHeight = Math.max( (elseTop + elseHeight), (rhombusHeight) ) + 10;
+                var ifThenElseHeight = Math.max( (elseTop + elseHeight + 20), (rhombusHeight) ) + 10;
                 
                 
                 // Output //
@@ -760,7 +760,7 @@ LAGVEIf = new Object();
                 
                 // this (the 'while' visual element container)
                 // statementListTop + statementList height
-                var whileHeight = statementListTop + statementListHeight + 5;
+                var whileHeight = statementListTop + statementListHeight + 20 + 5;
                 var whileWidth = statementListLeft + statementListWidth + 5;
                 
                 
@@ -1126,7 +1126,7 @@ LAGVE.Condition = new Object();
             
             // Output
             this.setStyle('width', conditionListWidth + 10 + 'px');
-            this.setStyle('height', conditionListHeight + 40 + 'px');
+            this.setStyle('height', conditionListHeight + 20 + 40 + 'px');
         }
         
         enough.resize = function( reason){
@@ -1765,7 +1765,7 @@ LAGVE.oneIndentation = '  ';
                         
             // Compute
             implementationWidth     = 5 + 180 + statementListWidth + 5;
-            implementationHeight    = 5 + statementListHeight + 5;
+            implementationHeight    = 5 + statementListHeight + 20 + 5;
             
             // Output
             

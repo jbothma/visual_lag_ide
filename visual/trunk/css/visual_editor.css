@@ -284,7 +284,6 @@ DIV.selected {
     min-height:             55px;
     min-width:              100px;
     list-style-type:        none;
-    padding:                 0px;
     background-color:       white;
 }
 .enough.primary.enough {
@@ -295,6 +294,10 @@ DIV.selected {
 }
 
 
+.condition-list {
+    padding-top:    10px;
+    padding-bottom: 10px;
+}
 
 
 /* STATEMENT */
@@ -305,6 +308,8 @@ DIV.selected {
     background-color:   white;
     float:              left;
     clear:              both;
+    padding-top:    10px;
+    padding-bottom: 10px;
 }
 .statement-list-child-container {
     min-height:         20px;
