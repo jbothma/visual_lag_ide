@@ -1,64 +1,128 @@
-<h1>Visual LAG Editor Help</h1>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 
-Quick tips:
-<ul>
-    <li>Right-click an item, select <em>Delete</em> then confirm to delete.</li>
-    <li>Drag Attributes onto Actions to insert.</li>
-    <li>Drag Actions between Statements to re-order.</li>
-</ul>
-<ul>
-    <li name="delete">
-        Delete Tool
-        <ul>
-            <li>Click on 'Delete Tool', then on a visual element in the editor to delete it.</li>
-        </ul>
-    </li>
-    <li name="attribute">
-        LAG Attribute/Value
-        <ul>
-            <li>The <em>Attribute</em> menu lets you choose each layer of a LAG attribute to insert.</li>
-            <li>Text input fields in the menu allow you to insert custom attribute names.</li>
-            <li>Attributes can be dragged around the editor window once inserted.</li>
-        </ul>
-    </li>
-    <li name="connector">
-        Connector
-        <ul>
-            <li>Click the <em>Connector</em> menu item to insert a new connector.</li>
-            <li>The black squares at each end of the connector are the handles</li>
-            <li>Connectors can be moved around the screen by dragging their handles around.</li>
-            <li>Drop connector handles on Connectable Box Connection Points to connect the Connector to the Connectable Box</li>
-        </ul>
-    </li>
-    <li name="connectable">
-        Connectable Box
-        <ul>
-            <li>Click the <em>Connectable</em> menu item to insert a new Connectable Box.</li>
-            <li>The green squares above and below the box are <em>Connection Points</em>.</li>
-            <li>See <a href="#connector">Connector</a> on how to connect Connectable Boxes.</li>
-        </ul>
-    </li>
-    <li name="action">
-        Action
-        <ul>
-            <li>Click the <em>Action</em> menu item to insert a new LAG Action.</li>
-            <li>Attributes and Values can be dropped as operands to the left and right of the action operator.</li>
-            <li>Actions can be connected like Connectables.</li>
-        </ul>
-    </li>
-</ul>
+<html>
+<head>
+    <style type="text/css">
+        .collapsed {
+            display:    none;
+        }
+        .yui-accordion-item-bd {
+            padding:        5px;
+            padding-left:   10px;
+        }
+        a {
+            text-decoration:    none;
+        }
+        * {
+            font-family:    sans-serif;
+        }
+    </style>
+	<title>Help and Documentation</title>
+</head>
+<body>
+    <a href="javascript:void(0)" id="expandAll">Expand All</a>
+    <a href="javascript:void(0)" id="collapseAll">Collapse All</a>
+    <h1>Help and Documentation</h1>
+    <div id="myaccordion" class="yui-accordion">
+        <div class="yui-module yui-accordion-item yui-accordion-item-active first-of-type">
+            <div class="yui-hd yui-accordion-item-hd">
+                <a href="javascript:void(0)" class="yui-accordion-item-trigger">Visual Elements</a>
+            </div>
+            <div class="yui-bd yui-accordion-item-bd">
+                <div id="visual-elements-accordion" class="yui-accordion">
+                    <div class="yui-module yui-accordion-item yui-accordion-item-active first-of-type">
+                        <div class="yui-hd yui-accordion-item-hd">
+                            <a href="javascript:void(0)" class="yui-accordion-item-trigger">Attribute</a>
+                        </div>
+                        <div class="yui-bd yui-accordion-item-bd">
+                            <p>Documentation of the Attribute visual element</p>
+                        </div>
+                    </div>
 
-<div id="licences" style="">
-    <br/>
-    PEAL is licensed by <a href="http://ww.ukarumpa.co.uk">Jon Bevan</a> 
-    under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>.<br/>
+            </div>
+        </div>
 
-    The icons are licensed by <a href="http://www.famfamfam.com/lab/icons/silk/">Mark James</a> 
-    under a <a href="http://creativecommons.org/licenses/by/2.5/">Creative Commons Attribution 2.5 License</a>.<br/>
+        <div class="yui-module yui-accordion-item">
+            <div class="yui-hd yui-accordion-item-hd">
+                <a href="javascript:void(0)" class="yui-accordion-item-trigger">Quick Tips</a>
+            </div>
+            <div class="yui-bd yui-accordion-item-bd">
+                <p>x y z</p>
+            </div>
+        </div>
 
-    CodeMirror is licensed by <a href="http://marijn.haverbeke.nl/codemirror/">Marijn Haverbeke</a> 
-    under a <a href="http://marijn.haverbeke.nl/codemirror/LICENSE">BSD-style license</a>.<br/>
+        <div class="yui-module yui-accordion-item">
+            <div class="yui-hd yui-accordion-item-hd">
+                <a href="javascript:void(0)" class="yui-accordion-item-trigger">item 3</a>
+            </div>
+            <div class="yui-bd yui-accordion-item-bd">
+                <p>item 3 content here...</p>
+            </div>
+        </div>
+        
+        <div class="yui-module yui-accordion-item">
+            <div class="yui-hd yui-accordion-item-hd">
+                <a href="javascript:void(0)" class="yui-accordion-item-trigger">License Information</a>
+            </div>
+            <div class="yui-bd yui-accordion-item-bd">
+                <p>
+                    PEAL is licensed by <a href="http://ww.ukarumpa.co.uk">
+                    Jon Bevan</a> 
+                    under a <a href="http://creativecommons.org/licenses/by/2.5/">
+                    Creative Commons Attribution 2.5 License</a>.
+                </p>
 
-    The Yahoo User Interface Library is licensed by <a href="http://developer.yahoo.com/yui/">Yahoo! Inc.</a> 
-    and its components are provided free of charge under a <a href="http://developer.yahoo.com/yui/license.html">liberal BSD license</a>.
-</div>
+                <p>
+                    The icons are licensed by <a href="http://www.famfamfam.com/lab/icons/silk/">
+                    Mark James</a> 
+                    under a <a href="http://creativecommons.org/licenses/by/2.5/">
+                    Creative Commons Attribution 2.5 License</a>.
+                </p>
+
+                <p>
+                    CodeMirror is licensed by <a href="http://marijn.haverbeke.nl/codemirror/">
+                    Marijn Haverbeke</a> 
+                    under a <a href="http://marijn.haverbeke.nl/codemirror/LICENSE">
+                    BSD-style license</a>.
+                </p>
+
+                <p>
+                    The Yahoo User Interface Library is licensed by 
+                    <a href="http://developer.yahoo.com/yui/">Yahoo! Inc.</a> 
+                    and its components are provided free of charge under a 
+                    <a href="http://developer.yahoo.com/yui/license.html">liberal BSD license</a>.
+                </p>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
+    <script type="text/javascript">
+        YUI({    
+            filter: 'raw',
+        }).use('node','event', function(Y) {
+            Y.one('#myaccordion').collapseAll = function() {
+                Y.all('.yui-accordion-item-bd').addClass('collapsed');
+            };
+            
+            Y.one('#myaccordion').expandAll = function() {
+                Y.all('.yui-accordion-item-bd').removeClass('collapsed');
+            };
+            
+            Y.one('#myaccordion').expandSelect = function( selector ) {
+                this.collapseAll();
+                this.get('childNodes').filter( selector ).removeClass('collapsed');
+            };
+            
+            function titleClick(e) {
+                e.currentTarget.next('.yui-accordion-item-bd').toggleClass('collapsed');
+            }
+            
+            Y.all('.yui-accordion-item-hd').on('click', titleClick);
+            
+            Y.one('#expandAll').on('click', Y.one('#myaccordion').expandAll);
+            Y.one('#collapseAll').on('click', Y.one('#myaccordion').collapseAll);
+        });
+    </script>
+</body>
+</html>
