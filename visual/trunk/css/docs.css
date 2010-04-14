@@ -260,5 +260,7 @@ div.logout {
     border-color:       green;
 }
 #strategy-description-editor {
-    width:              100%
+    left:       0.5%;
+    position:   relative;
+    width:      98%;
 }

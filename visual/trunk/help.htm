@@ -4,15 +4,14 @@
 <html>
 <head>
     <style type="text/css">
-        .collapsed {
+        UL.yui-accordion {
+            padding-left:   15px;
+        }
+        .collapsed>.accordion-item-bd {
             display:    none;
         }
         .accordion-item-bd {
-            padding:        5px;
-            padding-left:   10px;
-        }
-        a {
-            text-decoration:    none;
+            margin-left:    15px;
         }
         * {
             font-family:    sans-serif;
@@ -21,25 +20,24 @@
 	<title>Help and Documentation</title>
 </head>
 <body>
-    <a href="javascript:void(0)" id="expandAll">Expand All</a>
+    <a href="javascript:void(0)" id="expandAll">Expand All</a> | 
     <a href="javascript:void(0)" id="collapseAll">Collapse All</a>
-    <a href="javascript:void(0)" id="expandAttribute">Expand Attribute</a>
     
     <h1>Help and Documentation</h1>
     
-    <div id="help-accordion" class="yui-accordion">
-        <div class=" accordion-item">
-            <div class=" accordion-item-hd">
+    <ul id="help-accordion" class="yui-accordion">
+        <li id="visual-elements-doc-secion" class="accordion-item">
+            <div class="accordion-item-hd">
                 <a href="javascript:void(0)" class="accordion-item-trigger">
                     Visual Elements
                 </a>
             </div>
-            <div class=" accordion-item-bd">
-                <div id="visual-elements-accordion" class="yui-accordion">
-                    <div class=" accordion-item">
-                        <div class="attribute-visual-element-documentation accordion-item-hd">
+            <div class="accordion-item-bd">
+                <ul id="visual-elements-accordion" class="yui-accordion">
+                    <li id="initialization-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
                             <a href="javascript:void(0)" class="accordion-item-trigger">
-                                Attribute
+                                Initialization
                             </a>
                         </div>
                         <div class=" accordion-item-bd">
@@ -47,77 +45,171 @@
                                 Documentation of the Attribute visual element
                             </p>
                         </div>
-                    </div>
-                </div>
+                    </li>
+                    <li id="implementation-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Implementation
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
+                        </div>
+                    </li>
+                    <li id="attribute-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Attribute
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                                <br>
+                                <a class="accordion-item-anchor" href="#boolean-doc-secion">see Booleans</a>
+                            </p>
+                        </div>
+                    </li>
+                    <li id="assignment-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Assignment
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
+                        </div>
+                    </li>
+                    <li id="comparison-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Comparison
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
+                        </div>
+                    </li>
+                    <li id="boolean-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                True and False (Booleans)
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
+                        </div>
+                    </li>
+                    <li id="enough-satisfied-conditions-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Enough-Satisfied-Conditions
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
+                        </div>
+                    </li>
+                    <li id="condition-action-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Condition-Action
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
+                        </div>
+                    </li>
+                    <li id="each-concept-condition-action-doc-secion" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Each-Concept Condition-Action
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
+                        </div>
+                    </li>
+                </ul>
             </div>
-        </div>
+        </li>
 
-        <div class=" accordion-item">
-            <div class=" accordion-item-hd">
+        <li id="quick-tips-doc-secion" class=" accordion-item">
+            <div id="" class="accordion-item-hd">
                 <a href="javascript:void(0)" class="accordion-item-trigger">
-                    Quick Tips
+                    Quick tips
                 </a>
             </div>
             <div class=" accordion-item-bd">
                 <p>
-                    x y z
+                    inserting, deleting, saving
                 </p>
             </div>
-        </div>
+        </li>
 
-        <div class=" accordion-item">
-            <div class=" accordion-item-hd">
+        <li id="editor-overview-doc-secion" class="accordion-item">
+            <div id="" class="accordion-item-hd">
                 <a href="javascript:void(0)" class="accordion-item-trigger">
-                    item 3
+                    Editor overview
                 </a>
             </div>
             <div class=" accordion-item-bd">
                 <p>
-                    item 3 content here...
+                    overview, screenshots
                 </p>
             </div>
-        </div>
+        </li>
         
-        <div class=" accordion-item">
-            <div class=" accordion-item-hd">
+        <li id="licensing-information-doc-secion" class=" accordion-item">
+            <div class="accordion-item-hd">
                 <a href="javascript:void(0)" class="accordion-item-trigger">
-                    License Information
+                    License information
                 </a>
             </div>
-            <div class=" accordion-item-bd">
+            <div class="accordion-item-bd">
                 <p>
-                    PEAL 2 is licensed by <a href="http://ww.ukarumpa.co.uk">
+                    PEAL 2 is licensed by <a href="http://www.jbothma.co.uk/">
                     Jan Bothma</a> 
                     under a <a href="http://creativecommons.org/licenses/by/2.5/">
                     Creative Commons Attribution 2.5 License</a>.
-                </p>
-                <p>
-                    PEAL is licensed by <a href="http://ww.ukarumpa.co.uk">
+                    <br>
+                    PEAL is licensed by <a href="http://www.ukarumpa.co.uk">
                     Jon Bevan</a> 
                     under a <a href="http://creativecommons.org/licenses/by/2.5/">
                     Creative Commons Attribution 2.5 License</a>.
-                </p>
-                <p>
+                    <br>
                     The icons are licensed by <a href="http://www.famfamfam.com/lab/icons/silk/">
                     Mark James</a> 
                     under a <a href="http://creativecommons.org/licenses/by/2.5/">
                     Creative Commons Attribution 2.5 License</a>.
-                </p>
-                <p>
+                    <br>
                     CodeMirror is licensed by <a href="http://marijn.haverbeke.nl/codemirror/">
                     Marijn Haverbeke</a> 
                     under a <a href="http://marijn.haverbeke.nl/codemirror/LICENSE">
                     BSD-style license</a>.
-                </p>
-                <p>
+                    <br>
                     The Yahoo User Interface Library is licensed by 
                     <a href="http://developer.yahoo.com/yui/">Yahoo! Inc.</a> 
                     and its components are provided free of charge under a 
                     <a href="http://developer.yahoo.com/yui/license.html">liberal BSD license</a>.
                 </p>
             </div>
-        </div>
-    </div>
+        </li>
+    </ul>
     <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
     <script type="text/javascript">
         var helpAccordion = new Object();
@@ -126,37 +218,49 @@
             filter: 'raw',
         }).use('node','event', function(Y) {
             helpAccordion.collapseAll = function() {
-                var helpItemsContents = Y.all('#help-accordion .accordion-item-bd');
+                var helpItemsContents = Y.all('#help-accordion .accordion-item');
                 helpItemsContents.addClass('collapsed');
             };
             
             helpAccordion.expandAll = function() {
-                var helpItemsContents = Y.all('#help-accordion .accordion-item-bd');
+                var helpItemsContents = Y.all('#help-accordion .accordion-item');
                 helpItemsContents.removeClass('collapsed');
             };
             
-            helpAccordion.expandSelected = function( selector ) {
+            helpAccordion.expandOnly = function( selector ) {
                 this.collapseAll();
-                var selectedItem = Y.one('#help-accordion ' + selector).next('.accordion-item-bd');
+                var selectedItem = Y.one( selector );
                 
-                selectedItem.removeClass('collapsed');
+                if ( selectedItem ) {
+                    selectedItem.removeClass('collapsed');
                 
-                while (selectedItem && selectedItem.ancestor('.collapsed', true)) {
-                    selectedItem.ancestor('.collapsed', true).removeClass('collapsed');
+                    while ( selectedItem.ancestor('.collapsed', true) ) {
+                        var ancestor = selectedItem.ancestor('.collapsed', true);
+                        ancestor.removeClass('collapsed');
+                    }
                 }
             };
             
             function titleClick(e) {
-                e.currentTarget.next('.accordion-item-bd').toggleClass('collapsed');
+                e.currentTarget.get('parentNode').toggleClass('collapsed');
+                e.halt;
+                return false;
             }
             
             Y.all('#help-accordion .accordion-item-hd').on('click', titleClick);
             
             Y.one('#expandAll').on('click', helpAccordion.expandAll);
             Y.one('#collapseAll').on('click', helpAccordion.collapseAll);
-            Y.one('#expandAttribute').on('click', function() {
-                helpAccordion.expandSelected('.attribute-visual-element-documentation.accordion-item-hd');
+            
+            Y.all('A.accordion-item-anchor').each(function( node ) {
+                node.on('click', function(e) {
+                    helpAccordion.expandOnly( node.get('hash') );
+                });
             });
+            
+            if ( window.location.hash ) {
+                helpAccordion.expandOnly( window.location.hash );
+            }
         });
     </script>
 </body>
