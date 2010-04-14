@@ -383,10 +383,10 @@
                                                         <a class="yui-menuitem-content" href="#" onclick="LAGVE.Assignment.newAssignment(LAGVEContext.context)">Assignment</a>
                                                     </li>
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVEContext.context)">IfThenElse</a>
+                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVEContext.context)">Condition-Action</a>
                                                     </li>
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Elements.newWhile(LAGVEContext.context)">While()/For concepts where()</a>
+                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Elements.newWhile(LAGVEContext.context)">Each-Concept Condition-Action</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -405,7 +405,7 @@
                                                         <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newComparison(LAGVEContext.context)">Comparison</a>
                                                     </li>
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newEnough({targetNode:LAGVEContext.context})">Enough</a>
+                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newEnough({targetNode:LAGVEContext.context})">Enough-Satisfied-Conditions</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -449,10 +449,10 @@
         
         <div id="VE-help">
             <div id="VE-help-titlebar">
-                Visual LAG Editor Help (<a href="help.htm" onclick="LAGVE.hideHelp()">Page link</a>)
+                Help and Documentation
             </div>
             <div id="VE-help-closeBtn" onclick="LAGVE.hideHelp()">X</div>
-            <div id="VE-help-container"></div>
+            <div id="VE-help-container">
         </div>
         
         <div id="updating-visual-message-centering">
@@ -496,7 +496,7 @@
 
                     editor = new MirrorFrame(CodeMirror.replace(textarea), {
                         height:         "350px",
-                        width:          "85%",
+                        width:          "84%",
                         content:        textarea.value,
                         parserfile:     ["tokenizelag.js", "parselag.js"],
                         stylesheet:     "css/lagcolors.css",

@@ -7,7 +7,7 @@
         .collapsed {
             display:    none;
         }
-        .yui-accordion-item-bd {
+        .accordion-item-bd {
             padding:        5px;
             padding-left:   10px;
         }
@@ -23,70 +23,92 @@
 <body>
     <a href="javascript:void(0)" id="expandAll">Expand All</a>
     <a href="javascript:void(0)" id="collapseAll">Collapse All</a>
+    <a href="javascript:void(0)" id="expandAttribute">Expand Attribute</a>
+    
     <h1>Help and Documentation</h1>
-    <div id="myaccordion" class="yui-accordion">
-        <div class="yui-module yui-accordion-item yui-accordion-item-active first-of-type">
-            <div class="yui-hd yui-accordion-item-hd">
-                <a href="javascript:void(0)" class="yui-accordion-item-trigger">Visual Elements</a>
+    
+    <div id="help-accordion" class="yui-accordion">
+        <div class=" accordion-item">
+            <div class=" accordion-item-hd">
+                <a href="javascript:void(0)" class="accordion-item-trigger">
+                    Visual Elements
+                </a>
             </div>
-            <div class="yui-bd yui-accordion-item-bd">
+            <div class=" accordion-item-bd">
                 <div id="visual-elements-accordion" class="yui-accordion">
-                    <div class="yui-module yui-accordion-item yui-accordion-item-active first-of-type">
-                        <div class="yui-hd yui-accordion-item-hd">
-                            <a href="javascript:void(0)" class="yui-accordion-item-trigger">Attribute</a>
+                    <div class=" accordion-item">
+                        <div class="attribute-visual-element-documentation accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Attribute
+                            </a>
                         </div>
-                        <div class="yui-bd yui-accordion-item-bd">
-                            <p>Documentation of the Attribute visual element</p>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Documentation of the Attribute visual element
+                            </p>
                         </div>
                     </div>
-
+                </div>
             </div>
         </div>
 
-        <div class="yui-module yui-accordion-item">
-            <div class="yui-hd yui-accordion-item-hd">
-                <a href="javascript:void(0)" class="yui-accordion-item-trigger">Quick Tips</a>
+        <div class=" accordion-item">
+            <div class=" accordion-item-hd">
+                <a href="javascript:void(0)" class="accordion-item-trigger">
+                    Quick Tips
+                </a>
             </div>
-            <div class="yui-bd yui-accordion-item-bd">
-                <p>x y z</p>
+            <div class=" accordion-item-bd">
+                <p>
+                    x y z
+                </p>
             </div>
         </div>
 
-        <div class="yui-module yui-accordion-item">
-            <div class="yui-hd yui-accordion-item-hd">
-                <a href="javascript:void(0)" class="yui-accordion-item-trigger">item 3</a>
+        <div class=" accordion-item">
+            <div class=" accordion-item-hd">
+                <a href="javascript:void(0)" class="accordion-item-trigger">
+                    item 3
+                </a>
             </div>
-            <div class="yui-bd yui-accordion-item-bd">
-                <p>item 3 content here...</p>
+            <div class=" accordion-item-bd">
+                <p>
+                    item 3 content here...
+                </p>
             </div>
         </div>
         
-        <div class="yui-module yui-accordion-item">
-            <div class="yui-hd yui-accordion-item-hd">
-                <a href="javascript:void(0)" class="yui-accordion-item-trigger">License Information</a>
+        <div class=" accordion-item">
+            <div class=" accordion-item-hd">
+                <a href="javascript:void(0)" class="accordion-item-trigger">
+                    License Information
+                </a>
             </div>
-            <div class="yui-bd yui-accordion-item-bd">
+            <div class=" accordion-item-bd">
+                <p>
+                    PEAL 2 is licensed by <a href="http://ww.ukarumpa.co.uk">
+                    Jan Bothma</a> 
+                    under a <a href="http://creativecommons.org/licenses/by/2.5/">
+                    Creative Commons Attribution 2.5 License</a>.
+                </p>
                 <p>
                     PEAL is licensed by <a href="http://ww.ukarumpa.co.uk">
                     Jon Bevan</a> 
                     under a <a href="http://creativecommons.org/licenses/by/2.5/">
                     Creative Commons Attribution 2.5 License</a>.
                 </p>
-
                 <p>
                     The icons are licensed by <a href="http://www.famfamfam.com/lab/icons/silk/">
                     Mark James</a> 
                     under a <a href="http://creativecommons.org/licenses/by/2.5/">
                     Creative Commons Attribution 2.5 License</a>.
                 </p>
-
                 <p>
                     CodeMirror is licensed by <a href="http://marijn.haverbeke.nl/codemirror/">
                     Marijn Haverbeke</a> 
                     under a <a href="http://marijn.haverbeke.nl/codemirror/LICENSE">
                     BSD-style license</a>.
                 </p>
-
                 <p>
                     The Yahoo User Interface Library is licensed by 
                     <a href="http://developer.yahoo.com/yui/">Yahoo! Inc.</a> 
@@ -98,30 +120,43 @@
     </div>
     <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
     <script type="text/javascript">
+        var helpAccordion = new Object();
+        
         YUI({    
             filter: 'raw',
         }).use('node','event', function(Y) {
-            Y.one('#myaccordion').collapseAll = function() {
-                Y.all('.yui-accordion-item-bd').addClass('collapsed');
+            helpAccordion.collapseAll = function() {
+                var helpItemsContents = Y.all('#help-accordion .accordion-item-bd');
+                helpItemsContents.addClass('collapsed');
             };
             
-            Y.one('#myaccordion').expandAll = function() {
-                Y.all('.yui-accordion-item-bd').removeClass('collapsed');
+            helpAccordion.expandAll = function() {
+                var helpItemsContents = Y.all('#help-accordion .accordion-item-bd');
+                helpItemsContents.removeClass('collapsed');
             };
             
-            Y.one('#myaccordion').expandSelect = function( selector ) {
+            helpAccordion.expandSelected = function( selector ) {
                 this.collapseAll();
-                this.get('childNodes').filter( selector ).removeClass('collapsed');
+                var selectedItem = Y.one('#help-accordion ' + selector).next('.accordion-item-bd');
+                
+                selectedItem.removeClass('collapsed');
+                
+                while (selectedItem && selectedItem.ancestor('.collapsed', true)) {
+                    selectedItem.ancestor('.collapsed', true).removeClass('collapsed');
+                }
             };
             
             function titleClick(e) {
-                e.currentTarget.next('.yui-accordion-item-bd').toggleClass('collapsed');
+                e.currentTarget.next('.accordion-item-bd').toggleClass('collapsed');
             }
             
-            Y.all('.yui-accordion-item-hd').on('click', titleClick);
+            Y.all('#help-accordion .accordion-item-hd').on('click', titleClick);
             
-            Y.one('#expandAll').on('click', Y.one('#myaccordion').expandAll);
-            Y.one('#collapseAll').on('click', Y.one('#myaccordion').collapseAll);
+            Y.one('#expandAll').on('click', helpAccordion.expandAll);
+            Y.one('#collapseAll').on('click', helpAccordion.collapseAll);
+            Y.one('#expandAttribute').on('click', function() {
+                helpAccordion.expandSelected('.attribute-visual-element-documentation.accordion-item-hd');
+            });
         });
     </script>
 </body>

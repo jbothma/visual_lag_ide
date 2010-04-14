@@ -130,7 +130,7 @@ YUI({
         
         newAttribute.append(newAttribute.valueContainer);
         
-        newAttribute._LAGVEName = 'Attribute/Value';
+        newAttribute._LAGVEName = 'Attribute';
         newAttribute.getName = function() { return this._LAGVEName }        
         newAttribute.setName = function(newName) { this._LAGVEName = newName }
         
@@ -240,7 +240,7 @@ YUI({
         //////    ATTRIBUTE CONTAINER    //////
         assignment.attributeContainer               = Y.Node.create('\
             <div    class="assignment-attribute-container assignment-child-container selectable" \
-                    \title="Drop an attribute here."></div>\
+                    \title="Insert an attribute here."></div>\
         ');
         assignment.attributeContainer._LAGVEName    = 'Assignment attribute';
         assignment.attributeContainer.select        = LAGVE._genericSelect;
@@ -269,7 +269,7 @@ YUI({
         //////    VALUE CONTAINER    //////
         assignment.valueContainer               = Y.Node.create('\
             <div class="assignment-attribute-container assignment-child-container selectable" \
-            title="Drop an attribute or value here."></div>\
+            title="Insert an attribute or value here."></div>\
         ');
         assignment.valueContainer._LAGVEName    = 'Assignment value';
         assignment.valueContainer.select        = LAGVE._genericSelect;
@@ -410,7 +410,7 @@ LAGVEIf = new Object();
     LAGVEIf.newIf = function(targetNode) {
         ////////     IF-THEN-ELSE     /////////
         var ifThenElse          = Y.Node.create('<div class="ifthenelse statement-list-child"></div>');
-        ifThenElse._LAGVEName   = 'If-Then-Else block';
+        ifThenElse._LAGVEName   = 'Condition-Action';
         ifThenElse.getName      = function() { return this._LAGVEName; }
         
         ifThenElse.resize = function(reason) {        
@@ -692,7 +692,7 @@ LAGVEIf = new Object();
             this.statementList.unlockDrops();
         }
                 
-        newWhile._LAGVEName   = 'For Each Concept';
+        newWhile._LAGVEName   = 'Each-Concept Condition-Action';
         newWhile.getName      = function() { return this._LAGVEName; }
         
         newWhile.LAGVEInsert = function(child) {
@@ -857,6 +857,9 @@ LAGVEIf = new Object();
                 this.setStyle('height', whileHeight + 'px');
                 this.setStyle('width', whileWidth + 'px');
             }
+            
+            // Bubble
+            this.get('parentNode').resize('while.resize');
         }
         
         newWhile.conditionContainer.resize = function(reason) {
@@ -966,7 +969,7 @@ LAGVE.Condition = new Object();
         //////    ATTRIBUTE CONTAINER    //////
         comparison.attributeContainer = Y.Node.create('\
             <div class="comparison-attribute-container comparison-child-container selectable" \
-            title="Drop an attribute here."></div>\
+            title="Insert an attribute here."></div>\
         ');
         var attributeContainerDT = new Y.DD.Drop({
             node:    comparison.attributeContainer,
@@ -1028,7 +1031,7 @@ LAGVE.Condition = new Object();
         //////    VALUE CONTAINER    //////
         comparison.valueContainer            = Y.Node.create('\
             <div class="comparison-attribute-container comparison-child-container selectable" \
-            title="Drop an attribute here."></div>\
+            title="Insert an attribute or value here."></div>\
         ');
         var valueContainerDT         = new Y.DD.Drop({
             node:    comparison.valueContainer,
@@ -1101,7 +1104,7 @@ LAGVE.Condition = new Object();
             <div class="enough primary selectable">ENOUGH&nbsp;</div>\
         ');
         
-        enough._LAGVEName = 'Enough';
+        enough._LAGVEName = 'Enough-Satisfied-Conditions';
  
         enough.getName       = function() {
             return this._LAGVEName;
@@ -1166,9 +1169,11 @@ LAGVE.Condition = new Object();
             return this.get('value');
         }
         
-        enough.conditionList = Y.Node.create('\
-            <div class="enough condition-list selectable"></div>\
-        ')
+        enough.conditionList = Y.Node.create(
+            '<div class="enough condition-list selectable" \
+                  title="Condition List: Insert one or more condition here." \
+            ></div>'
+        );
         enough.conditionList.plug(
             Y.Plugin.Drop,
             {
@@ -1285,7 +1290,11 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     LAGVEStmt.newStatementList = function(targetNode) {
     
         //////    STATEMENT LIST   ///////
-        var statementList = Y.Node.create( '<div class="statement-list selectable statement-container"></div>' );
+        var statementList = Y.Node.create( 
+            '<div class="statement-list selectable statement-container" \
+                title="Statement List: Insert one or more statement here." \
+            ></div>' 
+        );
         
         statementList.resize = function(reason) {    
             // "bubble up"
@@ -1575,7 +1584,7 @@ LAGVEContext.items = {
         
         
     LAGVEContext.deleteItem = function() {
-        if (confirm('Are you sure you want to delete this ' + LAGVEContext.context.getName() + '?')) {
+        if (confirm('Are you sure you want to delete this ' + LAGVEContext.context.getName() + ' element?')) {
             var parent = LAGVEContext.context.get('parentNode');
             
             LAGVEContext.context.remove();
