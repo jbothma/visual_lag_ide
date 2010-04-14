@@ -452,7 +452,7 @@
                 Help and Documentation
             </div>
             <div id="VE-help-closeBtn" onclick="LAGVE.hideHelp()">X</div>
-            <div id="VE-help-container">
+            <div id="VE-help-container"></div>
         </div>
         
         <div id="updating-visual-message-centering">
