@@ -215,7 +215,8 @@
         var helpAccordion = new Object();
         
         YUI({    
-            filter: 'raw',
+            filter: 'min',
+            combine: 'true',
         }).use('node','event', function(Y) {
             helpAccordion.collapseAll = function() {
                 var helpItemsContents = Y.all('#help-accordion .accordion-item');

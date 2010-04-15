@@ -217,7 +217,7 @@ YUI({
     
     LAGVE.Assignment.newAssignment = function(targetNode) {
         //////    ASSIGNMENT    //////
-        var assignment      = Y.Node.create( '<div class="assignment statement-list-child"></div>' );
+        var assignment      = Y.Node.create( '<div class="assignment statement-list-child assignment-doc-section"></div>' );
         assignment.resize   = function(reason) {
             //Y.log('assignment.resize triggered by ' + reason);
             // Setup
@@ -1593,6 +1593,16 @@ LAGVEContext.items = {
         }
     }
     
+    LAGVEContext.help = function() {
+        var className = LAGVEContext.context.get('firstChild').get('className');
+        var matches = className.match(/[^ ]*doc-section\b/);
+        if ( matches && matches[0] ) {
+            window.open( 'help.htm#' + matches[0] );
+        } else {
+            window.open( 'help.htm#no-context-doc' );
+        }
+    }
+    
     LAGVEContext.show = function(contextNode, x, y) {
         LAGVEContext.context = contextNode;
         
@@ -2231,12 +2241,6 @@ LAGVE.oneIndentation = '  ';
         LAGVE.ToVisual.actions[action].visual = true;
     }
     
-    // Subscribe to event "io:complete", and pass an array
-    // as an argument to the event handler "complete", since
-    // "complete" is global.   At this point in the transaction
-    // lifecycle, success or failure is not yet known.
-    Y.on('io:complete', LAGVE.getHelpComplete);
-    
     Y.on('contentready', LAGVE._init, 'body');
     
     /*Y.on('click', function(e){
@@ -2274,8 +2278,4 @@ LAGVE.oneIndentation = '  ';
     });
     
 });
-
-LAGVE.showHelp = function() {document.getElementById('VE-help').style.visibility = 'visible';}
-
-LAGVE.hideHelp = function() {document.getElementById('VE-help').style.visibility = 'hidden';}
 

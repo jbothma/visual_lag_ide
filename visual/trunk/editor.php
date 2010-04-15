@@ -248,7 +248,7 @@
             <div class="yui-menu-content">
                 <ul> 
                     <li class="yui-menuitem">
-                        <a id="context-menu-delete" class="yui-menuitem-content hidden-by-default-menu" href="#" onclick="LAGVEContext.deleteItem()">Delete</a>
+                        <a id="context-menu-delete" class="yui-menuitem-content hidden-by-default-menu" href="javascript:void(0)" onclick="LAGVEContext.deleteItem()">Delete</a>
                     </li>
                     <li>
                         <a id="context-menu-insert" class="yui-menu-label hidden-by-default-menu" href="#Insert-Menu" title="Insert a LAG Visual Element">                                    
@@ -275,10 +275,10 @@
                                                                             <div class="yui-menu-content">
                                                                                 <ul> 
                                                                                     <li class="yui-menuitem">
-                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('GM.Concept.label', LAGVEContext.context)">label</a>
+                                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('GM.Concept.label', LAGVEContext.context)">label</a>
                                                                                     </li>
                                                                                     <li class="yui-menuitem"><!-- Bounding box -->
-                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('GM.Concept.weight', LAGVEContext.context)">weight</a>
+                                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('GM.Concept.weight', LAGVEContext.context)">weight</a>
                                                                                     </li>
                                                                                 </ul>
                                                                             </div>
@@ -305,16 +305,16 @@
                                                                                             <div class="yui-menu-content">
                                                                                                 <ul>
                                                                                                     <li class="yui-menuitem">
-                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('PM.GM.Concept.access', LAGVEContext.context)">access</a>
+                                                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('PM.GM.Concept.access', LAGVEContext.context)">access</a>
                                                                                                     </li>
                                                                                                     <li class="yui-menuitem">
-                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('PM.GM.Concept.show', LAGVEContext.context)">show</a>
+                                                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('PM.GM.Concept.show', LAGVEContext.context)">show</a>
                                                                                                     </li>
                                                                                                     <li class="yui-menuitem">
-                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('PM.GM.Concept.type', LAGVEContext.context)">type</a>
+                                                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('PM.GM.Concept.type', LAGVEContext.context)">type</a>
                                                                                                     </li>
                                                                                                     <li class="yui-menuitem">
-                                                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('PM.GM.Concept.visible', LAGVEContext.context)">visible</a>
+                                                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('PM.GM.Concept.visible', LAGVEContext.context)">visible</a>
                                                                                                     </li>
                                                                                                 </ul>
                                                                                             </div>
@@ -325,13 +325,13 @@
                                                                         </div> <!-- end PM.GM -->
                                                                     </li>
                                                                     <li>
-                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('PM.menu', LAGVEContext.context)">menu</a>
+                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('PM.menu', LAGVEContext.context)">menu</a>
                                                                     </li>
                                                                     <li>
-                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('PM.next', LAGVEContext.context)">next</a>
+                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('PM.next', LAGVEContext.context)">next</a>
                                                                     </li>
                                                                     <li>
-                                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewAttr('PM.ToDo', LAGVEContext.context)">ToDo</a>
+                                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewAttr('PM.ToDo', LAGVEContext.context)">ToDo</a>
                                                                     </li>
                                                                 </ul>
                                                             </div>
@@ -380,13 +380,13 @@
                                             <div class="yui-menu-content">
                                                 <ul> 
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Assignment.newAssignment(LAGVEContext.context)">Assignment</a>
+                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.Assignment.newAssignment(LAGVEContext.context)">Assignment</a>
                                                     </li>
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVEIf.newIf(LAGVEContext.context)">Condition-Action</a>
+                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVEIf.newIf(LAGVEContext.context)">Condition-Action</a>
                                                     </li>
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Elements.newWhile(LAGVEContext.context)">Each-Concept Condition-Action</a>
+                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.Elements.newWhile(LAGVEContext.context)">Each-Concept Condition-Action</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -402,10 +402,10 @@
                                             <div class="yui-menu-content">
                                                 <ul> 
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newComparison(LAGVEContext.context)">Comparison</a>
+                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.Condition.newComparison(LAGVEContext.context)">Comparison</a>
                                                     </li>
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.Condition.newEnough({targetNode:LAGVEContext.context})">Enough-Satisfied-Conditions</a>
+                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.Condition.newEnough({targetNode:LAGVEContext.context})">Enough-Satisfied-Conditions</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -417,10 +417,10 @@
                                             <div class="yui-menu-content">
                                                 <ul> 
                                                     <li>
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewBoolean('true', LAGVEContext.context)">true</a>
+                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewBoolean('true', LAGVEContext.context)">true</a>
                                                     </li>
                                                     <li>
-                                                        <a class="yui-menuitem-content" href="#" onclick="LAGVE.insertNewBoolean('false', LAGVEContext.context)">false</a>
+                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.insertNewBoolean('false', LAGVEContext.context)">false</a>
                                                     </li>
                                                 </ul>
                                             </div>
@@ -440,20 +440,11 @@
                         </div> <!-- end insert menu -->
                     </li>
                     <li class="yui-menuitem">
-                        <a id="context-menu-help" class="yui-menuitem-content hidden-by-default-menu" href="#" onclick="LAGVE.showHelp()">Help</a>
+                        <a id="context-menu-help" class="yui-menuitem-content hidden-by-default-menu" href="javascript:void(0)" onclick="LAGVEContext.help()">Help</a>
                     </li>
                 </ul>
             </div>
         </div> <!-- end VE-menu -->
-
-        
-        <div id="VE-help">
-            <div id="VE-help-titlebar">
-                Help and Documentation
-            </div>
-            <div id="VE-help-closeBtn" onclick="LAGVE.hideHelp()">X</div>
-            <div id="VE-help-container"></div>
-        </div>
         
         <div id="updating-visual-message-centering">
             <div id="updating-visual-message">
@@ -482,7 +473,7 @@
         
         <script type="text/javascript">
         //<![CDATA[
-            // CDATA line is commented because IE can only use xhmtl pages by acting like it's HTML.
+            // CDATA line is commented because IE can only use xhmtl pages by pretending it's HTML.
             
             // define the editor global
             var editor = null;
