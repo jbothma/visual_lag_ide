@@ -125,7 +125,10 @@ YUI({
      *   e.g. insertNewAttr('UM.GM.Concept.experience,some.yui.node.object)
      */
     LAGVE.Attr.insertNewAttr = function(value,targetNode) {
-        var newAttribute = Y.Node.create('<div class="attr_box attribute-doc-section"></div>');
+        var newAttribute = Y.Node.create(
+            '<div class="attr_box attribute-doc-section" \
+            title="Attribute visual element"></div>'
+        );
         newAttribute.valueContainer = Y.Node.create('<div class="attr_box_value">' + value + '</div>');
         
         newAttribute.append(newAttribute.valueContainer);
@@ -198,6 +201,7 @@ YUI({
             newBoolean.removeClass('attribute-doc-section');
             newBoolean.addClass('condition');
             newBoolean.addClass('boolean-doc-section');
+            newBoolean.set('title', 'Boolean visual element');
             newBoolean.dd.addToGroup('condition');
             
             newBoolean.parentChanged = function() {};
@@ -219,7 +223,11 @@ YUI({
     
     LAGVE.Assignment.newAssignment = function(targetNode) {
         //////    ASSIGNMENT    //////
-        var assignment      = Y.Node.create( '<div class="assignment statement-list-child assignment-doc-section"></div>' );
+        var assignment      = Y.Node.create(
+            '<div class="assignment statement-list-child assignment-doc-section" \
+                  title="Assignment visual element" \
+            ></div>'
+        );
         assignment.resize   = function(reason) {
             //Y.log('assignment.resize triggered by ' + reason);
             // Setup
@@ -411,7 +419,9 @@ LAGVEIf = new Object();
         
     LAGVEIf.newIf = function(targetNode) {
         ////////     IF-THEN-ELSE     /////////
-        var ifThenElse          = Y.Node.create('<div class="ifthenelse statement-list-child condition-action-doc-section"></div>');
+        var ifThenElse          = Y.Node.create(
+            '<div class="ifthenelse statement-list-child condition-action-doc-section" \
+            title="Condition-Action visual element"></div>');
         ifThenElse._LAGVEName   = 'Condition-Action';
         ifThenElse.getName      = function() { return this._LAGVEName; }
         
@@ -527,7 +537,8 @@ LAGVEIf = new Object();
         ifThenElse.SVGRhombus.attr("fill", "white");
 
         ifThenElse.conditionContainer = Y.Node.create('\
-            <div class="ifthenelse condition-container condition-container-doc-section"></div>\
+            <div class="ifthenelse condition-container condition-container-doc-section" \
+            title="Condition container"></div>\
         ');
         ifThenElse.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -628,7 +639,9 @@ LAGVEIf = new Object();
     
     LAGVE.Elements.newWhile = function(targetNode) {
         // .while.statement-list-child
-        var newWhile = Y.Node.create('<div class = "while statement-list-child each-concept-condition-action-doc-section"></div>');
+        var newWhile = Y.Node.create(
+            '<div class = "while statement-list-child each-concept-condition-action-doc-section" \
+            title="Each-Concept Condition-Action visual element"></div>');
         
         /////// SVG canvas ////////
         newWhile.raphael = Raphael( Y.Node.getDOMNode(newWhile), 1, 1 );
@@ -655,7 +668,8 @@ LAGVEIf = new Object();
         
         // .while.condition-container
         newWhile.conditionContainer   = Y.Node.create(
-            '<div class="while condition-container condition-container-doc-section"></div>');
+            '<div class="while condition-container condition-container-doc-section" \
+            title="Condition container"></div>');
                     
         // .while.statement
         newWhile.statementList = LAGVEStmt.newStatementList();
@@ -939,7 +953,9 @@ LAGVE.Condition = new Object();
     
     LAGVE.Condition.newComparison = function(targetNode) {
         ///////    COMPARISON    ///////
-        var comparison          = Y.Node.create( '<div class="comparison comparison-doc-section"></div>' );
+        var comparison          = Y.Node.create(
+            '<div class="comparison comparison-doc-section" \
+            title="Comparison visual element"></div>' );
         comparison._LAGVEName   = 'Comparison';        
         comparison.getName      = function() {
             return this._LAGVEName
@@ -971,7 +987,7 @@ LAGVE.Condition = new Object();
         //////    ATTRIBUTE CONTAINER    //////
         comparison.attributeContainer = Y.Node.create('\
             <div class="comparison-attribute-container comparison-child-container selectable attribute-container-doc-section" \
-            title="Insert an attribute here."></div>\
+            title="Attribute container"></div>\
         ');
         var attributeContainerDT = new Y.DD.Drop({
             node:    comparison.attributeContainer,
@@ -1033,7 +1049,7 @@ LAGVE.Condition = new Object();
         //////    VALUE CONTAINER    //////
         comparison.valueContainer            = Y.Node.create('\
             <div class="comparison-attribute-container comparison-child-container selectable value-container-doc-section" \
-            title="Insert an attribute or value here."></div>\
+            title="Value container"></div>\
         ');
         var valueContainerDT         = new Y.DD.Drop({
             node:    comparison.valueContainer,
@@ -1102,9 +1118,10 @@ LAGVE.Condition = new Object();
      *  Enough construct
      */ 
     LAGVE.Condition.newEnough = function(options) {        
-        var enough = Y.Node.create('\
-            <div class="enough primary selectable enough-doc-section">ENOUGH&nbsp;</div>\
-        ');
+        var enough = Y.Node.create(
+            '<div class="enough primary selectable enough-doc-section" \
+            title="Enough-Satisfied-Conditions visual element">ENOUGH&nbsp;</div>'
+        );
         
         enough._LAGVEName = 'Enough-Satisfied-Conditions';
  
@@ -1173,7 +1190,7 @@ LAGVE.Condition = new Object();
         
         enough.conditionList = Y.Node.create(
             '<div class="enough condition-list selectable condition-list-doc-section" \
-                  title="Condition List: Insert one or more condition here." \
+                  title="Condition List" \
             ></div>'
         );
         enough.conditionList.plug(
@@ -1294,7 +1311,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         //////    STATEMENT LIST   ///////
         var statementList = Y.Node.create( 
             '<div class="statement-list selectable statement-container statement-list-doc-section" \
-                title="Statement List: Insert one or more statement here." \
+                title="Statement List" \
             ></div>' 
         );
         
