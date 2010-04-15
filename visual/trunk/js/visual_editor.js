@@ -125,7 +125,7 @@ YUI({
      *   e.g. insertNewAttr('UM.GM.Concept.experience,some.yui.node.object)
      */
     LAGVE.Attr.insertNewAttr = function(value,targetNode) {
-        var newAttribute = Y.Node.create('<div class="attr_box"></div>');
+        var newAttribute = Y.Node.create('<div class="attr_box attribute-doc-section"></div>');
         newAttribute.valueContainer = Y.Node.create('<div class="attr_box_value">' + value + '</div>');
         
         newAttribute.append(newAttribute.valueContainer);
@@ -195,7 +195,9 @@ YUI({
         // Is the attribute 'true' or 'false'?
         if ( value in {'true':1, 'false':1} ) {
             var newBoolean = LAGVE.Attr.insertNewAttr(value, targetNode);
+            newBoolean.removeClass('attribute-doc-section');
             newBoolean.addClass('condition');
+            newBoolean.addClass('boolean-doc-section');
             newBoolean.dd.addToGroup('condition');
             
             newBoolean.parentChanged = function() {};
@@ -239,7 +241,7 @@ YUI({
         
         //////    ATTRIBUTE CONTAINER    //////
         assignment.attributeContainer               = Y.Node.create('\
-            <div    class="assignment-attribute-container assignment-child-container selectable" \
+            <div    class="assignment-attribute-container assignment-child-container selectable attribute-container-doc-section" \
                     \title="Insert an attribute here."></div>\
         ');
         assignment.attributeContainer._LAGVEName    = 'Assignment attribute';
@@ -268,7 +270,7 @@ YUI({
         
         //////    VALUE CONTAINER    //////
         assignment.valueContainer               = Y.Node.create('\
-            <div class="assignment-attribute-container assignment-child-container selectable" \
+            <div class="assignment-attribute-container assignment-child-container selectable value-conainer-doc-section" \
             title="Insert an attribute or value here."></div>\
         ');
         assignment.valueContainer._LAGVEName    = 'Assignment value';
@@ -409,7 +411,7 @@ LAGVEIf = new Object();
         
     LAGVEIf.newIf = function(targetNode) {
         ////////     IF-THEN-ELSE     /////////
-        var ifThenElse          = Y.Node.create('<div class="ifthenelse statement-list-child"></div>');
+        var ifThenElse          = Y.Node.create('<div class="ifthenelse statement-list-child condition-action-doc-section"></div>');
         ifThenElse._LAGVEName   = 'Condition-Action';
         ifThenElse.getName      = function() { return this._LAGVEName; }
         
@@ -525,7 +527,7 @@ LAGVEIf = new Object();
         ifThenElse.SVGRhombus.attr("fill", "white");
 
         ifThenElse.conditionContainer = Y.Node.create('\
-            <div class="ifthenelse condition-container"></div>\
+            <div class="ifthenelse condition-container condition-container-doc-section"></div>\
         ');
         ifThenElse.conditionContainer.plug(
             Y.Plugin.Drop,
@@ -626,7 +628,7 @@ LAGVEIf = new Object();
     
     LAGVE.Elements.newWhile = function(targetNode) {
         // .while.statement-list-child
-        var newWhile = Y.Node.create('<div class = "while statement-list-child"></div>');
+        var newWhile = Y.Node.create('<div class = "while statement-list-child each-concept-condition-action-doc-section"></div>');
         
         /////// SVG canvas ////////
         newWhile.raphael = Raphael( Y.Node.getDOMNode(newWhile), 1, 1 );
@@ -653,7 +655,7 @@ LAGVEIf = new Object();
         
         // .while.condition-container
         newWhile.conditionContainer   = Y.Node.create(
-            '<div class="while condition-container"></div>');
+            '<div class="while condition-container condition-container-doc-section"></div>');
                     
         // .while.statement
         newWhile.statementList = LAGVEStmt.newStatementList();
@@ -884,7 +886,7 @@ LAGVE.Condition = new Object();
      *    Parameters:    condition
      */
     LAGVE.Condition.wrapCondition = function(child) {
-        var conditionWrapper = Y.Node.create( '<div class="condition wrapper"></div>' );
+        var conditionWrapper = Y.Node.create( '<div class="condition wrapper condition-wrapper"></div>' );
 
         LAGVEContext.applyContextMenu(
             conditionWrapper, 
@@ -937,7 +939,7 @@ LAGVE.Condition = new Object();
     
     LAGVE.Condition.newComparison = function(targetNode) {
         ///////    COMPARISON    ///////
-        var comparison          = Y.Node.create( '<div class="comparison"></div>' );
+        var comparison          = Y.Node.create( '<div class="comparison comparison-doc-section"></div>' );
         comparison._LAGVEName   = 'Comparison';        
         comparison.getName      = function() {
             return this._LAGVEName
@@ -968,7 +970,7 @@ LAGVE.Condition = new Object();
         
         //////    ATTRIBUTE CONTAINER    //////
         comparison.attributeContainer = Y.Node.create('\
-            <div class="comparison-attribute-container comparison-child-container selectable" \
+            <div class="comparison-attribute-container comparison-child-container selectable attribute-container-doc-section" \
             title="Insert an attribute here."></div>\
         ');
         var attributeContainerDT = new Y.DD.Drop({
@@ -1030,7 +1032,7 @@ LAGVE.Condition = new Object();
         
         //////    VALUE CONTAINER    //////
         comparison.valueContainer            = Y.Node.create('\
-            <div class="comparison-attribute-container comparison-child-container selectable" \
+            <div class="comparison-attribute-container comparison-child-container selectable value-container-doc-section" \
             title="Insert an attribute or value here."></div>\
         ');
         var valueContainerDT         = new Y.DD.Drop({
@@ -1101,7 +1103,7 @@ LAGVE.Condition = new Object();
      */ 
     LAGVE.Condition.newEnough = function(options) {        
         var enough = Y.Node.create('\
-            <div class="enough primary selectable">ENOUGH&nbsp;</div>\
+            <div class="enough primary selectable enough-doc-section">ENOUGH&nbsp;</div>\
         ');
         
         enough._LAGVEName = 'Enough-Satisfied-Conditions';
@@ -1170,7 +1172,7 @@ LAGVE.Condition = new Object();
         }
         
         enough.conditionList = Y.Node.create(
-            '<div class="enough condition-list selectable" \
+            '<div class="enough condition-list selectable condition-list-doc-section" \
                   title="Condition List: Insert one or more condition here." \
             ></div>'
         );
@@ -1291,7 +1293,7 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     
         //////    STATEMENT LIST   ///////
         var statementList = Y.Node.create( 
-            '<div class="statement-list selectable statement-container" \
+            '<div class="statement-list selectable statement-container statement-list-doc-section" \
                 title="Statement List: Insert one or more statement here." \
             ></div>' 
         );
@@ -1594,12 +1596,20 @@ LAGVEContext.items = {
     }
     
     LAGVEContext.help = function() {
-        var className = LAGVEContext.context.get('firstChild').get('className');
-        var matches = className.match(/[^ ]*doc-section\b/);
+        var node = LAGVEContext.context;
+        if ( node && node.hasClass( 'statement-list-child-container' ) || node.hasClass( 'condition-wrapper' ) ) {
+            node = node.get('firstChild');
+        }
+        
+        var matches = null;
+        if ( node ) {
+            var className = node.get('className');
+            matches = className.match(/[^ ]*doc-section\b/);
+        }
         if ( matches && matches[0] ) {
             window.open( 'help.htm#' + matches[0] );
         } else {
-            window.open( 'help.htm#no-context-doc' );
+            window.open( 'help.htm#no-context-doc-found' );
         }
     }
     

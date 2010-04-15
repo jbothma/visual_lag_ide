@@ -13,7 +13,12 @@
         .accordion-item-bd {
             margin-left:    15px;
         }
-        * {
+        IMG.doc-diagram {
+            border:     1px solid black;
+            padding:    3px;
+            margin:     3px 3px 3px 15px;
+        }
+        BODY {
             font-family:    sans-serif;
         }
     </style>
@@ -26,6 +31,128 @@
     <h1>Help and Documentation</h1>
     
     <ul id="help-accordion" class="yui-accordion">
+        <li id="editor-overview-doc-section" class="accordion-item">
+            <div id="" class="accordion-item-hd">
+                <a href="javascript:void(0)" class="accordion-item-trigger">
+                    Editor overview
+                </a>
+            </div>
+            <div class=" accordion-item-bd">
+                <p>
+                    PEAL has four tabs. The LAG editor is the default active tab. 
+                    Other tabs can be activated by left-clicking on them.
+                    <br>
+                    <img 
+                        src="documentation/images/Entire_Editor_-_LAG_Editor_tab.png" 
+                        alt="PEAL 2 LAG Editor screenshot"
+                        class="doc-diagram"
+                    >
+                </p>
+                <p>
+                    The tab and its border change colour to indicate which tab is active.
+                    <br>
+                    <img 
+                        src="documentation/images/Editor_Tabs_-_Description_Editor_active.png" 
+                        alt="Editor tabs: Description tab is active"
+                        class="doc-diagram"
+                    ><br>
+                    <img 
+                        src="documentation/images/Editor_Tabs_-_Implementation_active.png" 
+                        alt="Editor tabs: Implementation tab is active"
+                        class="doc-diagram"
+                    ><br>
+                    <img 
+                        src="documentation/images/Editor_Tabs_-_Initialization_active.png" 
+                        alt="Editor tabs: Initialization tab is active"
+                        class="doc-diagram"
+                    ><br>
+                </p>
+            </div>
+        </li>
+        
+        <li id="quick-tips-doc-section" class=" accordion-item">
+            <div id="" class="accordion-item-hd">
+                <a href="javascript:void(0)" class="accordion-item-trigger">
+                    Quick tips
+                </a>
+            </div>
+            <div class=" accordion-item-bd">
+                <p>
+                    inserting, deleting, saving
+                </p>
+            </div>
+        </li>
+        <li id="visual-element-features--doc-section" class="accordion-item">
+            <div class="accordion-item-hd">
+                <a href="javascript:void(0)" class="accordion-item-trigger">
+                    Visual Element Features
+                </a>
+            </div>
+            <div class="accordion-item-bd">
+                <ul id="attribute-container-doc-section" class="yui-accordion">
+                    <li id="iattribute-container-doc-section" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                Attribute container
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                Attribute container
+                            </p>
+                        </div>
+                    </li>
+                    <li id="value-conainer-doc-section" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                value-conainer-doc-section
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                value-conainer-doc-section
+                            </p>
+                        </div>
+                    </li>
+                    <li id="condition-container-doc-section" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                condition-container-doc-section
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                condition-container-doc-section
+                            </p>
+                        </div>
+                    </li>
+                    <li id="statement-list-doc-section" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                statement-list-doc-section
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                statement-list-doc-section
+                            </p>
+                        </div>
+                    </li>
+                    <li id="condition-list-doc-section" class=" accordion-item">
+                        <div class="accordion-item-hd">
+                            <a href="javascript:void(0)" class="accordion-item-trigger">
+                                condition-list-doc-section
+                            </a>
+                        </div>
+                        <div class=" accordion-item-bd">
+                            <p>
+                                condition-list-doc-section
+                            </p>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </li>
         <li id="visual-elements-doc-section" class="accordion-item">
             <div class="accordion-item-hd">
                 <a href="javascript:void(0)" class="accordion-item-trigger">
@@ -42,7 +169,7 @@
                         </div>
                         <div class=" accordion-item-bd">
                             <p>
-                                Documentation of the Attribute visual element
+                                Initialization
                             </p>
                         </div>
                     </li>
@@ -54,7 +181,7 @@
                         </div>
                         <div class=" accordion-item-bd">
                             <p>
-                                Documentation of the Attribute visual element
+                                Implementation
                             </p>
                         </div>
                     </li>
@@ -80,7 +207,7 @@
                         </div>
                         <div class=" accordion-item-bd">
                             <p>
-                                Documentation of the Attribute visual element
+                                Documentation of the Assignment visual element
                             </p>
                         </div>
                     </li>
@@ -92,7 +219,7 @@
                         </div>
                         <div class=" accordion-item-bd">
                             <p>
-                                Documentation of the Attribute visual element
+                                Documentation of the Comparison visual element
                             </p>
                         </div>
                     </li>
@@ -104,7 +231,7 @@
                         </div>
                         <div class=" accordion-item-bd">
                             <p>
-                                Documentation of the Attribute visual element
+                                Documentation of the True and False (Booleans) visual element
                             </p>
                         </div>
                     </li>
@@ -148,31 +275,7 @@
             </div>
         </li>
 
-        <li id="quick-tips-doc-section" class=" accordion-item">
-            <div id="" class="accordion-item-hd">
-                <a href="javascript:void(0)" class="accordion-item-trigger">
-                    Quick tips
-                </a>
-            </div>
-            <div class=" accordion-item-bd">
-                <p>
-                    inserting, deleting, saving
-                </p>
-            </div>
-        </li>
-
-        <li id="editor-overview-doc-section" class="accordion-item">
-            <div id="" class="accordion-item-hd">
-                <a href="javascript:void(0)" class="accordion-item-trigger">
-                    Editor overview
-                </a>
-            </div>
-            <div class=" accordion-item-bd">
-                <p>
-                    overview, screenshots
-                </p>
-            </div>
-        </li>
+        
         
         <li id="licensing-information-doc-section" class=" accordion-item">
             <div class="accordion-item-hd">
@@ -210,13 +313,14 @@
             </div>
         </li>
     </ul>
+    <script src="/lib/yui/yui/yui.js" type="text/javascript"></script>
     <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
     <script type="text/javascript">
         var helpAccordion = new Object();
         
         YUI({    
             filter: 'min',
-            combine: 'true',
+            //combine: 'true',
         }).use('node','event', function(Y) {
             helpAccordion.collapseAll = function() {
                 var helpItemsContents = Y.all('#help-accordion .accordion-item');
@@ -235,8 +339,8 @@
                 if ( selectedItem ) {
                     selectedItem.removeClass('collapsed');
                 
-                    while ( selectedItem.ancestor('.collapsed', true) ) {
-                        var ancestor = selectedItem.ancestor('.collapsed', true);
+                    while ( selectedItem.ancestor('.collapsed') ) {
+                        var ancestor = selectedItem.ancestor('.collapsed');
                         ancestor.removeClass('collapsed');
                     }
                 }
