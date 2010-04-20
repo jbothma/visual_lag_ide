@@ -117,6 +117,20 @@
                     onclick="editor.mirror.editor.history.redo();" 
                 />
                 |
+                <a  href="help.htm"
+                    target="_blank"
+                    style="text-decoration:none;"
+                >
+                    <span id="toolbar-help-text" 
+                        style="font-size: 10pt;"
+                    >Help</span>
+                    <img src="png/help.png" 
+                        title="Help and Documentation" 
+                        alt="Help button"
+                        style="border:none;padding-left:0px;"
+                    />
+                </a>
+                |
                 <span id="isSaved" style="font-size: 10pt;"></span>
             </form>
             <div class="tabview" id="peal">
