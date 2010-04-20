@@ -50,7 +50,7 @@
                     <a href="php/logout.php">Logout</a>
                 </div>
                 <div id="title">
-                    <p><?php echo $peal_version_string;?></p>
+                    <p><?php echo $peal_version_string;?>  (Currently most reliable in <a href="http://www.mozilla-europe.org/en/firefox/">Firefox</a> 3.5 or newer. Also try Chrome, Opera and Safari.)</p>
                 </div>
             </div>
             <form id="savedetails" name="savedetails" action="">
