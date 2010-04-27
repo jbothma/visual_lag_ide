@@ -4,8 +4,7 @@ LAGVE = new Object();
 LAGVE.strategyTemplate = '// DESCRIPTION\n//\n//\n\n// VARS\n//\n//\n\ninitialization (\n\n)\n\nimplementation (\n\n)';
 
 /* UTILITY */
-function isset(variable)
-{
+function isset(variable) {
     return ( typeof(variable) == "undefined" || variable == null )?  false: true;
 }
 
@@ -129,7 +128,8 @@ YUI({
             '<div class="attr_box attribute-doc-section" \
             title="Attribute visual element"></div>'
         );
-        newAttribute.valueContainer = Y.Node.create('<div class="attr_box_value">' + value + '</div>');
+        newAttribute.valueContainer = 
+            Y.Node.create('<div class="attr_box_value">' + value + '</div>');
         
         newAttribute.append(newAttribute.valueContainer);
         
@@ -198,12 +198,17 @@ YUI({
         // Is the attribute 'true' or 'false'?
         if ( value in {'true':1, 'false':1} ) {
             var newBoolean = LAGVE.Attr.insertNewAttr(value, targetNode);
+
+            // Context documentation must be for Boolean, not Attribute
             newBoolean.removeClass('attribute-doc-section');
-            newBoolean.addClass('condition');
             newBoolean.addClass('boolean-doc-section');
             newBoolean.set('title', 'Boolean visual element');
+
+            // Also behave like a Condition
+            newBoolean.addClass('condition');
             newBoolean.dd.addToGroup('condition');
-            
+
+            // It's already been inserted to new parent by Attribute's constructor
             newBoolean.parentChanged = function() {};
             
             if (isset(targetNode)) {
@@ -550,11 +555,11 @@ LAGVEIf = new Object();
             ifThenElse.resize('ifThenElse.conditionContainer.resize | ' + reason);
         };
         ifThenElse.conditionContainer.LAGVEInsert = function(child) {
-            if (child.hasClass('condition')) {
-                if (!this.hasChildNodes()) {            
-                    this.append(child);
-                    child.parentChanged();
-                    child.resize('ifThenElse.conditionContainer.LAGVEInsert');
+            if (child.hasClass('condition')) {  // only insert conditions
+                if (!this.hasChildNodes()) {    // only contain one
+                    this.append(child);         // insert
+                    child.parentChanged();      // update parent
+                    child.resize('');           // resize and bubble up
                 }
             }
         }
@@ -745,8 +750,11 @@ LAGVEIf = new Object();
             if ( !this.ancestor('.tabview-hidden') ) {
                 // Setup //
                 
-                var conditionContainerWidth  = parseInt(this.conditionContainer.getComputedStyle('width'));
-                var conditionContainerHeight = parseInt(this.conditionContainer.getComputedStyle('height'));
+                var conditionContainerWidth  = 
+                    parseInt(this.conditionContainer.getComputedStyle('width'));
+                    
+                var conditionContainerHeight = 
+                    parseInt(this.conditionContainer.getComputedStyle('height'));
                 
                 var statementListHeight = parseInt(this.statementList.getComputedStyle('height'));
                 var statementListWidth = parseInt(this.statementList.getComputedStyle('width'));
@@ -782,7 +790,11 @@ LAGVEIf = new Object();
                 
                 // Output //
                 
-                this.raphael.PEAL.scaleRhombus( this.SVGRhombus, rhombusWidth, rhombusHeight );
+                this.raphael.PEAL.scaleRhombus( 
+                    this.SVGRhombus, 
+                    rhombusWidth, 
+                    rhombusHeight 
+                );
                 this.SVGRhombus.toFront();
                 
                 this.conditionContainer.setStyle('left', conditionContainerLeft + 'px');
@@ -1025,6 +1037,7 @@ LAGVE.Condition = new Object();
                 <option value="&gt;=">&gt;=</option>\
                 <option value="&lt;">&lt;</option>\
                 <option value="&lt;=">&lt;=</option>\
+                <option value="in">in</option>\
             </select>\
         ');
         
@@ -1279,9 +1292,9 @@ LAGVE.Condition = new Object();
 
 
 
-/* STATEMENT */
-LAGVEStmt = new Object();
-LAGVEStmt.overHandledTimestamp = new Date().getTime();
+    /* STATEMENT */
+    LAGVEStmt = new Object();
+    LAGVEStmt.overHandledTimestamp = new Date().getTime();
 
     //new Y.Console().render();
     
@@ -1301,16 +1314,19 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
     LAGVEStmt.lastY        = 0;
     
     /**
-     *  LAGVEStmt.newStatementList
-     *
-     *  reates a new LAG STATEMENT list.
+     *  Creates a new LAG STATEMENT list.
+     *  
+     *  Inserts statement list to targetNode if specified.
      *  Returns the statement list.
      */
     LAGVEStmt.newStatementList = function(targetNode) {
     
         //////    STATEMENT LIST   ///////
         var statementList = Y.Node.create( 
-            '<div class="statement-list selectable statement-container statement-list-doc-section" \
+            '<div class="statement-list \
+                         selectable \
+                         statement-container \
+                         statement-list-doc-section" \
                 title="Statement List" \
             ></div>' 
         );
@@ -1335,9 +1351,9 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
          */
         statementList.LAGVEInsert = function(node) {
             if (node.hasClass('statement-list-child')) {
-                var newChildContainer = LAGVEStmt._newStatementChildContainer(node)
-                statementList.append(newChildContainer);
-                newChildContainer.parentChanged();
+                var newChildWrapper = LAGVEStmt._newStatementChildWrapper(node)
+                statementList.append(newChildWrapper);
+                newChildWrapper.parentChanged();
                 node.resize('statementList.LAGVEInsert');
             } else {
                 Y.log(node.getName() + ' can not be inserted into ' + statementList.getName() + '.');
@@ -1388,96 +1404,103 @@ LAGVEStmt.overHandledTimestamp = new Date().getTime();
         return statementList;
     };
     
-    LAGVEStmt._newStatementChildContainer = function(child) {
-        var childContainer      = Y.Node.create( '<div class="statement-list-child-container"></div>' );
+    LAGVEStmt._newStatementChildWrapper = function(child) {
+        var childWrapper      = Y.Node.create( '<div class="statement-list-child-wrapper"></div>' );
     
-        var childContainerDrag  = new Y.DD.Drag({
-            node:        childContainer,
+        var childWrapperDrag  = new Y.DD.Drag({
+            node:        childWrapper,
             groups:        ['statement-list'],
         });
                                                     
-        childContainerDrag.plug(Y.Plugin.DDProxy, { moveOnEnd: false });
+        childWrapperDrag.plug(Y.Plugin.DDProxy, { moveOnEnd: false });
         
         var stateContainerDrop = new Y.DD.Drop({
-            node:    childContainer,
+            node:    childWrapper,
             groups:    ['statement-list'],
         });
         
-        childContainer.parentChanged = function() {
-            if (this.get('parentNode')) {
-                this.resize = this.get('parentNode').resize;
-                this.resize('statement child new parent');
-            }
+        childWrapper.parentChanged = function() {
+            // Resize wrapper which resizes new parent
+            this.resize('statement child new parent');
+            
+            // Unless this is a new statement, resize the old parent
+            // which now has one child fewer
             if (this._oldParent) {
                 this._oldParent.resize('statement child old parent.');
             }
+            
+            // update current parent
             this._oldParent = this.get('parentNode');
         }
         
-        childContainer.getName = function() {
+        childWrapper.resize = function() {
+            if (this.get('parentNode')) {
+                this.get('parentNode').resize();
+            }
+        }
+        
+        childWrapper.getName = function() {
             return child.getName();
         }
         
-        childContainer.toLAG = function() {
+        childWrapper.toLAG = function() {
             var LAG = this.get('firstChild').toLAG();
             
             return LAG;
         }
         
         LAGVEContext.applyContextMenu(
-            childContainer, 
+            childWrapper, 
             LAGVEContext.items.visualElement
         )
 
-        childContainer.append(child);
-        childContainer.parentChanged();
+        childWrapper.append(child);
+        childWrapper.parentChanged();
         
-        return childContainer;
+        return childWrapper;
     };
-        
+    
+    // Dav Glass' solution to getting the topmost drop target among overlapping drop targets
+    //http://yuilibrary.com/forum/viewtopic.php?f=92&t=2603&p=10839&hilit=overlapping#p10839
+    //http://pastebin.com/m3da6ff30
+    LAGVE.overTarget = null;
+    
+    Y.DD.DDM.on('drop:enter', function(e) {
+        LAGVE.overTarget = e.target;
+    });
+    
+    Y.DD.DDM.on('drop:exit', function(e) {
+        LAGVE.overTarget = null;
+    });
+    
     Y.DD.DDM.on('drag:over', function(e) {
-        var topOfDropStack = LAGVE.dropStack.peek();
-        if (topOfDropStack) {
-            //Y.log('Top of stack is ' + topOfDropStack.get('id'));
             
+        if (!LAGVE.overTarget) {
+            LAGVE.overTarget = e.drop;
+        }
+
+        if (LAGVE.overTarget === e.drop) { 
             //Get a reference to out drag and drop nodes
             var dragNode = e.drag.get('node'),
-                dropNode = topOfDropStack;
+                dropNode = e.drop.get('node');
             
-            // Optimisation to prevent running through all this code for each containing
-            // ancestor statement list ancestor. Each of these will fire the drag:over event 
-            // but, using the LAGVE.dropStack, each will insert to the top statement list (correctly)
-            // therefore we don't need to do it again for all of them on each move. The timestamp will
-            // probably be the same for most if not all events fired for a given move.
-            var currentTime = new Date().getTime();
-            if (currentTime !== LAGVEStmt.overHandledTimestamp) {
-                LAGVEStmt.overHandledTimestamp = currentTime;
-                                
-                //Are we dropping on a li node?
-                if (dropNode.hasClass('statement-list-child-container')) {
-                    //Are we going down? (not going up)
-                    // then we want to insert below, but not below a placeholder
-                    if (LAGVEStmt.goingDown) {
-                        var nextSibling = dropNode.get('nextSibling');
-                        if (isset(nextSibling)) { 
-                            dropNode = nextSibling 
-                            dropNode.get('parentNode').insertBefore(dragNode, dropNode);
-                        } else {
-                            if (!dropNode.contains(dragNode)) {
-                                dropNode.get('parentNode').append(dragNode);
-                                dragNode.parentChanged();
-                            }
-                        }
-                    } else {
-                        dropNode.get('parentNode').insertBefore(dragNode, dropNode);
-                        dragNode.parentChanged();
-                    }
-                }
-            
-                if (dropNode.hasClass('statement-list') && !dropNode.contains(dragNode)) {
-                    dropNode.append(dragNode);
+            // Are we dragging over a statement wrapper
+            //   and hence a statement?
+            if (dropNode.hasClass('statement-list-child-wrapper')) {
+                //Are we dragging downwards?
+                if (LAGVEStmt.goingDown) {
+                    dropNode.insert(dragNode, 'after');
+                    dragNode.parentChanged();
+                } else {
+                    dropNode.insert(dragNode, 'before');
                     dragNode.parentChanged();
                 }
+            }
+        
+            if ( dropNode.hasClass('statement-list') && 
+                 !dropNode.contains(dragNode) ) {
+                dropNode.append(dragNode);
+                dragNode.parentChanged();
             }
         }
     });
@@ -1589,7 +1612,7 @@ LAGVEContext.items = {
     ],
 }
         
-    LAGVEContext.applyContextMenu = function ( contextNode, contextMenuItems ) {
+    LAGVEContext.applyContextMenu = function( contextNode, contextMenuItems ) {
         // Mark the relevant context menu items on the node
         contextNode.contextMenuItems = contextMenuItems;
         
@@ -1603,18 +1626,26 @@ LAGVEContext.items = {
         
         
     LAGVEContext.deleteItem = function() {
-        if (confirm('Are you sure you want to delete this ' + LAGVEContext.context.getName() + ' element?')) {
+        var confirmMsg = 
+            'Are you sure you want to delete this ' + 
+            LAGVEContext.context.getName() + 
+            ' element?';
+            
+        if ( confirm( confirmMsg ) ) {
             var parent = LAGVEContext.context.get('parentNode');
             
             LAGVEContext.context.remove();
             
+            // with child deleted, parent might need to resize.
             parent.resize('context delete');            
         }
     }
     
     LAGVEContext.help = function() {
         var node = LAGVEContext.context;
-        if ( node && node.hasClass( 'statement-list-child-container' ) || node.hasClass( 'condition-wrapper' ) ) {
+        if ( node && 
+             node.hasClass( 'statement-list-child-wrapper' ) || 
+             node.hasClass( 'condition-wrapper' ) ) {
             node = node.get('firstChild');
         }
         
@@ -1633,7 +1664,7 @@ LAGVEContext.items = {
     LAGVEContext.show = function(contextNode, x, y) {
         LAGVEContext.context = contextNode;
         
-        for ( var ii = 0; ii < contextNode.contextMenuItems.length; ii++ ) {
+        for ( var ii = 0; ii < contextNode.contextMenuItems.length; ii++ ){
             contextNode.contextMenuItems[ii].addClass('valid-menu');
         }
         
@@ -1930,7 +1961,6 @@ LAGVE.oneIndentation = '  ';
     
     LAGVE.sizeWindow = function(newHeight) {
         Y.all('.VE-workspace').setStyle('height', (newHeight-130) + 'px');
-        //Y.log('LAGVE Window height set to ' + newHeight);
     }
     
     
@@ -2275,22 +2305,6 @@ LAGVE.oneIndentation = '  ';
             LAGVE.select(e.target);
         }
     });*/
-    
-    Y.DD.DDM.on('drop:enter', function(e) {
-        LAGVE.dropStack.push(e.drop.get('node'));
-    });
-    
-    Y.DD.DDM.on('drop:exit', function(e) {
-        LAGVE.dropStack.pop();
-    });
-    
-    Y.DD.DDM.on('drag:end', function(e) {
-        LAGVE.dropStack = new Array;
-    });
-    
-    Y.DD.DDM.on('drag:start', function(e) {
-        LAGVE.dropStack = new Array;
-    });
     
     Y.on('windowresize', function(e) {
         LAGVE.sizeWindow(e.target.get('winHeight'));

@@ -311,7 +311,7 @@ DIV.selected {
     padding-top:    10px;
     padding-bottom: 10px;
 }
-.statement-list-child-container {
+.statement-list-child-wrapper {
     min-height:         20px;
     position:           relative;
     background-color:   white;
@@ -484,7 +484,7 @@ SPAN.while.multiple-documents-symbol {
 
 .yui-dd-drop-active-valid,
 .yui-dd-drop-active-valid.condition-list {
-    background-color:   #95FC97;
+    background-color:   #95FC97; // Hex bright green
 }
 
 .context-menu-node {

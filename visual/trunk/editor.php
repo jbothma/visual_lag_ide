@@ -262,7 +262,13 @@
             <div class="yui-menu-content">
                 <ul> 
                     <li class="yui-menuitem">
-                        <a id="context-menu-delete" class="yui-menuitem-content hidden-by-default-menu" href="javascript:void(0)" onclick="LAGVEContext.deleteItem()">Delete</a>
+                        <a id="context-menu-delete" 
+                           class="yui-menuitem-content hidden-by-default-menu" 
+                           href="javascript:void(0)" 
+                           onclick="LAGVEContext.deleteItem()"
+                        >
+                            Delete
+                        </a>
                     </li>
                     <li>
                         <a id="context-menu-insert" class="yui-menu-label hidden-by-default-menu" href="#Insert-Menu" title="Insert a LAG Visual Element">                                    
@@ -397,7 +403,12 @@
                                                         <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.Assignment.newAssignment(LAGVEContext.context)">Assignment</a>
                                                     </li>
                                                     <li class="yui-menuitem">
-                                                        <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVEIf.newIf(LAGVEContext.context)">Condition-Action</a>
+                                                        <a  class="yui-menuitem-content" 
+                                                            href="javascript:void(0)" 
+                                                            onclick="LAGVEIf.newIf(LAGVEContext.context)"
+                                                        >
+                                                            Condition-Action
+                                                        </a>
                                                     </li>
                                                     <li class="yui-menuitem">
                                                         <a class="yui-menuitem-content" href="javascript:void(0)" onclick="LAGVE.Elements.newWhile(LAGVEContext.context)">Each-Concept Condition-Action</a>
