@@ -418,15 +418,89 @@ YUI({
     });
 
 
-/* IF-THEN-ELSE */
-LAGVEIf = new Object();
-
-        
+    /* IF-THEN-ELSE */
+    LAGVEIf = new Object();
+    
+    /**
+    *   Condition-Action constructor
+    */
     LAGVEIf.newIf = function(targetNode) {
-        ////////     IF-THEN-ELSE     /////////
-        var ifThenElse          = Y.Node.create(
-            '<div class="ifthenelse statement-list-child condition-action-doc-section" \
-            title="Condition-Action visual element"></div>');
+        ////////     Bounding Box     /////////
+        var ifThenElse = Y.Node.create(
+            '<div class="ifthenelse statement-list-child \
+                         condition-action-doc-section" \
+                  title="Condition-Action visual element"\
+             ></div>');
+
+        /////// SVG canvas ////////
+        ifThenElse.raphael = Raphael( Y.Node.getDOMNode(ifThenElse), 1, 1 );
+        ifThenElse.canvas = Y.one( ifThenElse.raphael.canvas );
+        
+        ifThenElse.canvas.setStyles({
+            position:   'absolute',
+            top:        '0px',
+            left:       '0px',
+        });
+
+        ///////    IF    ////////
+
+        ifThenElse.SVGRhombus = ifThenElse.raphael.PEAL.rhombus(0,0);
+        ifThenElse.SVGRhombus.attr("fill", "white");
+
+        ifThenElse.conditionContainer = Y.Node.create('\
+            <div class="ifthenelse condition-container \
+                        condition-container-doc-section" \
+                 title="Condition container"\
+            ></div>\
+        ');
+        ifThenElse.conditionContainer.plug(
+            Y.Plugin.Drop,
+            {
+                groups:    ['condition'],
+            }
+        );
+        ifThenElse.conditionContainer.resize = function(reason) {
+            ifThenElse.resize('ifThenElse.conditionContainer.resize | ' + reason);
+        };
+        ifThenElse.conditionContainer.LAGVEInsert = function(child) {
+            if (child.hasClass('condition')) {  // only insert conditions
+                if (!this.hasChildNodes()) {    // only contain one
+                    this.append(child);         // insert
+                    child.parentChanged();      // update parent
+                    child.resize('');           // resize and bubble up
+                }
+            }
+        }
+                
+        LAGVEContext.applyContextMenu(
+            ifThenElse.conditionContainer,
+            LAGVEContext.items.conditionContainer
+        );
+                
+
+        ///////    THEN    ////////
+        ifThenElse.thenStatementList = LAGVEStmt.newStatementList();
+        ifThenElse.thenStatementList.addClass('ifthenelse');
+        
+        
+        ///////    ELSE    ////////
+        ifThenElse.elseStatementList = LAGVEStmt.newStatementList();
+        ifThenElse.elseStatementList.addClass('ifthenelse');
+                
+        /*    Node structure:
+            
+        ifThenElse
+            raphaeljs canvas
+            conditionContainer
+            thenStatementList
+            elseStatementList
+        */
+        ifThenElse.append( ifThenElse.conditionContainer );
+        ifThenElse.append( ifThenElse.thenStatementList );
+        ifThenElse.append( ifThenElse.elseStatementList ); 
+
+        // methods
+        
         ifThenElse._LAGVEName   = 'Condition-Action';
         ifThenElse.getName      = function() { return this._LAGVEName; }
         
@@ -523,93 +597,29 @@ LAGVEIf = new Object();
             // Bubble
             this.get('parentNode').resize('ifThenElse.resize | ' + reason);
         };
-        
-        
-        /////// SVG canvas ////////
-        ifThenElse.raphael = Raphael( Y.Node.getDOMNode(ifThenElse), 1, 1 );
-        ifThenElse.canvas = Y.one( ifThenElse.raphael.canvas );
-        
-        ifThenElse.canvas.setStyles({
-            position:   'absolute',
-            top:        '0px',
-            left:       '0px',
-        });
-
-
-        ///////    IF    ////////
-
-        ifThenElse.SVGRhombus = ifThenElse.raphael.PEAL.rhombus(0,0);
-        ifThenElse.SVGRhombus.attr("fill", "white");
-
-        ifThenElse.conditionContainer = Y.Node.create('\
-            <div class="ifthenelse condition-container condition-container-doc-section" \
-            title="Condition container"></div>\
-        ');
-        ifThenElse.conditionContainer.plug(
-            Y.Plugin.Drop,
-            {
-                groups:    ['condition'],
-            }
-        );        
-        ifThenElse.conditionContainer.resize = function(reason) {
-            ifThenElse.resize('ifThenElse.conditionContainer.resize | ' + reason);
-        };
-        ifThenElse.conditionContainer.LAGVEInsert = function(child) {
-            if (child.hasClass('condition')) {  // only insert conditions
-                if (!this.hasChildNodes()) {    // only contain one
-                    this.append(child);         // insert
-                    child.parentChanged();      // update parent
-                    child.resize('');           // resize and bubble up
-                }
-            }
-        }
-                
-        LAGVEContext.applyContextMenu(
-            ifThenElse.conditionContainer,
-            LAGVEContext.items.conditionContainer
-        );
-                
-
-        ///////    THEN    ////////
-        ifThenElse.thenStatementList = LAGVEStmt.newStatementList();
-        ifThenElse.thenStatementList.addClass('ifthenelse');
-        
-        
-        ///////    ELSE    ////////
-        ifThenElse.elseStatementList = LAGVEStmt.newStatementList();
-        ifThenElse.elseStatementList.addClass('ifthenelse');
-                
-        /*    Node structure:
-            
-        ifThenElse
-            raphaeljs canvas
-            conditionContainer
-            thenStatementList
-            elseStatementList
-        */
-        ifThenElse.append( ifThenElse.conditionContainer );
-        ifThenElse.append( ifThenElse.thenStatementList );
-        ifThenElse.append( ifThenElse.elseStatementList ); 
-
-        
 
         ifThenElse.toLAG = function() {
             var LAG = 
-                'if ' + ifThenElse.conditionContainer.toLAG() + ' then (\r\n' + 
-                ifThenElse.thenStatementList.toLAG() + ')';
+                'if ' +                                 // if
+                ifThenElse.conditionContainer.toLAG() + //   CONDITION
+                ' then (\r\n' +                         // then (
+                ifThenElse.thenStatementList.toLAG() +  //   STATEMENT(S)
+                ')';                                    // )
                 
             // Else is optional
             var elseLAG = ifThenElse.elseStatementList.toLAG();
             if (elseLAG !== '')
-                LAG += ' else (\r\n' + elseLAG + ')';
-            
+                LAG += ' else (\r\n' + elseLAG + ')';   // else ( 
+                                                        //   STATEMENTS 
+                                                        // )            
             return LAG;
         }
+        
         ifThenElse.conditionContainer.toLAG = function() {
             if (this.hasChildNodes()) {
-                return this.get('firstChild').toLAG();
+                return this.get('firstChild').toLAG(); // first and only child
             }
-            return '';
+            return '';                                 // default empty string
         }
         
         ifThenElse.lockDrops = function() {
@@ -1032,12 +1042,30 @@ LAGVE.Condition = new Object();
         comparison.comparatorSelect =  Y.Node.create('\
             <select class="comparator-select">\
                 <option value=""></option>\
-                <option value="==">==</option>\
-                <option value="&gt;">&gt;</option>\
-                <option value="&gt;=">&gt;=</option>\
-                <option value="&lt;">&lt;</option>\
-                <option value="&lt;=">&lt;=</option>\
-                <option value="in">in</option>\
+                <option \
+                    title="The attribute must equal the value" \
+                    value="=="\
+                > == </option>\
+                <option \
+                    title="The attribute must be greater than the value" \
+                    value="&gt;"\
+                > &gt; </option>\
+                <option \
+                    title="The attribute must be greater than or equal to the value" \
+                    value="&gt;="\
+                > &gt;= </option>\
+                <option \
+                    title="The attribute must be less than the value" \
+                    value="&lt;"\
+                > &lt; </option>\
+                <option \
+                    title="The attribute must be less than or equal the value" \
+                    value="&lt;="\
+                > &lt;= </option>\
+                <option \
+                    title="" \
+                    value="in"\
+                > in </option>\
             </select>\
         ');
         
@@ -1049,9 +1077,9 @@ LAGVE.Condition = new Object();
             var wantedOption;
             this.comparatorSelect.get('childNodes').each(
                 function(currentNode) {
-                        if (currentNode.get('value') === comparator) {
-                            wantedOption = currentNode;
-                        }
+                    if (currentNode.get('value') === comparator) {
+                        wantedOption = currentNode;
+                    }
                 }
             );
             
@@ -1380,11 +1408,11 @@ LAGVE.Condition = new Object();
         statementList.toLAG = function() {
             var LAG = '';
             
+            // for each STATEMENT
             statementList.get('children').each(function() {
-                LAG += this.toLAG() + '\r\n';
+                // STATEMENT is 'this'
+                LAG += this.toLAG() + '\r\n'; // append STATEMENT's LAG
             });
-            
-            LAG += '';
             
             return LAG;
         }
@@ -1759,7 +1787,9 @@ LAGVE.oneIndentation = '  ';
         LAGVE.initialization.select     = LAGVE._genericSelect;
         LAGVE.initialization.deSelect   = LAGVE._genericDeSelect;
         LAGVE.initialization.toLAG      = function () {
-            var LAG = 'initialization (\r\n' + this.statementList.toLAG() + ')\r\n\r\n';
+            var LAG = 'initialization (\n' +        // initialization (
+                      this.statementList.toLAG() +  //   STATEMENT(S)
+                      ')\n\n';                      // )
             
             return LAG;
         }
@@ -1946,21 +1976,9 @@ LAGVE.oneIndentation = '  ';
         }
     }
     
-    LAGVE.getHelp = function() {
-        var uri = 'help.htm';
-     
-        var request = Y.io(uri);
-    }
-    
-    // Define a function to handle the response data.
-    LAGVE.getHelpComplete = function(id, o, args) {
-        var id = id; // Transaction ID.
-        var data = o.responseText;
-        Y.one('#VE-help-container').append(Y.Node.create(data));
-    };
-    
-    LAGVE.sizeWindow = function(newHeight) {
-        Y.all('.VE-workspace').setStyle('height', (newHeight-130) + 'px');
+    LAGVE.sizeWindow = function( newHeight ) {
+        var editorOffset = 130;
+        Y.all('.VE-workspace').setStyle('height', (newHeight - editorOffset) + 'px');
     }
     
     
@@ -1977,44 +1995,22 @@ LAGVE.oneIndentation = '  ';
     // be converted to the visual representation
     LAGVE.ToVisual.converting = false;
     
-    // the last editor onChange timestamp converted to visual representation
-    LAGVE.ToVisual.lastEditorChange = 0;
-    
-    /*LAGVE.ToVisual.convertIfCodeChanged = function(editorChangeTimestamp) {
-        if ( editorChangeTimestamp > LAGVE.ToVisual.lastEditorChange ) {
-            LAGVE.ToVisual.convert();
-        }
-    }*/
-    
     LAGVE.ToVisual.convert = function() {
         LAGVE.ToVisual.stack = new Array();
         
-        // update last code change converted to visual
-        //LAGVE.ToVisual.lastEditorChange = editorChangeTimestamp;
-        
-        // allow conversion - unset by implementation handler
+        // allow conversion - unset by Implementation action
         LAGVE.ToVisual.converting = true;
         
+        // Show the "updating visual representation" message
         Y.one('#updating-visual-message').setStyle('display', 'block');
         
-        // Make it really, really unlikely that parsing will pause and restart
-        // to try and ensure a single full pass. Stopping and starting means
-        // reparsing a line which is bad when converting to visual because the 
-        // visual element on top of the stack doesn't make sense to the 
-        // visual conversion code if we reparse a line.
-        editor.mirror.options.passDelay = 0;
-        editor.mirror.options.linesPerPass = 10000;
-        
-        // hackedly force full parse by copying
-        // and replacing all the code in the editor.
-        var code = editor.mirror.getCode();
-        editor.mirror.setCode(code);
+        // Mark all nodes as 'dirty' then 'highlight' (parse) dirty nodes 
+        // (all the code) in one pass, thus safely running the ToVisual 
+        // actions safely in the expected order.
+        editor.mirror.editor.reparseBuffer();
+        editor.mirror.editor.highlightDirty(true);
     }
-    
-                /*if ( LAGVE.ToVisual.stack.length > 0 &&
-                     typeof(LAGVE.ToVisual.stack[LAGVE.ToVisual.stack.length - 1])==='undefined')
-                    alert("undefined top of stack");*/    
-                    
+
     // Parser action stack functions to build visual elements
     LAGVE.ToVisual.actions = new Object();
 
@@ -2038,7 +2034,7 @@ LAGVE.oneIndentation = '  ';
 
     LAGVE.ToVisual.actions.startImplementation = function startImplementation() {
         if (LAGVE.ToVisual.converting) {
-            // implementation always exists so don't create it. 
+            // implementation visual element always exists so don't create it. 
             // Just find it and put it on the stack so we can 
             // insert its contents
             LAGVE.ToVisual.stack.push(LAGVE.implementation);
@@ -2048,32 +2044,32 @@ LAGVE.oneIndentation = '  ';
         }
     }
 
-    LAGVE.ToVisual.actions.finishImplementation = function finishImplementation() {
+  LAGVE.ToVisual.actions.finishImplementation = 
+    function finishImplementation() {
         if (LAGVE.ToVisual.converting) {
             LAGVE.ToVisual.stack.pop();
-            // We're not adding anything after implementation so
-            // stop trying to convert things to visual until 
-            // told otherwise
+            
+            // We're not adding anything after implementation so stop 
+            // trying to convert things to visual until told otherwise
             LAGVE.ToVisual.converting = false;
 
+            // hide the "updating visual representation" message
             Y.one('#updating-visual-message').setStyle('display', '');
-            
-            // revert to defaults
-            editor.mirror.options.passDelay = 200;
-            editor.mirror.options.linesPerPass = 20;
         }
     }
 
     LAGVE.ToVisual.actions.startCondition = function startCondition() {
         if (LAGVE.ToVisual.converting) {
-            // push the condition of the thing at top of stack
-            LAGVE.ToVisual.stack.push(LAGVE.ToVisual.stack.peek().conditionContainer);
+            // push the condition container of the element at top of stack
+            LAGVE.ToVisual.stack.push(
+                LAGVE.ToVisual.stack.peek().conditionContainer
+            );
         }
     }
 
     LAGVE.ToVisual.actions.finishCondition = function finishCondition() {
         if (LAGVE.ToVisual.converting) {
-            // pop conditionContainer
+            // pop condition Container
             LAGVE.ToVisual.stack.pop();
         }
     }
@@ -2308,14 +2304,6 @@ LAGVE.oneIndentation = '  ';
     
     Y.on('windowresize', function(e) {
         LAGVE.sizeWindow(e.target.get('winHeight'));
-    });
-    
-    Y.on('scroll', function(e) {
-        // stop user from scrolling the window because we only want the editing window to scroll ever.
-        // can still scroll with mouse middle click and drag, and with arrows.
-        // this is a hack which should be avoided but i'll leve it here in case i dont find
-        // a better solution.
-        //scroll(0,0);
     });
     
 });

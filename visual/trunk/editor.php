@@ -626,28 +626,29 @@
                             default:
                         }
                         
-                        
                         if ( tab.hasClass('visualeditor-tab') && oldTabId !== 'texteditor-tab') { 
-                            resizeVisual();
+                            redrawVisual();
                         }
                     }
                     
-                    resizeVisual = function() {
+                    redrawVisual = function() {
                         // do the conversion again since
-                        // that's currently the only way to force a resize.
+                        // that's currently the only way to force a redraw.
                         LAGVE.ToVisual.convert();
                     }
                     
                     function updateLAGTab() {    
-                        var LAG = getDescriptionFromTab() + LAGVE.initialization.toLAG() + LAGVE.implementation.toLAG();
+                        var LAG =   getDescriptionFromTab() +       // DESCRIPTION
+                                    LAGVE.initialization.toLAG() +  // INITIALIZATION
+                                    LAGVE.implementation.toLAG();   // IMPLEMENTATION
                         
                         LAGVE.ToVisual.converting = false;
-                        Y.one('#updating-visual-message').setStyle('display', '');
-                                                    
+                        
+                        // Replace code in LAG editor with up to date LAG
                         editor.mirror.setCode(LAG);
+                        
+                        // Let parser indent properly
                         editor.mirror.reindent();
-                        // clear errors after converting to LAG
-                        document.getElementById("cc").innerHTML = "&nbsp;";
                     }
                     
                     function hideVEMenu() {
@@ -689,22 +690,33 @@
                     
                     function getDescriptionFromTab() {
                         var descriptionNode = Y.one('#strategy-description-editor')
-                        var description = 'DESCRIPTION\n\n' + descriptionNode.get('value');
+                        
+                        // retrieve description plaintext
+                        var description = descriptionNode.get('value');
+                        
+                        // prepend description heading
+                        description = 'DESCRIPTION\n\n' + description;
+                        
+                        // prepend comment delimiter and add two lines
                         description = description.replace( /^/gm, '// ' ) + '\n\n';
+                        
                         return description;
                     }
                     
                     function evaluateDescription() {
                         var description = Y.one('#strategy-description-editor').get('value');
                         
-                        // http://stackoverflow.com/questions/1072765/count-number-of-matches-of-a-regex-in-javascript
+                        // From http://stackoverflow.com/questions/1072765/
+                        //   count-number-of-matches-of-a-regex-in-javascript
                         var matches = description.match(/\w+/gm);
                         var wordCount = matches ? matches.length : 0;
                         
                         if ( wordCount > 20 ) {
-                            Y.all('.strategy-description-indicator').addClass('strategy-description-ok');
+                            Y.all('.strategy-description-indicator').
+                                addClass('strategy-description-ok');
                         } else {
-                            Y.all('.strategy-description-indicator').removeClass('strategy-description-ok');
+                            Y.all('.strategy-description-indicator').
+                                removeClass('strategy-description-ok');
                         }
                     }
                     

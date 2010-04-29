@@ -246,48 +246,49 @@ var LAGParser = Editor.Parser = (function () {
             }
             return false;
         }
-
-        /**
-         *  Creates an action that will log to the FireBug console, if it exists
-         */
-        /*function logAction(logmsg) {
-            return function() {
-                if (typeof(console) !== 'undefined' && typeof(console.log) === 'function') {
-                    console.log(logmsg);
-                }
-            }
-        }
-        function log(logmsg) {
-            if (typeof(console) !== 'undefined' && typeof(console.log) === 'function') {
-                console.log(logmsg);
-            }
-        }*/
         
+        /**
+        *   Root LAG action
+        *   PROG -> INITIALIZATION IMPLEMENTATION
+        *   Pass, let init and impl take the token */
         function prog(type) {
-            //return pass(initImpl, statements);
-            return pass(init, impl);
+            pass( init, impl );
         }
 
-        // If it is either "initialisation" or "implementation" then OK, otherwise turn it red...
-        // Expect an (, then a multistatements (which returns: statement followed by multistatement OR carries the token onto the next
+
+        // Expect initialization, an (, then a multistatements (which returns: statement followed by multistatement OR carries the token onto the next
         // element in the stack...
-        function init(type) {
+        
+        /**
+        *   LAG parser action for 'initialization' construct
+        *     initialization ( STATEMENT* )
+        *   initialization is obligatory so mark tokens as errors
+        *   until "initialization" is found.
+        */
+        function init(type) { // initialization ( STATEMENT* )
             if (type == "init") {
-                cont(
-                    pushlex("init"),
+                cont(                                      // initialization
+                    pushlex("init"),                       // Lex scope init
                     ToVisual.actions.startInitialization,
-                    expect("("),
-                    pushlex(")"),
-                    multistatements,
-                    poplex,
-                    expect(")"),
+                    expect("("),                           // (
+                    pushlex(")"),                          // Lex scope in parens
+                    multistatements,                       // STATEMENT*
+                    poplex,                                // end ex in parens
+                    expect(")"),                           // )
                     ToVisual.actions.finishInitialization,
-                    poplex
+                    poplex                                 // end Lex init
                 );
             } else {
                 markError();
-                error("Found <b style=\"color:red;\">" + type + "</b>: Expected <b>initialization</b>");
-                cont(arguments.callee);
+                // e.g. Found variable: Expected initialization
+                error("Found <b style=\"color:red;\">" + 
+                      type + 
+                      "</b>: Expected <b>initialization</b>"
+                );
+                // Consume and ignore the current token
+                // Return this action to the stack to
+                //   keep looking for initialization
+                cont(arguments.callee); 
             }
         }
 
@@ -315,11 +316,15 @@ var LAGParser = Editor.Parser = (function () {
         // If the token passed to multistatements is a ) then it is passed onto the next element,
         // otherwise, it is passed onto statement and multistatement is expected afterwards...
         function multistatements(type) {
+            // multistatements is always followed by a )
+            // passing on ) here means avoiding
+            //                    infinite loop when statement passes it
+            //  or alternatively, statement incorrectly consuming it as syntax error
             if (type == ")") {
-                return pass(); // So that the ) isn't consumed, since multistatements is always followed by an expect(")")
+                pass(); 
                 // Jon Bevan: Do we need to get rid of any remaining multistatements that are on the stack expecting atm...?
             } else {
-                return pass(statement, multistatements);
+                pass(statement, multistatements);
             }
         }
 
@@ -341,13 +346,13 @@ var LAGParser = Editor.Parser = (function () {
         // Dispatches various types of statements based on the type of the
         // current token.
         function statement(type, tokenValue) {
-            if (type == "if") {
+            if (type == "if") { // if (? CONDITION )? then ( STATEMENT* ) 
+                                //                    else ( STATEMENT* )
                 cont(
                     ToVisual.actions.startIf,
                     condition,
                     pushlex("form"),
                     then,
-                    /*poplex,*/
                     ToVisual.actions.finishIf
                 );
             } else if (type == "while" && withinLexType("init")) {
@@ -406,9 +411,8 @@ var LAGParser = Editor.Parser = (function () {
             }
         }
 
-        // Need to allow for (condition)* -- DONE!
         function condition(type, tokenValue) {
-            if (type == "model") { // comparison: attribute comparator value
+            if (type == "model") { // comparison: ATTRIBUTE COMPARATOR VALUE
                 pass(
                     ToVisual.actions.startCondition,
                     ToVisual.actions.startComparison,
@@ -420,7 +424,7 @@ var LAGParser = Editor.Parser = (function () {
                     ToVisual.actions.finishComparison,
                     ToVisual.actions.finishCondition
                 );
-            } else if (type == "enough") {
+            } else if (type == "enough") { // enough ( CONDITION*, VALUE )
                 cont(
                     ToVisual.actions.startCondition,
                     pushlex("stat"),
@@ -564,9 +568,9 @@ var LAGParser = Editor.Parser = (function () {
         // Look for conditions until a comma is found.
         function setOfCondition(type) {
             if (type == ",") {
-                return cont();
+                cont();
             } else {
-                return pass(condition, setOfCondition);
+                pass(condition, setOfCondition);
             }
         }
 
