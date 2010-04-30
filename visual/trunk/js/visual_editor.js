@@ -96,8 +96,8 @@ Raphael.fn.PEAL = {
 LAGVE.Attr = new Object();
 
 YUI({
-    filter:     'raw',
-    //combine:    true,
+    filter:     'min',
+    combine:    true,
 }).use(
     'console',
     'dd-constrain',
