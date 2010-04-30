@@ -466,14 +466,13 @@
             </div>
         </li>
     </ul>
-    <script src="/lib/yui/yui/yui.js" type="text/javascript"></script>
     <script type="text/javascript" src="http://yui.yahooapis.com/3.0.0/build/yui/yui-min.js"></script>
     <script type="text/javascript">
         var helpAccordion = new Object();
         
         YUI({    
             filter: 'min',
-            //combine: 'true',
+            combine: 'true',
         }).use('node','event', function(Y) {
             helpAccordion.collapseAll = function() {
                 var helpItemsContents = Y.all('#help-accordion .accordion-item');
